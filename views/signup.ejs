@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zxx">
+<head>
+    <title>Workspace Sign Up Form Flat Responsive Widget Template :: W3layouts</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/style.css" type="text/css" media="all">
+    <link rel="stylesheet" href="/font-awesome.min.css" type="text/css" media="all">
+    <link href="//fonts.googleapis.com/css?family=Mukta:300,400,500" rel="stylesheet">
+</head>
+<body>
+    <section class="main">
+        <div class="bottom-grid">
+            <div class ="logo">
+                <h1><a href="index.html">Sign Up Form</a></h1>
+            </div>
+        </div>
+        <div class="w3lhny-register">
+            <div class="iconhny">
+                <span class="fa fa-user-plus"></span>
+            </div>
+            <form action="/signup" method="post" class="register-form" onsubmit="return validateForm();">
+                <fieldset>
+                    <div class="form">
+                        <div class="form-row">
+                            <span class="fa fa-user"></span>
+                            <p id="name-error" style="color: red;"></p>
+                            <input type="text" class="form-text" placeholder="Name" id="name" name="username">
+                        </div>
+                        <div class="form-row">
+                            <span class="fa fa-envelope"></span>
+                            <p id="email-error" style="color: red;"></p>
+                            <% if (typeof error !== 'undefined') { %>
+                                <p class="error-message" style="color: red;"><%= error %></p>
+                              <% } %>
+                              
+                            <input type="email" class="form-text" placeholder="Email Address" id="email" name="email">
+                        </div>
+                        <div class="form-row">
+                            <span class="fa fa-lock"></span>
+                            <p id="password-error" style="color: red;"></p>
+                            <input type="password" class="form-text" placeholder="Password" id="password" name="password">
+                        </div>
+                        <div class="form-row">
+                            <span class="fa fa-phone"></span>
+                            <p id="phone-error" style="color: red;"></p>
+                            <input type="tel" class="form-text" placeholder="Phone Number" pattern="[0-9]{10}" id="phone" name="phone">
+                        </div>
+                    </div>
+                    <div class="form-row button-login">
+                        <button class="btn btn-login" type="submit" id="submit">Sign Up</button>
+                    </div>
+                </fieldset>
+            </form>
+            
+            <!-- <div id="name-error" class="error-message" style="color: red;"></div>
+            <div id="email-error" class="error-message" style="color: red;"></div>
+            <div id="password-error" class="error-message" style="color: red;"></div>
+            <div id="phone-error" class="error-message" style="color: red;"></div> -->
+            <!-- <span class="create-account">Or Continue With!</span>
+            <div class="social-media">
+                <a href="#facebook" class="fb"><span class="fa fa-facebook"></span></a>
+                <a href="#twitter" class="tw"><span class="fa fa-twitter"></span></a>
+                <a href="#pinterest" class="pi"><span class="fa fa-pinterest"></span></a>
+            </div> -->
+            <!-- <p class="already">Already have an account <a href="#">Sign In</a></p> -->
+        </div>
+        <div class="w3l-copyright">
+            <p>© 2020 Workspace Sign Up Form. All rights reserved | Design by <a href="http://w3layouts.com">Midhun</a></p>
+        </div>
+    </section>
+
+    <script>
+        function validateForm() {
+            var name = document.getElementById("name").value;
+            var email = document.getElementById("email").value;
+            var password = document.getElementById("password").value;
+            var phone = document.getElementById("phone").value;
+            var valid = true;
+
+            // Reset error messages
+            document.getElementById("name-error").innerHTML = "";
+            document.getElementById("email-error").innerHTML = "";
+            document.getElementById("password-error").innerHTML = "";
+            document.getElementById("phone-error").innerHTML = "";
+
+            if (name.trim() === "") {
+                document.getElementById("name-error").innerHTML = "Name is required";
+                valid = false;
+            }
+
+            if (email.trim() === "") {
+                document.getElementById("email-error").innerHTML = "Email is required";
+                valid = false;
+            } else if (!validateEmail(email)) {
+                document.getElementById("email-error").innerHTML = "Invalid email format";
+                valid = false;
+            }
+
+            if (password.trim() === "") {
+                document.getElementById("password-error").innerHTML = "Password is required";
+                valid = false;
+            }
+
+            if (phone.trim() === "") {
+                document.getElementById("phone-error").innerHTML = "Phone Number is required";
+                valid = false;
+            }
+
+            return valid;
+        }
+
+        function validateEmail(email) {
+            var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            return emailPattern.test(email);
+        }
+    </script>
+</body>
+</html>
