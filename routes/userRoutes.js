@@ -4,7 +4,7 @@ const path=require('path');
 const user=require('../model/userModels');
 const userController=require('../controller/userController');
 const nodemailer=require("nodemailer");
-const generateOtp=require("generate-otp");
+const generateOtp=require('generate-otp');
 
 const session=require("express-session")
 //session handling
@@ -50,8 +50,14 @@ userRoutes.post('/login',userController.loginVerify);
 userRoutes.post('/signup',userController.insertUser);
 
 userRoutes.get('/cart',userController.cart);
+
 userRoutes.get('/profile',userController.profile);
-userRoutes.post('/profile',userController.profiledata);
+userRoutes.get('/addaddress',userController.addaddress);
+userRoutes.post('/addaddress/:id',userController.addAddressToUser)
+
+userRoutes.get('/editprofile',userController.editprofile);
+userRoutes.post('/updateprofile',userController.updateprofile);
+
 
 userRoutes.get("/otp",userController.otpLoad);
 userRoutes.post("/otp",userController.verifyOtp);

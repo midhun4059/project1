@@ -39,7 +39,7 @@ const categoryLoad=async(req,res)=>{
   res.render('category',{category})
 }
 
-const addCategory=async (req,res)=>{
+const addCategoryLoad=async (req,res)=>{
   res.render('addCategory')
 }
 
@@ -73,7 +73,7 @@ const insertCategory=async(req,res)=>{
 }
 
 
-const editCategory = async (req, res) => {
+const editCategoryLoad = async (req, res) => {
   try {
     let id = req.params.id;
 
@@ -140,7 +140,7 @@ const productsLoad=async(req,res)=>{
   res.render('products',{product})
 }
 
-const addProduct=async(req,res)=>{
+const addProductLoad=async(req,res)=>{
   res.render('addProducts');
 }
 const insertProducts = async (req, res) => {
@@ -169,9 +169,9 @@ const insertProducts = async (req, res) => {
 }
 
 
-const editProduct=async(req,res)=>{
+const editProductLoad=async(req,res)=>{
   let id=req.params.id;
-  const product=await productcollection.findById(id)
+await productcollection.findById(id)
 .then(product=>{
   if(!product){
   res.redirect('/admin/products')
@@ -289,15 +289,15 @@ module.exports=
   userUnblock,
 
   categoryLoad,
-addCategory,
+addCategoryLoad,
 insertCategory,
-editCategory,
+editCategoryLoad,
 updateCategory,
 deleteCategory,
 
 productsLoad,
-addProduct,
-editProduct,
+addProductLoad,
+editProductLoad,
 insertProducts,
 deleteProduct,
 updateProduct};

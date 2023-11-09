@@ -42,17 +42,17 @@ adminRoutes.post('/admin/block/:id',adminController.userBlock)
 adminRoutes.post('/admin/unblock/:id',adminController.userUnblock);
 
 adminRoutes.get('/admin/category',adminController.categoryLoad)
-adminRoutes.get('/admin/category/add',adminController.addCategory)
+adminRoutes.get('/admin/category/add',adminController.addCategoryLoad)
 adminRoutes.post('/admin/category/add',adminController.insertCategory)
 adminRoutes.get('/admin/category/delete/:id',adminController.deleteCategory)
-adminRoutes.get('/admin/category/edit/:id',adminController.editCategory)
+adminRoutes.get('/admin/category/edit/:id',adminController.editCategoryLoad)
 adminRoutes.post('/admin/category/update/:id',adminController.updateCategory)
 
 adminRoutes.get('/admin/products',adminController.productsLoad)
-adminRoutes.get('/admin/products/add',adminController.addProduct)
+adminRoutes.get('/admin/products/add',adminController.addProductLoad)
 adminRoutes.post('/admin/products/add',upload,adminController.insertProducts)
 adminRoutes.get('/admin/products/delete/:id',adminController.deleteProduct)
-adminRoutes.get('/admin/products/edit/:id',adminController.editProduct)
+adminRoutes.get('/admin/products/edit/:id',adminController.editProductLoad)
 adminRoutes.post('/admin/products/update/:id',upload,adminController.updateProduct)
 
 

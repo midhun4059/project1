@@ -1,4 +1,4 @@
-const user=require('../model/userModels')
+
 const session=require('express-session');
 const nodemailer=require("nodemailer");
 const generateOtp=require("generate-otp");
@@ -6,6 +6,7 @@ const users = require('../model/userModels');
 const productcollection = require('../model/productModels');
 
 const bcrypt = require('bcrypt');
+const { name } = require('ejs');
 
 
 const loginLoad=async(req,res)=>{
@@ -64,26 +65,27 @@ const homeLoad=async(req,res)=>{
 //     res.status(500).send('An error occurred during signup.');
 //   }
 // }
-
 const loginVerify=async (req, res) => {
   try{
-
-  
-const check=await user.findOne({email:req.body.email})
-console.log(check);
-if(check.email===req.body.email  && check.isblocked===false && check.password===req.body.password)
-{
-  req.session.user=req.body.email
-  res.redirect('/');
-}else{
-  res.render("login",{error:"Invalid login credential.Please try again"})
-}
+      console.log("Starting login verification");
+      const check=await users.findOne({email:req.body.email})
+      console.log("Check: ", check);
+      if(check.email===req.body.email && check.isblocked===false && check.password===req.body.password)
+      {
+        console.log("Login successful");
+        req.session.user=req.body.email;
+        res.redirect("/")
+      }else{
+        console.log("Login failed");
+        res.render("login",{error:"Invalid login credential.Please try again"})
+      }
+    }
+  catch(error){
+    console.log("error",error);
   }
-catch(error){
-  console.log("error",error);
-}}
-
-
+ }
+ 
+  
 const insertUser=async(req,res)=>{
   try{
 
@@ -302,8 +304,15 @@ const productdetails=async(req,res)=>{
 
 
 const cart=async(req,res)=>{
+  const user=req.session.user;
+
  try{
-  res.render('cart');
+  if(user){
+    res.render('cart');
+}
+else{
+  res.redirect('/profile');
+}
  }
  catch(error){
   console.log(error);
@@ -312,30 +321,139 @@ const cart=async(req,res)=>{
 
 const profile=async (req,res)=>{
   try{
-    res.render('profile');
+    const user=req.session.user;
+    console.log(user);
+
+    const data=await users.findOne({email:user});
+    if(user){
+      res.render('profile',{data});
+      console.log("data",data);
+    }
+    else{
+      res.redirect('/profile')
+    }
   }
   catch(error){
     console.log(error);
   }
 }
 
-const profiledata= async (req,res)=>{
-try{
- req.session.user=req.body.email;
-  const id=req.params.id;
-  const data=await users.findbyId(id);
+const editprofile= async (req,res)=>{
+  const user=req.session.user;
+console.log('uu',user)
+  const data=await users.findOne({email:user});
 
-  if(data){
-    res.render('profile',{data});
+  try{
+    if(data){
+      res.render('editprofile',{data});
+    }
+    else{
+      res.redirect('/profile');
+    }
   }
-else{
-  res.redirect('/home')
-}
-}catch(error){
-console.log(error);
+  catch (error){
+ console.log(error);
+  }
 }
 
+
+const updateprofile = async (req, res) => {
+  
+  const user = req.session.user;
+  const check = await users.findOne({ email: user });
+  console.log(user);
+  if (!check) {
+    return res.redirect('/profile');
+  } else {
+    const userdata =await users.findOneAndUpdate({ email: user },{
+      username: req.body.username,
+      email: req.body.email,
+      phone: req.body.phone
+    });
+    console.log(userdata);
+    // console.log(name);
+    // await users.find(userdata);
+    res.redirect('/profile');
+  }
 }
+
+const addaddress=async(req,res)=>{
+  const user=req.session.user;
+
+  const data=await users.findOne({email:user})
+
+  try{
+    if(data){
+      res.render('addaddress',{user,data});
+    }else{
+      res.redirect('/profile')
+    }
+  }
+  catch(error){
+    console.error(error);
+  }
+}
+
+// Controller function to add a new address to a user by ID
+const addAddressToUser = async (req, res) => {
+const userId = req.params.id; // Assuming you have a userId parameter in your route
+  // The address data from the request body
+
+  try {
+    const newAddress = {
+      street: req.body.street,
+      city: req.body.city,
+      state: req.body.state,
+      pincode: req.body.pincode,
+      country: req.body.country,
+      // primary: newAddressData.primary || false, // Set to false by default
+    };
+
+    console.log(newAddress);
+    // Push the new address directly to the user's address array
+    const updatedUser = await users.findByIdAndUpdate(
+      userId,
+      { $push: { address: newAddress } },
+      { new: true }
+    );
+
+res.redirect('/profile');
+
+    console.log(updatedUser);
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.status(201).json(updatedUser); // Respond with the updated user document
+  } catch (error) {
+    console.error(error);
+    
+  }
+};
+
+
+
+
+
+// const profiledata= async (req,res)=>{
+// try{
+//  const user=req.session.user;
+//   const id=req.params.id;
+
+  
+
+//   if(data){
+//     res.render('profile',{ data });
+//   }
+// else{
+//   res.redirect('/home')
+// }
+// }catch(error){
+// console.log(`Error fetching user with ID : ${error}`);
+// }
+
+// }
 
 const userLogout=(req,res)=>{
   req.session.destroy((err)=>{
@@ -363,6 +481,10 @@ module.exports={
   productdetails,
   cart,
   profile,
-  profiledata
+  addAddressToUser,
+  addaddress,
+  editprofile,
+  updateprofile
+ 
 
 }
