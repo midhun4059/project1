@@ -1,6 +1,20 @@
 const mongoose=require('mongoose')
 
-
+const cartItemSchema=new mongoose.Schema({
+ 
+ cart:[{
+  productId:{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:'product',
+    required:true,
+  },
+  quantity:{
+    type:Number,
+    required:true,
+    default:1,
+  }
+}]
+})
 
 const addressSchema = new mongoose.Schema({
   street: String,
@@ -41,11 +55,14 @@ const userSchema=new mongoose.Schema({
     type:Boolean,
     default:false
   },
-  address:[addressSchema]
+  address:[addressSchema],
+
+  cartitems:[cartItemSchema],
+  totalPrice:{
+    type:Number,
+    default:0,
+  }
 })
-
-
-
 
 module.exports= mongoose.model("User",userSchema);
 

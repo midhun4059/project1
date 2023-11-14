@@ -330,56 +330,68 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					<h4>Your shopping cart contains:
 						<span>3 Products</span>
 					</h4>
+					
 					<table class="timetable_sub">
 						<thead>
-							<tr>
-								<th>SL No.</th>
-								<th>Product</th>
-								<th>Quantity</th>
-								<th>Product Name</th>
-
-								<th>Price</th>
-								<th>Remove</th>
-							</tr>
+							 <tr>
+									<th>SL No.</th>
+									<th>Product</th>
+									<th>Quantity</th>
+									<th>Product Name</th>
+									<th>Price</th>
+									<th>Remove</th>
+							 </tr>
 						</thead>
 						<tbody>
-							<tr class="rem1">
-								<td class="invert">1</td>
-								<td class="invert-image">
-									<a href="single.html">
-										<img src="images/s1.jpg" alt=" " class="img-responsive">
-									</a>
-								</td>
-								<td class="invert">
-									<div class="quantity">
-										<div class="quantity-select">
-											<div class="entry value-minus">&nbsp;</div>
-											<div class="entry value">
-												<span>1</span>
-											</div>
-											<div class="entry value-plus active">&nbsp;</div>
-										</div>
-									</div>
-								</td>
-								<td class="invert">Irayz Butterfly </td>
-
-								<td class="invert">$281.00</td>
-								<td class="invert">
-									<div class="rem">
-										<div class="close1"> </div>
-									</div>
-
-								</td>
-							</tr>
 							
-							</tr>
-							
+							<% cartitems.forEach((cart, index) => { %>
+										<% cart.cart.forEach((product, indexs) => { %>
+											
+						
+												<tr class="rem1">
+														<td class="invert"><%= index + 1 %></td>
+														<td class="invert-image">
+
+																<a href="<%= product.productId.name %>">
+																		<!-- Use the product image source dynamically -->
+																		<img src="/images/<%= product.productId.image %>" alt="/images/<%= product.image %>" class="img-responsive">
+																</a>
+														</td>
+														
+														<td class="invert">
+																<div class="quantity">
+																		<div class="quantity-select">
+																				<div class="entry value-minus">&nbsp;</div>
+																				<div class="entry value">
+																						<span><%= product.quantity %></span>
+																				</div>
+																				<div class="entry value-plus active">&nbsp;</div>
+																		</div>
+																</div>
+														</td>
+														<td class="invert">
+																<h4><%= product.productId.name %></h4>
+														</td>
+														<td class="invert">
+																<p>Price: <%= product.productId.price %></p>
+														</td>
+														<td class="invert">
+																<div class="rem">
+																		<div class="close1"> </div>
+																</div>
+														</td>
+												</tr>
+										<% }); %>
+
+						<% }); %>
+						
 						</tbody>
-					</table>
+				 </table>
+				 
 				</div>
 				<div class="checkout-left row">
 					<div class="col-md-4 checkout-left-basket">
-						<h4>Continue to basket</h4>
+						<h4>Checkout</h4>
 					
 					</div>
 				</div>

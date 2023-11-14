@@ -1,14 +1,13 @@
 const express=require('express');
 const app=express()
 const path=require('path');
-const userRoutes=require('./routes/userRoutes')
 const dotenv=require('dotenv').config
 const mongoose=require('mongoose');
 mongoose.set('strictQuery', false);
 
 const session=require('express-session');
 const nocache=require('nocache');
-const adminRoutes = require('./routes/adminRoutes');
+
 
 
 

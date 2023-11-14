@@ -5,6 +5,7 @@ const generateOtp=require("generate-otp");
 const users = require('../model/userModels');
 const productcollection = require('../model/productModels');
 
+
 const bcrypt = require('bcrypt');
 const { name } = require('ejs');
 
@@ -69,7 +70,7 @@ const loginVerify=async (req, res) => {
   try{
       console.log("Starting login verification");
       const check=await users.findOne({email:req.body.email})
-      console.log("Check: ", check);
+      
       if(check.email===req.body.email && check.isblocked===false && check.password===req.body.password)
       {
         console.log("Login successful");
@@ -303,21 +304,7 @@ const productdetails=async(req,res)=>{
 }
 
 
-const cart=async(req,res)=>{
-  const user=req.session.user;
 
- try{
-  if(user){
-    res.render('cart');
-}
-else{
-  res.redirect('/profile');
-}
- }
- catch(error){
-  console.log(error);
- }
-}
 
 const profile=async (req,res)=>{
   try{
@@ -340,7 +327,7 @@ const profile=async (req,res)=>{
 
 const editprofile= async (req,res)=>{
   const user=req.session.user;
-console.log('uu',user)
+
   const data=await users.findOne({email:user});
 
   try{
@@ -361,7 +348,7 @@ const updateprofile = async (req, res) => {
   
   const user = req.session.user;
   const check = await users.findOne({ email: user });
-  console.log(user);
+ 
   if (!check) {
     return res.redirect('/profile');
   } else {
@@ -409,7 +396,7 @@ const userId = req.params.id; // Assuming you have a userId parameter in your ro
       // primary: newAddressData.primary || false, // Set to false by default
     };
 
-    console.log(newAddress);
+   
     // Push the new address directly to the user's address array
     const updatedUser = await users.findByIdAndUpdate(
       userId,
@@ -419,7 +406,7 @@ const userId = req.params.id; // Assuming you have a userId parameter in your ro
 
 res.redirect('/profile');
 
-    console.log(updatedUser);
+    
 
     if (!updatedUser) {
       return res.status(404).json({ error: 'User not found' });
@@ -432,6 +419,46 @@ res.redirect('/profile');
   }
 };
 
+ const editAddress=async(req,res)=>{
+const user=req.session.user
+  const data=await users.findOne({email:user})
+  try{
+    if(data){
+      res.render('editaddress',{data});
+    }
+    else{
+      res.redirect('/profile');
+    }
+  }
+  catch(error){
+    console.error(error);
+  }
+ }
+
+ const updateAddress=async(req,res)=>{
+ try{
+    const user={email:req.session.user};
+    
+    
+const newAddress={
+        address:[{
+        street:req.body.street,
+        city:req.body.city,
+        state:req.body.state,
+        pincode:req.body.pincode,
+        country:req.body.country,
+  }]}
+
+ 
+const option={upsert:true};
+await users.updateOne(user,newAddress,option);
+res.redirect('/profile');
+  
+  }
+  catch(error){
+    console.error(error)
+  }
+ }
 
 
 
@@ -479,10 +506,11 @@ module.exports={
   userLogout,
   signupLoad,
   productdetails,
-  cart,
   profile,
   addAddressToUser,
+  editAddress,
   addaddress,
+  updateAddress,
   editprofile,
   updateprofile
  

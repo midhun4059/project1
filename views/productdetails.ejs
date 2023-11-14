@@ -393,19 +393,18 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 										</div>
 										<div class="clearfix"> </div>
 									</div> -->
-									<div class="occasion-cart">
-											<div class="googles single-item singlepage">
-													<form action="#" method="post">
-														<input type="hidden" name="cmd" value="_cart">
-														<input type="hidden" name="add" value="1">
-														<input type="hidden" name="googles_item" value="Farenheit">
-														<input type="hidden" name="amount" value="575.00">
-														<button type="submit" class="googles-cart pgoogles-cart">
-															Add to Cart
-														</button>
-														
-													</form>
-		
+									
+								<div class="googles single-item singlepage">
+   <form action="/addtocart/<%= products._id %>" method="post">
+      <input type="hidden" name="productId" value="<%= products._id %>">
+      <input type="hidden" name="quantity" value="1"> <!-- Assuming you want to add one quantity by default -->
+      <button type="submit" class="googles-cart pgoogles-cart">
+         Add to Cart
+      </button>
+   </form>
+</div>
+
+								
 												</div>
 									</div>
 									<ul class="footer-social text-left mt-lg-4 mt-3">

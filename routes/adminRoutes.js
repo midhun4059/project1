@@ -3,7 +3,7 @@ const adminRoutes=express();
 const path=require("path");
 const session=require("express-session")
 const adminController=require("../controller/adminController")
-const productcollection=require('../model/productModels')
+
 
 const multer=require('multer')
 

@@ -3,6 +3,7 @@ const userRoutes=express();
 const path=require('path');
 const user=require('../model/userModels');
 const userController=require('../controller/userController');
+const cartController=require('../controller/cartController')
 const nodemailer=require("nodemailer");
 const generateOtp=require('generate-otp');
 
@@ -49,19 +50,23 @@ userRoutes.get('/',userController.homeLoad);
 userRoutes.post('/login',userController.loginVerify);
 userRoutes.post('/signup',userController.insertUser);
 
-userRoutes.get('/cart',userController.cart);
+userRoutes.get("/otp",userController.otpLoad);
+userRoutes.post("/otp",userController.verifyOtp);
+// userRoutes.post('/otp/resend',userController.resend)
+
 
 userRoutes.get('/profile',userController.profile);
 userRoutes.get('/addaddress',userController.addaddress);
 userRoutes.post('/addaddress/:id',userController.addAddressToUser)
+userRoutes.get('/editaddress',userController.editAddress);
+userRoutes.post('/editaddress',userController.updateAddress);
 
 userRoutes.get('/editprofile',userController.editprofile);
-userRoutes.post('/updateprofile',userController.updateprofile);
+userRoutes.post('/editprofile',userController.updateprofile);
 
 
-userRoutes.get("/otp",userController.otpLoad);
-userRoutes.post("/otp",userController.verifyOtp);
-// userRoutes.post('/otp/resend',userController.resend)
+userRoutes.get('/cart',cartController.cart);
+userRoutes.post('/addtocart/:id', cartController.addtocart);
 
 userRoutes.get("/productdetails/:id",userController.productdetails)
 
