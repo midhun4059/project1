@@ -204,11 +204,6 @@ const updateProduct=async(req,res)=>{
 let id=req.params.id;
 
 const check=await productcollection.findById(id);
-if(check){
-  res.redirect('/admin/products')
-}
-
-else{
 
 
 const result=await productcollection.findByIdAndUpdate(id,{
@@ -224,7 +219,7 @@ if(!result){
 }else{
   res.redirect('/admin/products')
 }
-}
+
   }
 catch{
   console.log('Error updating the product:',err);
@@ -265,6 +260,10 @@ const userUnblock = async (req, res) => {
 };
 
 
+const orderLoad=async(req,res)=>{
+  res.render('orders');
+}
+
 
 const adminLogout=(req,res)=>{
   req.session.destroy((err)=>{
@@ -294,6 +293,8 @@ insertCategory,
 editCategoryLoad,
 updateCategory,
 deleteCategory,
+
+orderLoad,
 
 productsLoad,
 addProductLoad,

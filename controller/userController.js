@@ -21,7 +21,11 @@ const loginLoad=async(req,res)=>{
 
 const signupLoad= async(req,res)=>{
   try{
+    const data=await users.findOneAndRemove({isVerified:false});
+
+    
   if(req.session.user){
+
     res.redirect('/')
   }
   else{
@@ -36,6 +40,7 @@ catch(error){
 const homeLoad=async(req,res)=>{
   if(req.session.user){
     const products=await productcollection.find()
+    
     
     res.render('home',{products})
   }else{
@@ -71,11 +76,13 @@ const loginVerify=async (req, res) => {
       console.log("Starting login verification");
       const check=await users.findOne({email:req.body.email})
       
-      if(check.email===req.body.email && check.isblocked===false && check.password===req.body.password)
+      if(check.email===req.body.email && check.isblocked===false && check.password===req.body.password){
+      
       {
         console.log("Login successful");
         req.session.user=req.body.email;
         res.redirect("/")
+      }
       }else{
         console.log("Login failed");
         res.render("login",{error:"Invalid login credential.Please try again"})
@@ -93,14 +100,19 @@ const insertUser=async(req,res)=>{
     const { username, email, password, phone } = req.body;
 //checking  the email is existing or not
 
-const existingUser = await users.findOne({ email });
+const existingUser = await users.findOne({ email:email });
+console.log("existingUser",existingUser)
 if (existingUser) {
+
+  console.log("hereee")
   // Email already exists, send an error message to EJS
   return res.render('signup', {
     error: 'Email already exists. Please use a different email address.',
   });
 }
 else{
+
+  console.log("ererer")
 
  const otp = generateOtp.generate(4, { digits: true, alphabets: false, specialChars: false });
 
@@ -206,7 +218,10 @@ catch(error){
 const otpLoad=(req,res)=>{
   try{
     
-    res.render("otp",{errorMessage: ''})
+  
+
+      res.render("otp",{errorMessage: ''})
+    
   }catch(error){
     console.log(error);
 
@@ -243,6 +258,10 @@ const verifyOtp = async (req, res) => {
     console.log(enterOtp);
 
     if (parseInt(foundUser.OTP) === enterOtp) {
+
+    const user = await users.findByIdAndUpdate(foundUser._id, { isVerified: true });
+      
+
       // await users.insertMany([data])
 
       res.redirect("/login");
@@ -343,6 +362,37 @@ const editprofile= async (req,res)=>{
   }
 }
 
+const resetpassLoad=async(req,res)=>{
+  try{
+    if(req.session.user){
+      res.render('resetpassword');
+    }else{
+      res.redirect('/profile');
+  }
+
+  }
+  catch(error){
+    console.log(error);
+  }
+}
+
+const checkpassword=async(req,res)=>{
+  try{
+    const user=req.session.user;
+    const data=await users.findOne({email:user});
+
+if(req.body.currentpassword===data.password){
+  await users.findByIdAndUpdate(data._id,{password:req.body.newpassword})
+
+ 
+  res.redirect('/profile');
+}
+ }
+ catch(error){
+  console.log(error);
+ }
+}
+
 
 const updateprofile = async (req, res) => {
   
@@ -381,6 +431,24 @@ const addaddress=async(req,res)=>{
   }
 }
 
+const addaddresscheckout=async(req,res)=>{
+  const user=req.session.user;
+
+  const data=await users.findOne({email:user})
+
+  try{
+    if(data){
+      res.render('addaddresscheckout',{user,data});
+    }else{
+      res.redirect('/checkout')
+    }
+  }
+  catch(error){
+    console.error(error);
+  }
+}
+
+
 // Controller function to add a new address to a user by ID
 const addAddressToUser = async (req, res) => {
 const userId = req.params.id; // Assuming you have a userId parameter in your route
@@ -418,6 +486,63 @@ res.redirect('/profile');
     
   }
 };
+
+const editaddresscheckout=async(req,res)=>{
+  const user=req.session.user
+    const data=await users.findOne({email:user})
+    try{
+      if(data){
+        res.render('editaddresscheckout',{data});
+      }
+      else{
+        res.redirect('/checkout');
+      }
+    }
+    catch(error){
+      console.error(error);
+    }
+   }
+  
+
+   const addAddressToCheckout = async (req, res) => {
+    const userId = req.params.id; // Assuming you have a userId parameter in your route
+      // The address data from the request body
+    
+      try {
+        const newAddress = {
+          street: req.body.street,
+          city: req.body.city,
+          state: req.body.state,
+          pincode: req.body.pincode,
+          country: req.body.country,
+          // primary: newAddressData.primary || false, // Set to false by default
+        };
+    
+       
+        // Push the new address directly to the user's address array
+        const updatedUser = await users.findByIdAndUpdate(
+          userId,
+          { $push: { address: newAddress } },
+          { new: true }
+        );
+    
+    res.redirect('/checkout');
+    
+        
+    
+        if (!updatedUser) {
+          return res.status(404).json({ error: 'User not found' });
+        }
+    
+        res.status(201).json(updatedUser); // Respond with the updated user document
+      } catch (error) {
+        console.error(error);
+        
+      }
+    };
+
+
+
 
  const editAddress=async(req,res)=>{
 const user=req.session.user
@@ -460,6 +585,30 @@ res.redirect('/profile');
   }
  }
 
+ const updateAddresscheckout=async(req,res)=>{
+  try{
+     const user={email:req.session.user};
+     
+     
+ const newAddress={
+         address:[{
+         street:req.body.street,
+         city:req.body.city,
+         state:req.body.state,
+         pincode:req.body.pincode,
+         country:req.body.country,
+   }]}
+ 
+  
+ const option={upsert:true};
+ await users.updateOne(user,newAddress,option);
+ res.redirect('/checkout');
+   
+   }
+   catch(error){
+     console.error(error)
+   }
+  }
 
 
 
@@ -481,6 +630,11 @@ res.redirect('/profile');
 // }
 
 // }
+
+const confirmLoad=async(req,res)=>{
+ const userId =req.session.user;
+  const user=await users.findOne({email:userId}).populate('cart')
+}
 
 const userLogout=(req,res)=>{
   req.session.destroy((err)=>{
@@ -512,7 +666,15 @@ module.exports={
   addaddress,
   updateAddress,
   editprofile,
-  updateprofile
+  updateprofile,
+  resetpassLoad,
+  checkpassword,
+editaddresscheckout,
+updateAddresscheckout,
+addaddresscheckout,
+addAddressToCheckout 
+
+
  
 
 }

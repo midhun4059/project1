@@ -1,5 +1,6 @@
 const mongoose=require('mongoose')
 
+
 const cartItemSchema=new mongoose.Schema({
  
  cart:[{
@@ -55,13 +56,44 @@ const userSchema=new mongoose.Schema({
     type:Boolean,
     default:false
   },
+  isVerified:{
+type:Boolean,
+default:false
+  },
   address:[addressSchema],
 
   cartitems:[cartItemSchema],
   totalPrice:{
     type:Number,
     default:0,
-  }
+  },
+
+  orders:[{
+    product: {
+    type:mongoose.Schema.Types.ObjectId,
+    ref: 'products' ,
+    required: true,
+},
+productName: String,
+quantity: {
+type: Number,
+ required: true,
+default: 1
+},
+status:{
+    type:String,
+    default:'Pending',
+},
+paymentmethod:{
+    type:String,
+    default:''
+},
+orderDate: {
+    type: Date,
+    required: true,
+    default: Date.now
+},
+}],
 })
 
 module.exports= mongoose.model("User",userSchema);

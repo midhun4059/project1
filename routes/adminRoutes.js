@@ -55,7 +55,7 @@ adminRoutes.get('/admin/products/delete/:id',adminController.deleteProduct)
 adminRoutes.get('/admin/products/edit/:id',adminController.editProductLoad)
 adminRoutes.post('/admin/products/update/:id',upload,adminController.updateProduct)
 
-
+adminRoutes.get('/admin/orders',adminController.orderLoad);
 
 
 adminRoutes.post('/admin/logout',adminController.adminLogout);

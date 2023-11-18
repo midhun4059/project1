@@ -71,13 +71,15 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 								<input type="hidden" name="display" value="1">
 								<button class="top_googles_cart" type="submit" name="submit" value="">
 									My Cart
-									<i class="fab fa-cart-arrow-down"></i>
+									<i class="fas fa-cart-arrow-down"></i>
 								</button>
 							</form>
             </form>
 					</li>
 					<form action="/logout" method="post">
-						<button class="top_googles_cart" type="submit">Logout</button>
+						<button class="top_googles_cart" type="submit">Logout
+						
+						</button>
 					</form>
 					</ul>
 					<!---->
@@ -423,15 +425,14 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 											</ul>
 										</div>
 										<div class="googles single-item hvr-outline-out">
-											<form action="#" method="post">
-												<input type="hidden" name="cmd" value="_cart">
-												<input type="hidden" name="add" value="1">
-												<input type="hidden" name="googles_item" value="Farenheit">
-												<input type="hidden" name="amount" value="575.00">
+											<form action="/addtocart/<%=row._id %>" method="post">
+												<input type="hidden" name="productId" value="<%= products._id %>">
+												<input type="hidden" name="quantity" value="1">
 												<button type="submit" class="googles-cart pgoogles-cart">
 													<i class="fa fa-cart-plus"></i>
 												</button>
 
+												
 												
 											</form>
 

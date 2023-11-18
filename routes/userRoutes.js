@@ -61,14 +61,34 @@ userRoutes.post('/addaddress/:id',userController.addAddressToUser)
 userRoutes.get('/editaddress',userController.editAddress);
 userRoutes.post('/editaddress',userController.updateAddress);
 
+
+userRoutes.get('/editaddresscheckout',userController.editaddresscheckout);
+userRoutes.post('/editaddresscheckout',userController.updateAddresscheckout);
+
+
+userRoutes.get('/addaddresscheckout',userController.addaddresscheckout);
+userRoutes.post('/addaddresscheckout/:id',userController.addAddressToCheckout )
+
+
 userRoutes.get('/editprofile',userController.editprofile);
 userRoutes.post('/editprofile',userController.updateprofile);
+
+userRoutes.get('/resetpassword',userController.resetpassLoad);
+userRoutes.post('/resetpassword',userController.checkpassword);  
 
 
 userRoutes.get('/cart',cartController.cart);
 userRoutes.post('/addtocart/:id', cartController.addtocart);
+userRoutes.get('/deletecart/:id',cartController.deleteCart);
 
-userRoutes.get("/productdetails/:id",userController.productdetails)
+userRoutes.post('/incrementQuantity/:userId/:productId',cartController.addQuantity);
+userRoutes.post('/decrementQuantity/:userId/:productId',cartController.subQuantity);
+
+
+userRoutes.get('/checkout',cartController.checkoutLoad);
+userRoutes.get("/productdetails/:id",userController.productdetails);
+
+userRoutes.post('/orderconfirm',cartController.confirmLoad)
 
 userRoutes.post('/logout',userController.userLogout);
 
