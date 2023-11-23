@@ -1,11 +1,10 @@
 const express=require('express')
 const userRoutes=express();
 const path=require('path');
-const user=require('../model/userModels');
 const userController=require('../controller/userController');
-const cartController=require('../controller/cartController')
-const nodemailer=require("nodemailer");
-const generateOtp=require('generate-otp');
+const cartController=require('../controller/cartController');
+const productController=require('../controller/productController');
+
 
 const session=require("express-session")
 //session handling
@@ -52,8 +51,7 @@ userRoutes.post('/signup',userController.insertUser);
 
 userRoutes.get("/otp",userController.otpLoad);
 userRoutes.post("/otp",userController.verifyOtp);
-// userRoutes.post('/otp/resend',userController.resend)
-
+userRoutes.post('/otp/resend',userController.resendOtp);
 
 userRoutes.get('/profile',userController.profile);
 userRoutes.get('/addaddress',userController.addaddress);
@@ -61,14 +59,11 @@ userRoutes.post('/addaddress/:id',userController.addAddressToUser)
 userRoutes.get('/editaddress',userController.editAddress);
 userRoutes.post('/editaddress',userController.updateAddress);
 
-
 userRoutes.get('/editaddresscheckout',userController.editaddresscheckout);
 userRoutes.post('/editaddresscheckout',userController.updateAddresscheckout);
 
-
 userRoutes.get('/addaddresscheckout',userController.addaddresscheckout);
 userRoutes.post('/addaddresscheckout/:id',userController.addAddressToCheckout )
-
 
 userRoutes.get('/editprofile',userController.editprofile);
 userRoutes.post('/editprofile',userController.updateprofile);
@@ -76,20 +71,22 @@ userRoutes.post('/editprofile',userController.updateprofile);
 userRoutes.get('/resetpassword',userController.resetpassLoad);
 userRoutes.post('/resetpassword',userController.checkpassword);  
 
+userRoutes.get('/showorders',userController.showorders);
+userRoutes.get('/cancelOrder/:id',userController.cancelOrder);
+userRoutes.post('/logout',userController.userLogout);
+
+
+
+userRoutes.get("/productdetails/:id",productController.productdetails);
+
 
 userRoutes.get('/cart',cartController.cart);
 userRoutes.post('/addtocart/:id', cartController.addtocart);
 userRoutes.get('/deletecart/:id',cartController.deleteCart);
-
 userRoutes.post('/incrementQuantity/:userId/:productId',cartController.addQuantity);
 userRoutes.post('/decrementQuantity/:userId/:productId',cartController.subQuantity);
-
-
 userRoutes.get('/checkout',cartController.checkoutLoad);
-userRoutes.get("/productdetails/:id",userController.productdetails);
-
 userRoutes.post('/orderconfirm',cartController.confirmLoad)
 
-userRoutes.post('/logout',userController.userLogout);
 
 module.exports=userRoutes;

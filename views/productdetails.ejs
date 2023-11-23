@@ -351,6 +351,12 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 								<div class="col-lg-8 single-right-left simpleCart_shelfItem">
 									<h3><%= products.name %></h3>
 									<p><span class="item_price"> Rs <%= products.price %></span>
+										<div class="single_page">
+											<h6>Description:</h6>
+											<p><%= products.description %>0</p>
+											<p class="para">
+											
+										</div>
 										<!-- <del>$1,199</del> -->
 									</p>
 									<div class="rating1">
@@ -362,15 +368,15 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 											<li><a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a></li>
 										</ul>
 									</div>
-									<div class="description">
+									<!-- <div class="description">
 										<h5>Check delivery, payment options and charges at your location</h5>
 										<form action="#" method="post">
 												<input class="form-control" type="text" name="Email" placeholder="Please enter..." required="">
 											<input type="submit" value="Check">
 										</form>
-									</div>
+									</div> -->
 									<div class="color-quality">
-										<div class="color-quality-right">
+										<!-- <div class="color-quality-right">
 											<h5>Quality :</h5>
 											<select id="country1" onchange="change_country(this.value)" class="frm-field required sect">
 													<option value="null">5 Qty</option>
@@ -378,7 +384,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 													<option value="null">7 Qty</option>					
 													<option value="null">10 Qty</option>								
 												</select>
-										</div>
+										</div> -->
 									<!-- </div>
 									<div class="occasional">
 										<h5>Types :</h5>
@@ -398,6 +404,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
    <form action="/addtocart/<%= products._id %>" method="post">
       <input type="hidden" name="productId" value="<%= products._id %>">
       <input type="hidden" name="quantity" value="1"> <!-- Assuming you want to add one quantity by default -->
+
+	
       <button type="submit" class="googles-cart pgoogles-cart">
          Add to Cart
       </button>
@@ -408,7 +416,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 												</div>
 									</div>
 									<ul class="footer-social text-left mt-lg-4 mt-3">
-											<li>Share On : </li>
+											
 											<li class="mx-2">
 												<a href="#">
 													<span class="fa fa-facebook-f"></span>
@@ -454,10 +462,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 												<div class="single_page">
 													<h6>Description</h6>
 													<p><%= products.description %>0</p>
-													<p class="para">Lorem ipsum dolor sit amet, consectetur adipisicing elPellentesque vehicula augue eget nisl ullamcorper, molestie
-														blandit ipsum auctor. Mauris volutpat augue dolor.Consectetur adipisicing elit, sed do eiusmod tempor incididunt
-														ut lab ore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. labore et dolore
-														magna aliqua.</p>
+													<p class="para">
+														Sunglasses are a popular accessory that serves both practical and fashionable purposes. Designed to protect the eyes from harmful ultraviolet (UV) rays emitted by the sun, sunglasses have become an essential item in everyday life. Here are some key aspects to consider when talking about sunglasses.</p>
 												</div>
 											</div>
 											<!--//tab_one-->

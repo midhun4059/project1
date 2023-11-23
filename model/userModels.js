@@ -71,7 +71,7 @@ default:false
   orders:[{
     product: {
     type:mongoose.Schema.Types.ObjectId,
-    ref: 'products' ,
+    ref: 'product' ,
     required: true,
 },
 productName: String,

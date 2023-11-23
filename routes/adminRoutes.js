@@ -3,7 +3,7 @@ const adminRoutes=express();
 const path=require("path");
 const session=require("express-session")
 const adminController=require("../controller/adminController")
-
+const productController=require('../controller/productController');
 
 const multer=require('multer')
 
@@ -47,16 +47,15 @@ adminRoutes.post('/admin/category/add',adminController.insertCategory)
 adminRoutes.get('/admin/category/delete/:id',adminController.deleteCategory)
 adminRoutes.get('/admin/category/edit/:id',adminController.editCategoryLoad)
 adminRoutes.post('/admin/category/update/:id',adminController.updateCategory)
-
-adminRoutes.get('/admin/products',adminController.productsLoad)
-adminRoutes.get('/admin/products/add',adminController.addProductLoad)
-adminRoutes.post('/admin/products/add',upload,adminController.insertProducts)
-adminRoutes.get('/admin/products/delete/:id',adminController.deleteProduct)
-adminRoutes.get('/admin/products/edit/:id',adminController.editProductLoad)
-adminRoutes.post('/admin/products/update/:id',upload,adminController.updateProduct)
-
 adminRoutes.get('/admin/orders',adminController.orderLoad);
-
-
+adminRoutes.get('/updateOrderStatus/:userId/:orderId/:newStatus',adminController.updateOrderStatus)
 adminRoutes.post('/admin/logout',adminController.adminLogout);
+
+adminRoutes.get('/admin/products',productController.productsLoad)
+adminRoutes.get('/admin/products/add',productController.addProductLoad)
+adminRoutes.post('/admin/products/add',upload,productController.insertProducts)
+adminRoutes.get('/admin/products/delete/:id',productController.deleteProduct)
+adminRoutes.get('/admin/products/edit/:id',productController.editProductLoad)
+adminRoutes.post('/admin/products/update/:id',upload,productController.updateProduct)
+
 module.exports=adminRoutes;

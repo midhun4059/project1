@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        .gradient-custom {
+/* fallback for old browsers */
+background: #cd9cf2;
+
+/* Chrome 10-25, Safari 5.1-6 */
+background: -webkit-linear-gradient(to top left, rgba(205, 156, 242, 1), rgba(246, 243, 255, 1));
+
+/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+background: linear-gradient(to top left, rgba(205, 156, 242, 1), rgba(246, 243, 255, 1))
+}
+    </style>
+</head>
+<body>
+	<header>
+		<!-- Jumbotron -->
+		<div class="p-3 text-center bg-white border-bottom">
+		  <div class="container">
+			<div class="d-flex justify-content-between">
+			  <!-- Left elements -->
+			  <div class="">
+				
+				  <h3>GLASSY</h3>
+				
+			  </div>
+			  <!-- Left elements -->
+	  
+			  <!-- right elements -->
+			  
+			  <!-- right elements -->
+			</div>
+		  </div>
+		</div>
+		<!-- Jumbotron -->
+	  
+		<!-- Heading -->
+		<div class="bg-black">
+		  <div class="container py-4">
+			<!-- Breadcrumb -->
+			<nav class="d-flex">
+			  <h6 class="mb-0">
+				<a href="/" class="text-white-50">Home</a>
+				<span class="text-white-50 mx-2"> > </span>
+				<a href="/user/profile" class="text-white-50">Profile</a>
+				<span class="text-white-50 mx-2"> > </span>
+				<a href="" class="text-white"><u> Order info</u></a>
+				<span class="text-white-50 mx-2"> </span>
+				
+			  </h6>
+			</nav>
+			<!-- Breadcrumb -->
+		  </div>
+		</div>
+		<!-- Heading -->
+	  </header>
+
+      <section class="h-100 gradient-custom">
+        <div class="container py-5 h-100">
+          <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-lg-10 col-xl-8">
+              <div class="card" style="border-radius: 10px;">
+                <div class="card-header px-4 py-5">
+					
+                  <h5 class="text-muted mb-0">Thanks for your Order, <span style="color: #a8729a;"><%=user.name%></span>!</h5>
+                </div>
+                <div class="card-body p-4">
+                  <!-- <div class="d-flex justify-content-between align-items-center mb-4">
+                    <p class="lead fw-normal mb-0" style="color: #a8729a;">Receipt</p>
+                    <p class="small text-muted mb-0">Receipt Voucher : 1KAU9-84UIL</p>
+                  </div> -->
+                  <%orderItems.forEach(item =>{%>
+
+                 
+                  <div class="card shadow-0 border mb-4">
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-2">
+                            <img src="/images/<%= item.product.image%>" class="border rounded me-3" style="width: 96px; height: 96px;" />
+                            
+                        </div>
+                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                          <p class="text-muted mb-0"><%=item.product.name%></p>
+                        </div>
+                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                          <p class="text-muted mb-0 small"><%=item.product.category%></p>
+                        </div>
+                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                          <p class="text-muted mb-0 small"><%=item.product.description%></p>
+                        </div>
+                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                          <p class="text-muted mb-0 small">Qty: <%=item.quantity%></p>
+                        </div>
+                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                          <p class="text-muted mb-0 small">₹<%= item.product.price %></p>
+                        </div>
+						<div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+							<% if (item.status !== 'Cancelled') { %>
+								<% if (item.status === 'Delivered') { %>
+									<!-- If status is Delivered, display Return button -->
+									<a href="/returnOrder/<%= item._id %>" class="btn btn-outline-primary">Return</a>
+								<% } else { %>
+									<!-- If status is not Cancelled or Delivered, display Cancel Order button -->
+									<a href="/cancelOrder/<%= item._id %>" class="btn btn-outline-primary">Cancel Order</a>
+								<% } %>
+							<% } else { %>
+								<!-- If status is Cancelled, display Cancelled message -->
+								<p class="text-muted mb-0 small">Cancelled</p>
+							<% } %>
+						</div>
+						
+                      </div>
+                      <hr class="mb-4" style="background-color: #e0e0e0; opacity: 1;">
+                      <div class="row d-flex align-items-center">
+                        <div class="col-md-2">
+                          <p class="text-muted mb-0 small">Track Order</p>
+                        </div>
+                        <div class="col-md-10">
+
+
+                          <div class="progress" style="height: 6px; border-radius: 16px;">
+        <div class="progress-bar" role="progressbar"
+            style="width: <% 
+                switch (item.status) {
+                    case 'Pending':
+                        %>0<%
+                        break;
+                    case 'Order Confirmed':
+                        %>25<%
+                        break;
+                    case 'Shipped':
+                        %>50<%
+                        break;
+                    case 'Out For Delivery':
+                        %>75<%
+                        break;
+                    case 'Delivered':
+                        %>100<%
+                        break;
+                    default:
+                        %>0<%
+                }
+            %>%; border-radius: 16px; background-color: #a8729a;" aria-valuenow="<% 
+                switch (item.status) {
+                    case 'Pending':
+                        %>0<%
+                        break;
+                    case 'Order Confirmed':
+                        %>25<%
+                        break;
+                    case 'Shipped':
+                        %>50<%
+                        break;
+                    case 'Out For Delivery':
+                        %>75<%
+                        break;
+                    case 'Delivered':
+                        %>100<%
+                        break;
+                    default:
+                        %>0<%
+                }
+            %>" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+
+
+                          <div class="d-flex justify-content-around mb-1">
+                            <p class="text-muted mt-1 mb-0 small ms-xl-5"></p>
+                            <p class="text-muted mt-1 mb-0 small ms-xl-5"><%=item.status%></p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <% })%>
+                 
+      
+                  <!-- <div class="d-flex justify-content-between pt-2">
+                    <p class="fw-bold mb-0">Order Details</p>
+                    <p class="text-muted mb-0"><span class="fw-bold me-4">Total</span> $898.00</p>
+                  </div>
+      
+                  <div class="d-flex justify-content-between pt-2">
+                    <p class="text-muted mb-0">Invoice Number : 788152</p>
+                    <p class="text-muted mb-0"><span class="fw-bold me-4">Discount</span> $19.00</p>
+                  </div>
+      
+                  <div class="d-flex justify-content-between">
+                    <p class="text-muted mb-0">Invoice Date : 22 Dec,2019</p>
+                    <p class="text-muted mb-0"><span class="fw-bold me-4">GST 18%</span> 123</p>
+                  </div>
+      
+                  <div class="d-flex justify-content-between mb-5">
+                    <p class="text-muted mb-0">Recepits Voucher : 18KU-62IIK</p>
+                    <p class="text-muted mb-0"><span class="fw-bold me-4">Delivery Charges</span> Free</p>
+                  </div>
+                </div>
+                <div class="card-footer border-0 px-4 py-5"
+                  style="background-color: #a8729a; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+                  <h5 class="d-flex align-items-center justify-content-end text-white text-uppercase mb-0">Total
+                    paid: <span class="h2 mb-0 ms-2">$1040</span></h5>
+                </div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
+
+
+
+      <footer class="text-center text-lg-start text-muted bg-black mt-3">
+		<!-- Section: Links  -->
+		<section class="">
+		  <div class="container text-center text-md-start pt-4 pb-4">
+			<!-- Grid row -->
+			<div class="row mt-3">
+			  <!-- Grid column -->
+			  <div class="col-12 col-lg-3 col-sm-12 mb-2">
+				<!-- Content -->
+				<a href="https://mdbootstrap.com/" target="_blank" class="text-white h2">
+				  GLASSY
+				</a>
+				<p class="mt-1 text-white">
+				  © 2023 Copyright:GLASSY.com
+				</p>
+			  </div>
+			  <!-- Grid column -->
+	  
+			  <!-- Grid column -->
+			  <div class="col-6 col-sm-4 col-lg-2">
+				<!-- Links -->
+				<h6 class="text-uppercase text-white fw-bold mb-2">
+				  Store
+				</h6>
+				<ul class="list-unstyled mb-4">
+				  <li><a class="text-white-50" href="#">About us</a></li>
+				  <li><a class="text-white-50" href="#">Find store</a></li>
+				  <li><a class="text-white-50" href="#">Categories</a></li>
+				  <li><a class="text-white-50" href="#">Blogs</a></li>
+				</ul>
+			  </div>
+			  <!-- Grid column -->
+	  
+			  <!-- Grid column -->
+			  <div class="col-6 col-sm-4 col-lg-2">
+				<!-- Links -->
+				<h6 class="text-uppercase text-white fw-bold mb-2">
+				  Information
+				</h6>
+				<ul class="list-unstyled mb-4">
+				  <li><a class="text-white-50" href="#">Help center</a></li>
+				  <li><a class="text-white-50" href="#">Money refund</a></li>
+				  <li><a class="text-white-50" href="#">Shipping info</a></li>
+				  <li><a class="text-white-50" href="#">Refunds</a></li>
+				</ul>
+			  </div>
+			  <!-- Grid column -->
+	  
+			  <!-- Grid column -->
+			  <div class="col-6 col-sm-4 col-lg-2">
+				<!-- Links -->
+				<h6 class="text-uppercase text-white fw-bold mb-2">
+				  Support
+				</h6>
+				<ul class="list-unstyled mb-4">
+				  <li><a class="text-white-50" href="#">Help center</a></li>
+				  <li><a class="text-white-50" href="#">Documents</a></li>
+				  <li><a class="text-white-50" href="#">Account restore</a></li>
+				  <li><a class="text-white-50" href="#">My orders</a></li>
+				</ul>
+			  </div>
+			  <!-- Grid column -->
+	  
+			  <!-- Grid column -->
+			  <div class="col-12 col-sm-12 col-lg-3">
+				<!-- Links -->
+				<h6 class="text-uppercase text-white fw-bold mb-2">Newsletter</h6>
+				<p class="text-white">Stay in touch with latest updates about our products and offers</p>
+				<div class="input-group mb-3">
+				  <input type="email" class="form-control border" placeholder="Email" aria-label="Email" aria-describedby="button-addon2" />
+				  <button class="btn btn-light border shadow-0" type="button" id="button-addon2" data-mdb-ripple-color="dark">
+					Join
+				  </button>
+				</div>
+			  </div>
+			  <!-- Grid column -->
+			</div>
+			<!-- Grid row -->
+		  </div>
+		</section>
+		<!-- Section: Links  -->
+	  
+		<div class="">
+		  <div class="container">
+			<div class="d-flex justify-content-between py-4 border-top">
+			  <!--- payment --->
+			  <div>
+				<i class="fab fa-lg fa-cc-visa text-white"></i>
+				<i class="fab fa-lg fa-cc-amex text-white"></i>
+				<i class="fab fa-lg fa-cc-mastercard text-white"></i>
+				<i class="fab fa-lg fa-cc-paypal text-white"></i>
+			  </div>
+			  <!--- payment --->
+	  
+			  <!--- language selector --->
+			  <div class="dropdown dropup">
+				<a class="dropdown-toggle text-white" href="#" id="Dropdown" role="button" data-mdb-toggle="dropdown" aria-expanded="false"> <i class="flag-united-kingdom flag m-0 me-1"></i>English </a>
+	  
+				<ul class="dropdown-menu dropdown-menu-endp" aria-labelledby="Dropdown">
+				  <li>
+					<a class="dropdown-item" href="#"><i class="flag-united-kingdom flag"></i>English <i class="fa fa-check text-success ms-2"></i></a>
+				  </li>
+				  <li><hr class="dropdown-divider" /></li>
+				  <li>
+					<a class="dropdown-item" href="#"><i class="flag-poland flag"></i>Polski</a>
+				  </li>
+				  <li>
+					<a class="dropdown-item" href="#"><i class="flag-china flag"></i>中文</a>
+				  </li>
+				  <li>
+					<a class="dropdown-item" href="#"><i class="flag-japan flag"></i>日本語</a>
+				  </li>
+				  <li>
+					<a class="dropdown-item" href="#"><i class="flag-germany flag"></i>Deutsch</a>
+				  </li>
+				  <li>
+					<a class="dropdown-item" href="#"><i class="flag-france flag"></i>Français</a>
+				  </li>
+				  <li>
+					<a class="dropdown-item" href="#"><i class="flag-spain flag"></i>Español</a>
+				  </li>
+				  <li>
+					<a class="dropdown-item" href="#"><i class="flag-russia flag"></i>Русский</a>
+				  </li>
+				  <li>
+					<a class="dropdown-item" href="#"><i class="flag-portugal flag"></i>Português</a>
+				  </li>
+				</ul>
+			  </div>
+			  <!--- language selector --->
+			</div>
+		  </div>
+		</div>
+	  </footer>
+	  <!-- Footer -->
+	 
+<script
+  type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.js"></script>
+</body>
+</html>

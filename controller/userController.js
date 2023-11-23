@@ -76,7 +76,7 @@ const loginVerify=async (req, res) => {
       console.log("Starting login verification");
       const check=await users.findOne({email:req.body.email})
       
-      if(check.email===req.body.email && check.isblocked===false && check.password===req.body.password){
+      if(check.email===req.body.email && check.isblocked===false && check.password===req.body.password && check.isVerified===true){
       
       {
         console.log("Login successful");
@@ -101,7 +101,7 @@ const insertUser=async(req,res)=>{
 //checking  the email is existing or not
 
 const existingUser = await users.findOne({ email:email });
-console.log("existingUser",existingUser)
+
 if (existingUser) {
 
   console.log("hereee")
@@ -112,14 +112,10 @@ if (existingUser) {
 }
 else{
 
-  console.log("ererer")
-
  const otp = generateOtp.generate(4, { digits: true, alphabets: false, specialChars: false });
 
  const hashedPassword = await bcrypt.hash(req.body.password, 10);
  
-console.log(`hashed password: ${hashedPassword}`);
-
    const data={
     username:req.body.username,
     email:req.body.email,
@@ -162,12 +158,12 @@ req.session.username=req.body.username
  
   
   setTimeout(async () => {
-    const otpUnset = await users.findOneAndUpdate(
-        { username:req.body.username},
-        { $unset: { otp: 1 } },
+  await users.findOneAndUpdate(
+        { email:req.body.email},
+        { $unset: { OTP: 1 } },
         {new:true}
     );
-    console.log("otp un set sucessfull")
+    console.log("otp  unset sucessfull")
 }, 30000);
  res.redirect('/otp');
 
@@ -183,70 +179,18 @@ catch(error){
 }
 }
 
-// const otpLoad=(req,res)=>{
-//   try{
-    
-//     res.render("otp")
-//   }catch(error){
-//     console.log(error);
-
-//   }
-// }
 
 
-
-// const verifyOtp=async(req,res)=>{
-//   try{
-//       const enterOtp=req.body.otp;
-//       console.log(enterOtp)
-//       if(otp===enterOtp){
-//           // await users.insertMany([data])
-      
-//       res.render("login")
-//       }
-//       else{
-//           res.redirect("/otp")
-//       }
-//   }
-//   catch(error){
-//       console.error(error);
-//       res.status(500).send("internal server error")
-//   }
-
-// }
-///////////////////////////
 const otpLoad=(req,res)=>{
   try{
-    
-  
-
-      res.render("otp",{errorMessage: ''})
-    
+     res.render("otp",{errorMessage: ''})
   }catch(error){
     console.log(error);
 
   }
 }
 
-// const verifyOtp = async (req, res) => {
-//   try {
-//     const username = req.session.username;
-//     const foundUser = await users.findOne({ username });
-    
-//     const enterOtp = parseInt(req.body.otp); // Convert user input to a number
-//     console.log(enterOtp);
 
-//     if (enterOtp && foundUser.OTP === enterOtp) { // Check if it's a valid number
-//       // The OTP is correct, you can proceed with further actions
-//       res.redirect("/login");
-//     } else {
-//       res.render("otp", { errorMessage: 'Invalid OTP. Please try again.' });
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send("Internal server error");
-//   }
-// }
 
 
 const verifyOtp = async (req, res) => {
@@ -259,7 +203,7 @@ const verifyOtp = async (req, res) => {
 
     if (parseInt(foundUser.OTP) === enterOtp) {
 
-    const user = await users.findByIdAndUpdate(foundUser._id, { isVerified: true });
+  await users.findByIdAndUpdate(foundUser._id, { isVerified: true });
       
 
       // await users.insertMany([data])
@@ -273,57 +217,79 @@ const verifyOtp = async (req, res) => {
     res.status(500).send("Internal server error");
   }
 }
-//////////////////////
-// const resend = (req, res) => {
-//   // Generate a new OTP
-//   const newOTP = generateOtp.generate(4, { digits: true, alphabets: false, specialChars: false });
 
 
+const resendOtp=async(req,res)=>{
+  try{
+    const email=req.session.user;
+    const existingUser = await users.findOne({ email:email });
 
-// req.session.username=req.body.username
+ const otp = generateOtp.generate(4, { digits: true, alphabets: false, specialChars: false });
 
-//   // Create a Nodemailer transporter for sending the new OTP
-//   const transporter = nodemailer.createTransport({
-//       service: "gmail",
-//       auth: {
-//           user: 'testtdemoo11111@gmail.com',
-//           pass: 'wikvaxsgqyebphvh'
-//       },
-//   });
-
-//   // Define the email message with the new OTP
-//   const mailOptions = {
-//       from: "midhunrpillai4059@gmail.com",
-//       to: "midhunrpillai4059@gmail.com", // Update the recipient email
-//       subject: "Your New OTP Code",
-//       text: `Your new OTP code is: ${newOTP}`,
-//   };
-
-//   // Send the new OTP to the user
-//   transporter.sendMail(mailOptions, (error, info) => {
-//       if (error) {
-//           console.error("Error sending new OTP", error);
-//           res.status(500).json({ error: "Error sending new OTP" });
-//       } else {
-//           console.log("New OTP sent successfully", info.response);
-//           res.status(200).json({ message: "New OTP sent successfully" });
-//       }
-//   });
-//   console.log("newOTP",newOTP)
-
+ const hashedPassword  =await bcrypt.hash(req.body.password, 10);
  
-// };
-
-
-
-const productdetails=async(req,res)=>{
-  let id=req.params.id;
-  const products=await productcollection.findById(id)
-  res.render('productdetails',{products})
+   const data={
+    username:req.body.username,
+    email:req.body.email,
+    password:req.body.password,
+    phone:req.body.phone,
+    OTP:otp,
 }
 
 
+await users.create(data);
 
+req.session.username=req.body.username
+
+
+  let transporter=nodemailer.createTransport({
+      service:"gmail",
+      auth:{
+          user: 'testtdemoo11111@gmail.com',
+          pass: 'wikvaxsgqyebphvh'
+            
+      },
+  })
+  const mailOptions={
+      from:"midhunrpillai4059@gmail.com",
+      to:"midhunrpillai4059@gmail.com",
+      subject:"Your Otp code",
+      text:`your  resend otp code is:${otp}`
+  }
+  transporter.sendMail(mailOptions,(error,info) =>{
+      if(error){
+          console.error("error sending otp",error)
+
+      }
+      else{
+          console.log("otp send:",info.response);
+      }
+
+
+  })
+ 
+  
+  setTimeout(async () => {
+  await users.findOneAndUpdate(
+        { email:req.body.email},
+        {$set:{OTP:otp}},
+        {new:true}
+    );
+    console.log("otp unset sucessfull")
+}, 30000);
+ res.redirect('/otp');
+
+
+  console.log("send successfully", otp);
+  }
+
+
+  catch(error){
+    console.error(error)
+  }
+
+
+}
 
 const profile=async (req,res)=>{
   try{
@@ -383,9 +349,7 @@ const checkpassword=async(req,res)=>{
 
 if(req.body.currentpassword===data.password){
   await users.findByIdAndUpdate(data._id,{password:req.body.newpassword})
-
- 
-  res.redirect('/profile');
+ res.redirect('/profile');
 }
  }
  catch(error){
@@ -416,10 +380,8 @@ const updateprofile = async (req, res) => {
 
 const addaddress=async(req,res)=>{
   const user=req.session.user;
-
-  const data=await users.findOne({email:user})
-
-  try{
+const data=await users.findOne({email:user})
+try{
     if(data){
       res.render('addaddress',{user,data});
     }else{
@@ -431,25 +393,8 @@ const addaddress=async(req,res)=>{
   }
 }
 
-const addaddresscheckout=async(req,res)=>{
-  const user=req.session.user;
-
-  const data=await users.findOne({email:user})
-
-  try{
-    if(data){
-      res.render('addaddresscheckout',{user,data});
-    }else{
-      res.redirect('/checkout')
-    }
-  }
-  catch(error){
-    console.error(error);
-  }
-}
 
 
-// Controller function to add a new address to a user by ID
 const addAddressToUser = async (req, res) => {
 const userId = req.params.id; // Assuming you have a userId parameter in your route
   // The address data from the request body
@@ -471,37 +416,35 @@ const userId = req.params.id; // Assuming you have a userId parameter in your ro
       { $push: { address: newAddress } },
       { new: true }
     );
-
 res.redirect('/profile');
-
-    
-
-    if (!updatedUser) {
+if (!updatedUser) {
       return res.status(404).json({ error: 'User not found' });
     }
-
-    res.status(201).json(updatedUser); // Respond with the updated user document
+res.status(201).json(updatedUser); // Respond with the updated user document
   } catch (error) {
     console.error(error);
     
   }
 };
 
-const editaddresscheckout=async(req,res)=>{
-  const user=req.session.user
-    const data=await users.findOne({email:user})
-    try{
-      if(data){
-        res.render('editaddresscheckout',{data});
-      }
-      else{
-        res.redirect('/checkout');
-      }
+const addaddresscheckout=async(req,res)=>{
+  const user=req.session.user;
+
+  const data=await users.findOne({email:user})
+
+  try{
+    if(data){
+      res.render('addaddresscheckout',{user,data});
+    }else{
+      res.redirect('/checkout')
     }
-    catch(error){
-      console.error(error);
-    }
-   }
+  }
+  catch(error){
+    console.error(error);
+  }
+}
+
+
   
 
    const addAddressToCheckout = async (req, res) => {
@@ -527,10 +470,7 @@ const editaddresscheckout=async(req,res)=>{
         );
     
     res.redirect('/checkout');
-    
-        
-    
-        if (!updatedUser) {
+    if (!updatedUser) {
           return res.status(404).json({ error: 'User not found' });
         }
     
@@ -541,7 +481,7 @@ const editaddresscheckout=async(req,res)=>{
       }
     };
 
-
+    
 
 
  const editAddress=async(req,res)=>{
@@ -559,6 +499,22 @@ const user=req.session.user
     console.error(error);
   }
  }
+
+ const editaddresscheckout=async(req,res)=>{
+  const user=req.session.user
+    const data=await users.findOne({email:user})
+    try{
+      if(data){
+        res.render('editaddresscheckout',{data});
+      }
+      else{
+        res.redirect('/checkout');
+      }
+    }
+    catch(error){
+      console.error(error);
+    }
+   }
 
  const updateAddress=async(req,res)=>{
  try{
@@ -612,29 +568,39 @@ res.redirect('/profile');
 
 
 
-// const profiledata= async (req,res)=>{
-// try{
-//  const user=req.session.user;
-//   const id=req.params.id;
 
-  
 
-//   if(data){
-//     res.render('profile',{ data });
-//   }
-// else{
-//   res.redirect('/home')
-// }
-// }catch(error){
-// console.log(`Error fetching user with ID : ${error}`);
-// }
+const showorders=async(req,res)=>{
+try{
+  const email=req.session.user;
+  const user=await users.findOne({email:email}).populate('orders.product');
+  console.log('640:',user.orders);
+  if(user){
+   res.render('showorders',{user,orderItems:user.orders})
 
-// }
-
-const confirmLoad=async(req,res)=>{
- const userId =req.session.user;
-  const user=await users.findOne({email:userId}).populate('cart')
+  }else{
+   res.redirect('/checkout');
+  }
+ 
+}catch(error){
+  console.error(error);
 }
+}
+
+const cancelOrder=async(req,res)=>{
+  try{
+    const orderId=req.params.id;
+    const order=await users.findOneAndUpdate({
+      'orders._id':orderId},
+      {$set:{'orders.$.status':'Cancelled'}},
+      {new:true});
+
+      res.redirect('/showorders')
+  }catch(error){
+    console.error(error);
+  }
+}
+
 
 const userLogout=(req,res)=>{
   req.session.destroy((err)=>{
@@ -654,12 +620,14 @@ module.exports={
   loginVerify,
   otpLoad,
   verifyOtp,
-  insertUser,
+  resendOtp,
+ 
+ insertUser,
   loginLoad,
   homeLoad,
   userLogout,
   signupLoad,
-  productdetails,
+  
   profile,
   addAddressToUser,
   editAddress,
@@ -672,7 +640,9 @@ module.exports={
 editaddresscheckout,
 updateAddresscheckout,
 addaddresscheckout,
-addAddressToCheckout 
+addAddressToCheckout ,
+showorders,
+cancelOrder
 
 
  

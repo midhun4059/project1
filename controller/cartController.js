@@ -268,44 +268,61 @@ console.log('2',user.cartitems);
   }
 }
 
+
 const confirmLoad = async (req, res) => {
   try {
     const email = req.session.user;
     const user = await User.findOne({ email: email });
-    console.log(user);
 
-    if (user && user.cartitems && Array.isArray(user.cartitems) && user.cartitems.length > 0) {
+    console.log(user);
+    console.log(email);
+
+    // Check if user exists and has cartitems with at least one item
+    if (user && user.cartitems && user.cartitems.length > 0) {
       console.log('Condition satisfied. Processing cart items...');
 
-      // Assuming there is only one cartItem in the array
-      const cartItem = user.cartitems[0];
-      
-      for (const item of cartItem.cart) {
-        const orderItem = {
-          product: item.productId, // Assuming productId is the correct property
-          productName: item.productName,
-          quantity: item.quantity,
-          // Add other fields as needed
-        };
+      // Loop through each entry in cartitems
+      for (const cartItemEntry of user.cartitems) {
+        // Check if the entry has a valid 'cart' property and it is an array
+        if (cartItemEntry.cart && Array.isArray(cartItemEntry.cart)) {
+          const cart = cartItemEntry.cart;
+          console.log('Accessing cart from cartitems entry:', cart);
 
-        user.orders.push(orderItem);
+          for (const item of cart) {
+            const orderItem = {
+              product: item.productId, // Assuming productId is the correct property
+              productName: item.productName,
+              quantity: item.quantity,
+              totalPrice: item.totalPrice,
+              // Add other fields as needed
+            };
+
+            user.orders.push(orderItem);
+          }
+
+          // Assuming 'cart' is the correct property
+          cartItemEntry.cart = [];
+        }
+      }
+      if(user.cartitems){
+        user.cartitems=[];
       }
 
-      for (const order of user.orders) {
-        const product = order.product;
-        const orderedQuantity = order.quantity;
-        // You need to get the actual product document from the database
-        const productFromDB = await productCollection.findById(product);
-        productFromDB.stock -= orderedQuantity;
-        await productFromDB.save();
-      }
-
-      // Clear the cart
-      cartItem.cart = [];
+      // Save the user object with emptied carts
       await user.save();
+      console.log('User saved successfully after emptying carts.');
+
+      // Remove the cart items from the database
+      const updateResult = await User.updateOne(
+        { email: email },
+        { $set: { 'cartitems.[].cart': [] } }
+      );
+
+      console.log('Update result:', updateResult);
+
       res.render('orderconfirm');
     } else {
-      res.redirect('/profile');
+      res.redirect('/cart');
     }
   } catch (error) {
     console.error(error);
@@ -315,4 +332,12 @@ const confirmLoad = async (req, res) => {
 };
 
 
-module.exports = { cart, addtocart ,deleteCart,addQuantity,subQuantity,checkoutLoad,confirmLoad};
+
+
+module.exports = { cart, 
+  addtocart ,
+  deleteCart,
+  addQuantity,
+  subQuantity,
+  checkoutLoad,
+  confirmLoad};
