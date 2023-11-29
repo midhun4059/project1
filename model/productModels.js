@@ -18,10 +18,11 @@ name:{
     type:String,
     require:true,
   },
-  image:{
+  image:[{
     type:String,
     require:true,
-  },
+  }]
+  ,
   stock:{
     type:Number,
     require:true,

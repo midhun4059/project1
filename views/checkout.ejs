@@ -44,30 +44,16 @@
 		</div>
 		<!-- Heading -->
 	  </header>
-	  
 	  <section class="bg-light py-5">
 		<div class="container">
 		  <div class="row">
 			<div class="col-xl-8 col-lg-8 mb-4">
-			  <!-- <div class="card mb-4 border shadow-0">
-				<div class="p-4 d-flex justify-content-between">
-				  <div class="">
-					<h5>Have an account?</h5>
-					<p class="mb-0 text-wrap ">Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>
-				  </div>
-				  <div class="d-flex align-items-center justify-content-center flex-column flex-md-row">
-					<a href="#" class="btn btn-outline-primary me-0 me-md-2 mb-2 mb-md-0 w-100">Register</a>
-					<a href="#" class="btn btn-primary shadow-0 text-nowrap w-100">Sign in</a>
-				  </div>
-				</div>
-			  </div> -->
-	  
-			  <!-- Checkout -->
+			 <!-- Checkout -->
 			  <div class="card shadow-0 border">
 				<div class="p-4">
 				  <h5 class="card-title mb-3">Your Address</h5>
 				  <div class="row">
-					<form action="/orderconfirm" method="post" >
+					<form action="/orderconfirm" method="post" id="form" >
 					<div class="col-6 mb-3">
 						<div class="card mb-3">
 							<div class="card-body">
@@ -75,11 +61,12 @@
 									<div class="col-sm-3">
 										<h6 class="mb-0">Select Address:</h6>
 									</div>
+									<input type="hidden" name="selectedAddress" id="selectedAddress" value="" />
 									<div class="col-sm-9 text-secondary">
 										<% if (user.address && user.address.length > 0) { %>
 											<select id="addressSelect" class="form-select mb-2">
 												<% user.address.forEach((address, index) => { %>
-													<option value="<%= index %>">
+													<option value="<%=address._id %>">
 														 <%= address.street %>,
 														<%= address.city %>, <%= address.state %>,
 														<%= address.pincode %>, <%= address.country %>
@@ -96,20 +83,15 @@
 						</div>
 					</div>
 					<div class="col-6 mb-3">
-					  
-					  <div class="form-outline">
+					<div class="form-outline">
 					<a class="btn btn-info " href="/addaddresscheckout">Add Address</a>
 					<a class="btn btn-info <% if (user.address.length === 0) { %>disabled<% } %>" href="/editaddresscheckout">Edit Address</a>
 						
 					  </div>
 					</div>
 				  </div>
-	  
-				 
-	  
-				  <hr class="my-4" />
-	  
-				  <h5 class="card-title mb-3">Select Payment Method </h5>
+	  <hr class="my-4" />
+	  <h5 class="card-title mb-3">Select Payment Method </h5>
 	  
 				  <div class="row mb-3">
 					<div class="col-lg-4 mb-3">
@@ -143,7 +125,7 @@
 					<a href="/cart" class="btn btn-outline-primary shadow-0 border">Go to Cart</a>
 					<% if (user.address && user.address.length > 0) { %>
 			
-						<button class="btn btn-success shadow-0 border" >
+						<button class="btn btn-success shadow-0 border" id="placeorder" >
 							Place Order
 						</button>
 				
@@ -168,22 +150,20 @@
 				<h6 class="mb-3">Summary</h6>
 				<div class="d-flex justify-content-between">
 				  <p class="mb-2">Total price:</p>
-				  <p class="mb-2">₹<%=user.totalPrice%></p>
+				  <p class="mb-2" name="total">₹<%=user.totalPrice%></p>
 				</div>
 				<!-- <div class="d-flex justify-content-between">
 				  <p class="mb-2">Discount:</p>
 				  <p class="mb-2 text-danger">- $60.00</p>
 				</div> -->
 				<div class="d-flex justify-content-between">
-				  <p class="mb-2">Shipping cost:</p>
-				  <% ship=50 %>
-				  <%total=ship+user.totalPrice%>
-				  <p class="mb-2">+₹50.00</p>
+				  <p id="" class="mb-2">Discount Amount:</p>
+				  <p id="discountamount" class="mb-2">+₹0</p>
 				</div>
 				<hr />
 				<div class="d-flex justify-content-between">
 				  <p class="mb-2">Total price:</p>
-				  <p class="mb-2 fw-bold">₹<%=total%></p>
+				  <p class="mb-2 fw-bold" id="total">₹<%=user.totalPrice%></p>
 				</div>
 	  
 				<!-- <div class="input-group mt-3 mb-4">
@@ -212,9 +192,29 @@
 									</a>
 									<div class="price text-muted">Price: ₹<%= product.productId.price %></div>
 							</div>
+
+							
 					</div>
 			<% }); %>
 			<% }); %>
+
+			   <!-- Coupon Code -->
+				 <div class="form-group">
+				  <label class="form-label">Have coupon?</label>
+				  <div class="input-group">
+					<input type="text" class="form-control border" id="couponid" name="couponCode" placeholder="Coupon code" />
+					<button class="btn btn-light border" type="button"  id="buttons">Apply</button>
+				  </div>
+				  <div class="alert alert-success mt-3" role="alert" id="success-message" style="display: none;">
+					Coupon applied successfully!
+				  </div>
+				  <div class="alert text-danger mt-3" role="alert" id="error-messages">
+					<% if (typeof errorMessage !== 'undefined' && errorMessage !== null) { %>
+					  <%= errorMessage %>
+					<% } %>
+				  </div>
+				  <p class="text-danger" id="error-message"></p>
+				</div>
 
 				</div>
 				
@@ -235,7 +235,7 @@
 			  <!-- Grid column -->
 			  <div class="col-12 col-lg-3 col-sm-12 mb-2">
 				<!-- Content -->
-				<a href="https://mdbootstrap.com/" target="_blank" class="text-white h2">
+				<a href="/" target="_blank" class="text-white h2">
 				  GLASSY
 				</a>
 				<p class="mt-1 text-white">
@@ -324,36 +324,7 @@
 			  <div class="dropdown dropup">
 				<a class="dropdown-toggle text-white" href="#" id="Dropdown" role="button" data-mdb-toggle="dropdown" aria-expanded="false"> <i class="flag-united-kingdom flag m-0 me-1"></i>English </a>
 	  
-				<ul class="dropdown-menu dropdown-menu-endp" aria-labelledby="Dropdown">
-				  <li>
-					<a class="dropdown-item" href="#"><i class="flag-united-kingdom flag"></i>English <i class="fa fa-check text-success ms-2"></i></a>
-				  </li>
-				  <li><hr class="dropdown-divider" /></li>
-				  <li>
-					<a class="dropdown-item" href="#"><i class="flag-poland flag"></i>Polski</a>
-				  </li>
-				  <li>
-					<a class="dropdown-item" href="#"><i class="flag-china flag"></i>中文</a>
-				  </li>
-				  <li>
-					<a class="dropdown-item" href="#"><i class="flag-japan flag"></i>日本語</a>
-				  </li>
-				  <li>
-					<a class="dropdown-item" href="#"><i class="flag-germany flag"></i>Deutsch</a>
-				  </li>
-				  <li>
-					<a class="dropdown-item" href="#"><i class="flag-france flag"></i>Français</a>
-				  </li>
-				  <li>
-					<a class="dropdown-item" href="#"><i class="flag-spain flag"></i>Español</a>
-				  </li>
-				  <li>
-					<a class="dropdown-item" href="#"><i class="flag-russia flag"></i>Русский</a>
-				  </li>
-				  <li>
-					<a class="dropdown-item" href="#"><i class="flag-portugal flag"></i>Português</a>
-				  </li>
-				</ul>
+				
 			  </div>
 			  <!--- language selector --->
 			</div>
@@ -361,21 +332,130 @@
 		</div>
 	  </footer>
 	  <!-- Footer -->
-	 
+	
 <script
   type="text/javascript"
   src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.js"></script>
-  <script>
-    function validateAddress() {
-        // Check if address is selected
-        const addressSelect = document.getElementById('addressSelect'); // Assuming there is a select box with this ID
 
-        if (addressSelect && addressSelect.value === '') {
+	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+
+  <script>
+
+        // Check if address is selected
+        const form = document.getElementById('form');
+		   form.addEventListener('submit',(event)=>{
+				const addressSelect=document.getElementById('addressSelect').value
+				if (addressSelect && addressSelect.value=== '') {
             // If no address is selected, show an alert message
             alert('Please select an address before placing the order.');
             event.preventDefault(); // Prevent the default action (order placement)
-        }
-    }
+        }else{
+ document.getElementById('selectedAddress').value=addressSelect
+				}
+
+          
+
+          
+			 })
+
+				 // Assuming there is a select box with this ID
+
+    
 </script>
+
+<!-- apply coupon -->
+<script>
+	document.getElementById("buttons").addEventListener("click", async function () {
+	  var couponCode = document.getElementById("couponid").value;
+	  const total = document.getElementById("total").innerText.split("₹")[1].trim();
+		
+	
+	  try {
+			const response = await fetch('/applycoupon', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    code: couponCode,
+    total: total,
+  }),
+});
+
+		const data = await response.json();
+	
+		if (data.success) {
+			console.log("data389:",data)
+		  document.getElementById("discountamount").innerText = data.discountAmount;
+		  document.getElementById("total").textContent = data.newTotal;
+		  document.getElementById("success-message").style.display ='block';
+		  setTimeout(function () {
+                document.getElementById("success-message").style.display ='none';
+            }, 5000);
+		} else {
+		  document.getElementById("error-message").innerText = data.message;
+		  document.getElementById("success-message").style.display = 'none';
+		  setTimeout(function () {
+                document.getElementById("success-message").style.display = 'none';
+            }, 5000);
+			setTimeout(function () {
+                document.getElementById("error-messages").style.display = 'none';
+            }, 5000);
+		}
+	  } catch (error) {
+		console.error("Error applying coupon:", error);
+	  }
+	});
+	</script>
+<!-- payment  method -->
+<script>
+	document.getElementById('placeorder').addEventListener('click', async (event) => {
+			event.preventDefault();
+	
+			// Your existing code...
+	const paymentMethod = document.querySelector('input[name="method"]:checked').value;
+			
+			if (paymentMethod === "Online Payment") {
+					const response = await fetch('/razorpay', {
+							method: 'POST',
+					});
+	            if (response.ok) {
+							const razorpayorder = await response.json();
+							console.log("dataaaaaaaa", razorpayorder, razorpayorder.razorpayorder.currency)
+	
+							// Initialize Razorpay
+							var options = {
+									key: 'rzp_test_n0MSjxnGUDs0pC',
+									amount: razorpayorder.razorpayorder.amount,
+									currency: razorpayorder.razorpayorder.currency,
+									name: 'Glassy',
+									description: 'Payment for your order',
+									order_id: razorpayorder.razorpayorder._id,
+									handler: function (response) {
+											alert("payment successful")
+											const selectedAddress = document.getElementById('addressSelect').value;
+        document.getElementById('selectedAddress').value = selectedAddress;
+				form.submit();
+									},
+							};
+	
+							var rzp1 = new Razorpay(options);
+							rzp1.open();
+					} 
+			}else{
+					const selectedAddress = document.getElementById('addressSelect').value;
+        document.getElementById('selectedAddress').value = selectedAddress;
+
+        // Submit the form for further processing
+        form.submit();
+			}
+	
+			// Retrieve the value of addressSelect inside the event listener
+			// const addressSelect = document.getElementById('addressSelect').value;
+			// console.log("Selected address:", addressSelect);
+	});
+	</script>
+	
 </body>
 </html>

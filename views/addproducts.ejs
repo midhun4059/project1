@@ -160,9 +160,11 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
               </div>
               
                 <div class="form-group">
-                  <label for="productImage"><i class="fa fa-image"></i> Image of product</label>
-                  <input type="file" name="image" class="form-control-file" id="productImage" required>
-                </div>
+                   
+                  <label for="productImage"> <i class="fa-fa-image"></i>Image of product</label>
+                  <input type="file" name="image" multiple accept="image/*" class="form-control-file" id="productImage"  required>
+                  </div>
+
                 <div class="form-group">
                   <label for="productStock"><i class="fa fa-cubes"></i> Stock of product</label>
                   <input type="number" name="stock" class="form-control" id="productStock" placeholder="Enter product stock" min="1" required>
@@ -173,34 +175,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
             </div>
           </div>
         </div>
-      
-
-
-
-
-
-
-
-  </section>
 </section>
-
-
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-      // Get the query parameter value
-      const urlParams = new URLSearchParams(window.location.search);
-      const alreadyExisted = urlParams.get('AlreadyExited');
-
-      // Check if the query parameter is 'true' and display the message
-      if (alreadyExisted === 'true') {
-          const messageElement = document.createElement('p');
-          messageElement.textContent = 'Category already exists';
-          document.body.appendChild(messageElement);
-      }
-  });
-</script>
-
-
+</section>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
@@ -271,6 +247,22 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	   
 	});
 	</script>
+
+<!-- form update -->
+<script>
+  const formData = new FormData();
+// append your form data here
+
+fetch('/your-route/:id', {
+    method: 'POST',
+    body: formData,
+    headers: {
+        'Content-Type': 'multipart/form-data',
+    },
+});
+
+</script>
+
 <!-- calendar -->
 	<script type="text/javascript" src="js/monthly.js"></script>
 	<script type="text/javascript">

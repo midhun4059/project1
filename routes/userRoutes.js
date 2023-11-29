@@ -4,7 +4,8 @@ const path=require('path');
 const userController=require('../controller/userController');
 const cartController=require('../controller/cartController');
 const productController=require('../controller/productController');
-
+const orderController=require('../controller/orderController');
+const dotenv=require('dotenv').config()
 
 const session=require("express-session")
 //session handling
@@ -13,6 +14,19 @@ userRoutes.use(session({
   saveUninitialized:false,
   resave:false
 }))
+
+// const Razorpay = require('razorpay');
+// var instance = new Razorpay({ key_id: process.env.KEY_ID, key_secret:process.env.KEY_SECRET })
+
+// var options = {
+//   amount: 50000,  // amount in the smallest currency unit
+//   currency: "INR",
+//   receipt: "order_rcptid_11"
+// };
+// instance.orders.create(options, function(err, order) {
+//   console.log(order);
+// });
+
 
 //pairng the user inputted data
 userRoutes.use(express.urlencoded({extended:true}))
@@ -45,6 +59,9 @@ userRoutes.use(express.static(path.join(__dirname,'public')))
 userRoutes.get('/login',userController.loginLoad);
 userRoutes.get('/signup',userController.signupLoad);
 userRoutes.get('/',userController.homeLoad);
+
+userRoutes.get('/productsonly',userController.productonly);
+userRoutes.post('/sortproducts',userController.sortedProducts);
 
 userRoutes.post('/login',userController.loginVerify);
 userRoutes.post('/signup',userController.insertUser);
@@ -88,5 +105,8 @@ userRoutes.post('/decrementQuantity/:userId/:productId',cartController.subQuanti
 userRoutes.get('/checkout',cartController.checkoutLoad);
 userRoutes.post('/orderconfirm',cartController.confirmLoad)
 
+userRoutes.post('/razorpay',orderController.razorpayLoad);
+
+userRoutes.post('/applycoupon',userController.applyCoupon);
 
 module.exports=userRoutes;

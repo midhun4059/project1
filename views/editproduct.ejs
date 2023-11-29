@@ -162,8 +162,10 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 </div>
                 <div class="form-group">
                   <label for="productImage"><i class="fa fa-image"></i> Image</label>
-                  <input type="file" name="image" class="form-control-file" id="productImage" required><br>
-                  <img src="/images/<%= product.image %>" width="100px" height="100px" alt="/images/<%= product.image %>">
+                  <input type="file" name="image" class="form-control-file" id="productImage" multiple required><br>
+                  <% product.image.forEach(image => { %>
+                    <img src="/images/<%= image %>" width="100px" height="100px" alt="/images/<%= image %>">
+                  <% }); %>
                   
                 </div>
                 <div class="form-group">

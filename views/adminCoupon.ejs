@@ -142,9 +142,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
       
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
-              <a class="nav-link" href="/admin/category/add">Add-Category</a>
+              <a class="nav-link" href="/admin/add-coupon">Add-Coupon</a>
           </button>
-          <h1>Category Management</h1>
+          <h1>Coupon Management</h1>
       </nav>
       <!-- You may want to remove or replace the above navbar with your preferred navigation. -->
 
@@ -156,36 +156,45 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
                       
                       <table class="table table-striped text-center my-3">
-                          <thead>
-                              <tr class="table-dark ">
-                                  <th>ID</th>
-                                  <th>Category</th>
-                                  <th>Description</th>
-                                  <th>Actions</th>
-
-                              </tr>
-                          </thead>
-                          <tbody>
-                              <% category.forEach((row, index) => { %>
-                                  <tr class='align-middle'>
-                                      <td style="color: black;"><%= index+1 %></td>
-                                      <td style="color: black;"><%= row.category %></td>
-                                      <td style="color: black;"><%= row.description %></td>
-                                  
-                                      <td>
-                                          <a href="/admin/category/edit/<%= row._id %>"class="text-success"><i class="fa fa-edit fa-lg mx-1"></i></a>
-                                          <a href="/admin/category/delete/<%= row._id %>" class="text-danger" onclick="checker(event)">
-                                            <i class="fa fa-trash fa-lg mx-1"></i>
-                                          </a>
-                                      </td>
-                                    
-  
-                                      
-                                  </tr>
-                                  <% }) %>
-
-                          
-                          </tbody>
+                        <thead>
+                          <tr>
+                              <th>Coupon Code</th>
+                              <th>Discount Amount</th>
+                              <th>Expiration Date</th>
+                              <th>Minimum Purchase</th>
+                              <th>Is Blocked</th>
+                          </tr>
+                      </thead>
+                      <!-- Assuming you have a variable 'coupons' containing an array of coupon objects -->
+        <tbody>
+          <% coupons.forEach(coupon => { %>
+              <tr>
+                  <td><%= coupon.couponCode %></td>
+                  <td><%= coupon.discountAmount %></td>
+                  <td><%= coupon.expirationDate %></td>
+                  <td><%= coupon.minimumpurchase %></td>
+                  <td>
+                    <% if (coupon.isBlocked) { %>
+                        <!-- User is blocked, show unblock button -->
+                    
+            
+                          <form method="post" action="/admin/couponunblock/<%= coupon._id %>">
+                            <button type="submit" class="btn btn-success">Unblock</button>
+                          </form>
+                      <% } else { %>
+                        <!-- User is not blocked, show block button -->
+                        <form method="post" action="/admin/couponblock/<%= coupon._id %>">
+                            <button type="submit" class="btn btn-danger">Block</button>
+                          </form>
+                       
+                   
+                      <% } %>
+                      
+                </td>
+              </tr>
+          <% }); %>
+        </tbody>
+        
                       </table>
                   </div>
               </div>
@@ -306,3 +315,4 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	<!-- //calendar -->
 </body>
 </html>
+

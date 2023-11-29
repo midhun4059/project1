@@ -4,7 +4,7 @@ const path=require('path');
 const dotenv=require('dotenv').config
 const mongoose=require('mongoose');
 mongoose.set('strictQuery', false);
-
+const Razorpay = require('razorpay');
 const session=require('express-session');
 const nocache=require('nocache');
 

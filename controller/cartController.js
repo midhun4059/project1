@@ -12,7 +12,7 @@ const cartitems = user.cartitems.map(cart => cart);
 
       const totalPriceArray = user.cartitems.map((cartItem) => {
         return cartItem.cart.reduce((acc, curr) => {
-          console.log("1299",curr.productId.price, curr.quantity)
+          
           return acc + curr.productId.price * curr.quantity;
         }, 0);
       });
@@ -66,7 +66,7 @@ const addtocart = async (req, res) => {
         const existingProduct = user.cartitems.find(cartitems => {
       
           const foundproduct = cartitems.cart.find(item => {
-            console.log("item",item.productId._id, "productid", productId);
+            
             return item.productId._id.toString() === productId;
           });
           return foundproduct;
@@ -74,7 +74,7 @@ const addtocart = async (req, res) => {
 
 
         if (existingProduct) {
-          console.log("herreq")
+          
           // If the product is already in the cart, update the quantity
           existingProduct.cart.forEach((product)=>{
             product.quantity +=1
@@ -254,8 +254,7 @@ const checkoutLoad=  async (req, res) => {
   try {
     const email = req.session.user;
     const user = await User.findOne({ email: email }).populate('cartitems.cart.productId');
-console.log('1',user);
-console.log('2',user.cartitems);
+
 
 
     if (user && user.cartitems ) {
@@ -273,20 +272,18 @@ const confirmLoad = async (req, res) => {
   try {
     const email = req.session.user;
     const user = await User.findOne({ email: email });
-
-    console.log(user);
-    console.log(email);
-
+    console.log('275',req.body);
     // Check if user exists and has cartitems with at least one item
     if (user && user.cartitems && user.cartitems.length > 0) {
-      console.log('Condition satisfied. Processing cart items...');
-
+    
       // Loop through each entry in cartitems
       for (const cartItemEntry of user.cartitems) {
         // Check if the entry has a valid 'cart' property and it is an array
         if (cartItemEntry.cart && Array.isArray(cartItemEntry.cart)) {
           const cart = cartItemEntry.cart;
-          console.log('Accessing cart from cartitems entry:', cart);
+          const selectedAddress=await User.findOne({email:email},{address:{$elemMatch:{ _id:req.body.selectedAddress}}});
+
+
 
           for (const item of cart) {
             const orderItem = {
@@ -294,6 +291,7 @@ const confirmLoad = async (req, res) => {
               productName: item.productName,
               quantity: item.quantity,
               totalPrice: item.totalPrice,
+              address:selectedAddress
               // Add other fields as needed
             };
 
@@ -318,7 +316,6 @@ const confirmLoad = async (req, res) => {
         { $set: { 'cartitems.[].cart': [] } }
       );
 
-      console.log('Update result:', updateResult);
 
       res.render('orderconfirm');
     } else {

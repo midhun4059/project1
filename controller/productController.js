@@ -1,10 +1,14 @@
 const session=require('express-session');
+const express=require("express");
+
 const productcollection = require('../model/productModels');
+const app=express();
+const fileUpload = require('express-fileupload');
+app.use(fileUpload());
 
 
-
-
-
+const multer=require('multer')
+const upload = multer();
 
 
 
@@ -31,7 +35,7 @@ const insertProducts = async (req, res) => {
       description: req.body.description,
       price: req.body.price,
       category: req.body.category,
-      image: req.file.filename,
+      image: req.files.image.map(file => file.filename),
       stock: req.body.stock,
     };
     const check = await productcollection.findOne({ name: req.body.name });
@@ -92,7 +96,7 @@ const result=await productcollection.findByIdAndUpdate(id,{
   description:req.body.description,
   price:req.body.price,
   category:req.body.category,
-  image:req.file.filename,
+  image: req.file.map(file => file.filename),
   stock:req.body.stock,
 })
 if(!result){
@@ -103,7 +107,7 @@ if(!result){
 
   }
 catch{
-  console.log('Error updating the product:',err);
+  console.log(error);
 }
 }
 

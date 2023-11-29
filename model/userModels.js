@@ -88,11 +88,18 @@ paymentmethod:{
     type:String,
     default:''
 },
+redeemedCoupon:{
+type:String,
+default:''
+},
 orderDate: {
     type: Date,
     required: true,
     default: Date.now
 },
+address:{
+  type:String
+}
 }],
 })
 

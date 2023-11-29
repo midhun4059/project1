@@ -4,6 +4,8 @@ const nodemailer=require("nodemailer");
 const generateOtp=require("generate-otp");
 const users = require('../model/userModels');
 const productcollection = require('../model/productModels');
+const couponcollection=require('../model/couponModel');
+// const fetch=require('node-fetch');
 
 
 const bcrypt = require('bcrypt');
@@ -189,10 +191,6 @@ const otpLoad=(req,res)=>{
 
   }
 }
-
-
-
-
 const verifyOtp = async (req, res) => {
   try {
     const username = req.session.username;
@@ -217,8 +215,6 @@ const verifyOtp = async (req, res) => {
     res.status(500).send("Internal server error");
   }
 }
-
-
 const resendOtp=async(req,res)=>{
   try{
     const email=req.session.user;
@@ -235,14 +231,10 @@ const resendOtp=async(req,res)=>{
     phone:req.body.phone,
     OTP:otp,
 }
-
-
 await users.create(data);
-
 req.session.username=req.body.username
 
-
-  let transporter=nodemailer.createTransport({
+let transporter=nodemailer.createTransport({
       service:"gmail",
       auth:{
           user: 'testtdemoo11111@gmail.com',
@@ -264,12 +256,8 @@ req.session.username=req.body.username
       else{
           console.log("otp send:",info.response);
       }
-
-
-  })
- 
-  
-  setTimeout(async () => {
+ })
+ setTimeout(async () => {
   await users.findOneAndUpdate(
         { email:req.body.email},
         {$set:{OTP:otp}},
@@ -278,19 +266,12 @@ req.session.username=req.body.username
     console.log("otp unset sucessfull")
 }, 30000);
  res.redirect('/otp');
-
-
-  console.log("send successfully", otp);
+console.log("send successfully", otp);
   }
-
-
-  catch(error){
+catch(error){
     console.error(error)
   }
-
-
 }
-
 const profile=async (req,res)=>{
   try{
     const user=req.session.user;
@@ -602,6 +583,101 @@ const cancelOrder=async(req,res)=>{
 }
 
 
+
+
+// Apply Coupon
+
+
+const applyCoupon =async(req,res)=>{
+  const email=req.session.user
+ 
+  try{
+      const couponCode = req.body.code;
+
+   
+      const totalPrice=req.body.total;
+
+      console.log('597:',couponCode,totalPrice);
+
+      const coupon = await couponcollection .findOne({ couponCode });
+       const minimumAmount=coupon.minimumpurchase;
+       if (!coupon=== coupon.couponCode) {
+         return res.json({ success: false, message: "Invalid coupon code" });
+       }
+      
+      if (!coupon || coupon.expirationDate < new Date()) {
+        return res.json({ success: false, message: "Invalid coupon code" });
+      }
+      
+      // coupon is used by user or not
+      const user = await users.findOne({email:email});
+      // if (user.redeemedCoupons.some((redeemedCoupon) => redeemedCoupon.couponCode === couponCode)) {
+      //     return res.json({ success: false, message: "You have already used this coupon" });
+      // }
+  
+      // if (!user) {
+      //   return res.json({ success: false, message: "User not found" });
+      // }
+      if (totalPrice <= minimumAmount) {
+          return res.json({ success: false, message:` Minimum purchase of ${minimumAmount} is required to claim the coupon `});
+      }
+      const newTotal = totalPrice - coupon.discountAmount;
+    
+      user.totalPrice = newTotal;
+      const discountAmount=coupon.discountAmount
+   
+
+     
+      await user.save();
+
+      res.json({ success: true, newTotal,discountAmount });
+
+
+  }catch(error){
+      console.error("Error applying coupon:", error);
+  res.status(500).json({ success: false, message: "Invalid coupon code" });
+  }
+}
+
+
+const productonly=async(req,res)=>{
+  if(req.session.user){
+    const products=await productcollection.find()
+    res.render('productsonly',{products})
+  }else{
+    res.redirect('/login')
+  }
+  }
+
+  const sortedProducts = async (req, res) =>{
+  try {
+    if (req.session.user) {
+      {
+        const sortOrder = req.body.sort;
+        const products=await productcollection.find()
+    
+        // Your existing logic to fetch and filter products from the database
+    
+        // Sort the products based on the selected order
+        if (sortOrder === 'asc') {
+            products.sort((a, b) => a.price - b.price);
+        } else if (sortOrder === 'desc') {
+            products.sort((a, b) => b.price - a.price);
+        }
+    
+        // Render the sorted products and send them back to the client
+        res.render('productsonly', { products });
+    }
+  }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+}
+  
+
+
+
 const userLogout=(req,res)=>{
   req.session.destroy((err)=>{
     if(err){
@@ -642,7 +718,15 @@ updateAddresscheckout,
 addaddresscheckout,
 addAddressToCheckout ,
 showorders,
-cancelOrder
+cancelOrder,
+
+applyCoupon,
+
+productonly,
+
+sortedProducts,
+
+
 
 
  

@@ -1,6 +1,7 @@
 const categorycollection = require('../model/categoryModel');
 const productcollection = require('../model/productModels');
 const users=require('../model/userModels');
+const couponCollection=require('../model/couponModel');
 const { render } = require('../routes/userRoutes');
 
 
@@ -135,30 +136,14 @@ const deleteCategory=async (req,res)=>{
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 const userBlock = async (req, res) => {
   try {
     const id = req.params.id;
     const user = await users.findByIdAndUpdate(id, { isblocked: true });
-
-    if (!user) {
+if (!user) {
       res.status(400).json({ error: 'User not found or could not be blocked' });
     }
-   
-    res.redirect('/admin/users');
+       res.redirect('/admin/users');
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });
@@ -180,7 +165,72 @@ const userUnblock = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+const CouponLoad=async(req,res)=>{
+ const coupons=await couponCollection.find();
+ res.render('adminCoupon',{coupons});
+}
+const addCoupon=async(req,res)=>{
+  res.render('addCoupon');
+}
 
+const insertCoupon=async(req,res)=>{
+  try{
+    const data={
+     couponCode: req.body.couponCode,
+     discountAmount:req.body.discountAmount,
+     expirationDate:req.body.expirationDate,
+     minimumpurchase:req.body.minimumpurchase,
+    }
+
+    const check=await couponCollection.findOne({couponCode:req.body.couponCode});
+  
+    if(check){
+      console.log("already exists");
+      res.redirect('/adminCoupon');
+    }
+
+    else{
+      await couponCollection.insertMany([data])
+      res.redirect('/adminCoupon');
+    }
+  }catch(error){
+    console.error(error)
+  }
+}
+
+const couponBlock=async (req, res) => {
+  try {
+    const id = req.params.id;
+    console.log('204:',id)
+    const user = await couponCollection.findByIdAndUpdate(id, { isBlocked: true });
+
+    if (!user) {
+      res.status(400).json({ error: 'User not found or could not be blocked' });
+    }
+   
+    res.redirect('/adminCoupon');
+  } catch (error) {
+    console.error(error);
+    
+}
+};
+
+const couponUnblock=async (req, res) => {
+  try {
+    const id = req.params.id;
+    console.log('221:',id)
+
+    const user = await couponCollection.findByIdAndUpdate(id, { isBlocked: false });
+
+    if (!user) {
+      res.status(400).json({ error: 'User not found or could not be unblocked' });
+    } 
+    res.redirect('/adminCoupon');
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
 
 const orderLoad=async(req,res)=>{
   try{
@@ -211,8 +261,9 @@ try{
 }catch(error){
   console.log(error);
 }
-
 }
+
+
 
 
 const adminLogout=(req,res)=>{
@@ -243,8 +294,13 @@ insertCategory,
 editCategoryLoad,
 updateCategory,
 deleteCategory,
-
 orderLoad,
-updateOrderStatus,
 
+CouponLoad,
+addCoupon,
+insertCoupon,
+couponBlock,
+couponUnblock,
+
+updateOrderStatus,
 };

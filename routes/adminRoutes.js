@@ -4,6 +4,7 @@ const path=require("path");
 const session=require("express-session")
 const adminController=require("../controller/adminController")
 const productController=require('../controller/productController');
+const fileUpload = require('express-fileupload');
 
 const multer=require('multer')
 
@@ -16,8 +17,9 @@ const storage=multer.diskStorage({
         cb(null,name)
     }
 })
-const upload=multer({storage:storage}).single('image');
+const upload = multer({storage:storage});
 
+adminRoutes.use(fileUpload());
 
 adminRoutes.use(express.urlencoded({extended:true}))
 adminRoutes.use(express.json())
@@ -51,11 +53,18 @@ adminRoutes.get('/admin/orders',adminController.orderLoad);
 adminRoutes.get('/updateOrderStatus/:userId/:orderId/:newStatus',adminController.updateOrderStatus)
 adminRoutes.post('/admin/logout',adminController.adminLogout);
 
+adminRoutes.get("/admincoupon",adminController.CouponLoad);
+adminRoutes.get("/admin/add-coupon",adminController.addCoupon);
+adminRoutes.post("/admin/add-coupon",adminController.insertCoupon);
+adminRoutes.post("/admin/couponblock/:id",adminController.couponBlock);
+adminRoutes.post("/admin/couponunblock/:id",adminController.couponUnblock);
+
+
 adminRoutes.get('/admin/products',productController.productsLoad)
 adminRoutes.get('/admin/products/add',productController.addProductLoad)
-adminRoutes.post('/admin/products/add',upload,productController.insertProducts)
+adminRoutes.post('/admin/products/add',upload.array('image'),productController.insertProducts)
 adminRoutes.get('/admin/products/delete/:id',productController.deleteProduct)
 adminRoutes.get('/admin/products/edit/:id',productController.editProductLoad)
-adminRoutes.post('/admin/products/update/:id',upload,productController.updateProduct)
+adminRoutes.post('/admin/products/update/:id',upload.array('image'),productController.updateProduct)
 
 module.exports=adminRoutes;
