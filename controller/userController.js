@@ -50,29 +50,7 @@ const homeLoad=async(req,res)=>{
   }
   }
   
-// const signuppost= async (req, res) => {
-  
-//   const data = {
-//     username: req.body.username,
-//     email: req.body.email,
-//     password: req.body.password,
-//     phone: req.body.phone,
-//   }
 
-//   try {
-//     const newdata = await users.insertMany([data]);
-//     console.log(newdata);
-//     res.render('login');
-//   } catch (error) {
-//     console.error('Error during signup:', error);
-
-//     if (error && error.writeErrors && error.writeErrors.length > 0) {
-//       console.error('Write errors:', error.writeErrors);
-//     }
-
-//     res.status(500).send('An error occurred during signup.');
-//   }
-// }
 const loginVerify=async (req, res) => {
   try{
       console.log("Starting login verification");

@@ -59,55 +59,29 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				</div>
 
 				<div class="col-md-3 top-info-cart text-right mt-lg-4">
-					<ul class="cart-inner-info">
-						<li class="button-log">
-							<a class="btn-open" href="/profile">
-								<span class="fa fa-user" aria-hidden="true"></span>
-							</a>
-						</li>
-						<li class="galssescart galssescart2 cart cart box_1">
-							<form action="/cart" method="get" class="last">
+					<ul class="cart-inner-info list-inline">
+						
+						<li class="list-inline-item">
+							<form action="/cart" method="get">
 								<input type="hidden" name="cmd" value="_cart">
 								<input type="hidden" name="display" value="1">
-								<button class="top_googles_cart" type="submit" name="submit" value="">
+								<button class="btn top_googles_cart" type="submit" name="submit" value="">
 									My Cart
 									<i class="fas fa-cart-arrow-down"></i>
 								</button>
 							</form>
-            </form>
-					</li>
-					<form action="/logout" method="post">
-						<button class="top_googles_cart" type="submit">Logout
-						
-						</button>
-					</form>
+						</li>
+					
+						<li class="list-inline-item">
+							<form action="/logout" method="post">
+								<button class="btn top_googles_cart" type="submit">Logout</button>
+							</form>
+						</li>
 					</ul>
-					<!---->
+				</div>
 				
-					<!---->
-				</div>
 			</div>
-			<div class="search">
-				<div class="mobile-nav-button">
-					<button id="trigger-overlay" type="button">
-						<i class="fas fa-search"></i>
-					</button>
-				</div>
-				<!-- open/close -->
-				<div class="overlay overlay-door">
-					<button type="button" class="overlay-close">
-						<i class="fa fa-times" aria-hidden="true"></i>
-					</button>
-					<form action="#" method="post" class="d-flex">
-						<input class="form-control" type="search" placeholder="Search here..." required="">
-						<button type="submit" class="btn btn-primary submit">
-							<i class="fas fa-search"></i>
-						</button>
-					</form>
-
-				</div>
-				<!-- open/close -->
-			</div>
+	
 			<label class="top-log mx-auto"></label>
 			<nav class="navbar navbar-expand-lg navbar-light bg-light top-header mb-2">
 
@@ -119,20 +93,24 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				</button>
 				<div class="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul class="navbar-nav nav-mega mx-auto">
-						<li class="nav-item active">
-							<a class="nav-link ml-lg-0" href="/productsonly">products
+						<li class="nav-item ">
+							<a class="nav-link ml-lg-0" href="/productsonly">Products
 								
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="about.html">About</a>
+							<a class="nav-link" href="/wishlist">Wishlist</a>
 						</li>
 					
 						
+						
 						<li class="nav-item">
-							<a class="nav-link" href="contact.html">Contact</a>
+							<a class="nav-link" href="/profile">Profile</a>
 						</li>
 					</ul>
+
+
+				
 
 				</div>
 			</nav>
@@ -230,18 +208,23 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 										</div>
 										<div class="googles single-item hvr-outline-out">
 											<form action="/addtocart/<%=row._id %>" method="post">
-												<input type="hidden" name="productId" value="<%= products._id %>">
+												<input type="hidden" name="productId" value="<%= row._id %>">
 												<input type="hidden" name="quantity" value="1">
 												<button type="submit" class="googles-cart pgoogles-cart">
 													<i class="fa fa-cart-plus"></i>
 												</button>
-
-												
-												
 											</form>
 
 										</div>
+
+										
 									</div>
+									<form action="/addtowish/<%= row._id %>" method="post">
+										<input type="hidden" name="productId" value="<%= products._id %>">
+										<button type="submit" class="wishlist-button">
+											<span class="heart-symbol">❤️</span> Add to Wishlist
+										</button>
+									</form>
 									<div class="clearfix"></div>
 								</div>
 							</div>

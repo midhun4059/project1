@@ -23,6 +23,10 @@ name:{
     require:true,
   }]
   ,
+  offerPrice:{
+    type:Number,
+    require:true,
+  },
   stock:{
     type:Number,
     require:true,

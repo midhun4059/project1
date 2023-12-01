@@ -1,7 +1,7 @@
 const { users } = require("moongose/models");
 const productCollection = require("../model/productModels");
 const User = require('../model/userModels');
-const session = require('express-session');
+
 
 const cart = async (req, res) => {
   try {
@@ -9,24 +9,20 @@ const cart = async (req, res) => {
 const user= await User.findOne({email:useremail}).populate('cartitems.cart.productId');
 const cartitems = user.cartitems.map(cart => cart);
     if (user) {
-
-      const totalPriceArray = user.cartitems.map((cartItem) => {
+const totalPriceArray = user.cartitems.map((cartItem) => {
         return cartItem.cart.reduce((acc, curr) => {
-          
           return acc + curr.productId.price * curr.quantity;
         }, 0);
       });
-    
-      
-      const totalPrice = totalPriceArray.reduce((acc, price) => acc + price, 0);
+    const totalPrice = totalPriceArray.reduce((acc, price) => acc + price, 0);
       console.log(totalPrice)
       
   
-      user.totalPrice=totalPrice
+      user.totalPrice=totalPrice;
   
       // Save the updated user data
       await user.save();
-      res.render("cart", { cartitems,user })
+      res.render("cart",{cartitems,user})
     } else {
       res.redirect("/");
     }
@@ -41,53 +37,38 @@ const addtocart = async (req, res) => {
   try {
     if (req.session.user) {
       const { productId, quantity } = req.body;
-
-      const useremail = req.session.user;
+const useremail = req.session.user;
 
       // Check if product exists
       const product = await productCollection.findById(productId);
       const user = await User.findOne({ email: useremail });
     
-      if (!product || !user) {
+     if (!product || !user) {
         return res.status(404).json({ error: 'Product not found' });
       }
-
-      // Retrieve or create a cart for the user
+// Retrieve or create a cart for the user
       if (user && product) {
-
-        // Initialize user.cartitems as an empty array if it's undefined
+// Initialize user.cartitems as an empty array if it's undefined
         if (!user.cartitems) {
           user.cartitems = [];
         }
-
         // Check if the product is already in the cart
-      
-
-        const existingProduct = user.cartitems.find(cartitems => {
-      
-          const foundproduct = cartitems.cart.find(item => {
-            
+    const existingProduct = user.cartitems.find(cartitems => {
+      const foundproduct = cartitems.cart.find(item => {
             return item.productId._id.toString() === productId;
           });
           return foundproduct;
         });
-
-
-        if (existingProduct) {
-          
-          // If the product is already in the cart, update the quantity
+  if (existingProduct) {
+        // If the product is already in the cart, update the quantity
           existingProduct.cart.forEach((product)=>{
             product.quantity +=1
           })
         } else {
-
-  
           const cartitemspush={
             productId:productId,
             quantity:1
-          }
-    
-          // If the product is not in the cart, add it
+          }// If the product is not in the cart, add it
           user.cartitems.push({
             cart: [cartitemspush]
           });
@@ -104,8 +85,7 @@ const addtocart = async (req, res) => {
   } catch (error) {
     console.log("error here")
     console.error(error);
-
-    res.status(500).json({ error: 'Internal Server Error' });
+res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 

@@ -81,6 +81,28 @@ button#trigger-overlay {
 	background: #ff4e00;
 	border-radius:0;
 }
+
+
+.wishlist-button {
+    background-color: #ffffff;
+    color: #333;
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 14px;
+    transition: background-color 0.3s;
+    margin-top: 10px; /* Add margin to separate it from the Add to Cart button */
+  }
+
+  .wishlist-button:hover {
+    background-color: #1880bd;
+  }
+
+  .heart-symbol {
+    margin-right: 5px;
+  }
+
 /* Menu style *
 .overlay ul {
 	list-style: none;

@@ -5,6 +5,8 @@ const userController=require('../controller/userController');
 const cartController=require('../controller/cartController');
 const productController=require('../controller/productController');
 const orderController=require('../controller/orderController');
+const wishlistController = require('../controller/wishlistController');
+
 const dotenv=require('dotenv').config()
 
 const session=require("express-session")
@@ -108,5 +110,13 @@ userRoutes.post('/orderconfirm',cartController.confirmLoad)
 userRoutes.post('/razorpay',orderController.razorpayLoad);
 
 userRoutes.post('/applycoupon',userController.applyCoupon);
+
+
+
+userRoutes.get('/wishlist',wishlistController.wishLoad)
+userRoutes.post('/addtowish/:id',wishlistController.addToWish)
+userRoutes.get('/remove/:id',wishlistController.removeFromWishlist)
+userRoutes.get('/addcart/:id',wishlistController.wishlistAddCart)
+
 
 module.exports=userRoutes;
