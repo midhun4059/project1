@@ -5,10 +5,20 @@ const productcollection = require('../model/productModels');
 const app=express();
 const fileUpload = require('express-fileupload');
 app.use(fileUpload());
-
-
 const multer=require('multer')
-const upload = multer();
+
+const storage=multer.diskStorage({
+  destination:function(req,file,cb){
+      cb(null,path.join(__dirname,'../public/images'))
+  },
+  filename:function(req,file,cb){
+      const name=Date.now()+'-'+file.originalname;
+      cb(null,name)
+  }
+})
+// const upload = multer({storage:storage});
+
+// const upload = multer();
 
 
 
@@ -27,6 +37,7 @@ const addProductLoad=async(req,res)=>{
   res.render('addProducts');
 }
 
+const upload = multer({storage:storage});
 
 const insertProducts = async (req, res) => {
   try {
@@ -35,7 +46,7 @@ const insertProducts = async (req, res) => {
       description: req.body.description,
       price: req.body.price,
       category: req.body.category,
-      image: req.files.image.map(file => file.filename),
+      image: req.files.map(file => file.filename),
       stock: req.body.stock,
     };
     const check = await productcollection.findOne({ name: req.body.name });
@@ -96,7 +107,7 @@ const result=await productcollection.findByIdAndUpdate(id,{
   description:req.body.description,
   price:req.body.price,
   category:req.body.category,
-  image: req.file.map(file => file.filename),
+  image: req.files.map(file => file.filename),
   stock:req.body.stock,
 })
 if(!result){
@@ -106,10 +117,16 @@ if(!result){
 }
 
   }
-catch{
+catch(error){
   console.log(error);
 }
 }
+
+ 
+
+
+
+
 
 module.exports={productdetails,
   productsLoad,
@@ -117,4 +134,7 @@ module.exports={productdetails,
   editProductLoad,
   insertProducts,
   deleteProduct,
+
+
+
   updateProduct}

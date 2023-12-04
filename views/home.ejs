@@ -67,7 +67,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 								<input type="hidden" name="display" value="1">
 								<button class="btn top_googles_cart" type="submit" name="submit" value="">
 									My Cart
-									<i class="fas fa-cart-arrow-down"></i>
+									
 								</button>
 							</form>
 						</li>
@@ -131,7 +131,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 							<h3>Men’s eyewear
 								<span>Cool summer sale 50% off</span>
 							</h3>
-							<a href="shop.html" class="btn btn-sm animated-button gibson-three mt-4">Shop Now</a>
+							<a href="/productsonly" class="btn btn-sm animated-button gibson-three mt-4">Shop Now</a>
 						</div>
 					</div>
 					<div class="carousel-item item2">
@@ -185,7 +185,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 						<div class="product-googles-info googles">
 							<div class="men-pro-item">
 								<div class="men-thumb-item">
-									<img src="images/<%= row.image %>" class="img-fluid" alt="<%= row.image %>">
+									<img src="images/<%= row.image[0] %>" class="img-fluid" alt="<%= row.image %>">
 									<div class="men-cart-pro">
 										<div class="inner-men-cart-pro">
 											<a href="/productdetails/<%=row._id%>" class="link-product-add-cart">Quick View</a>
@@ -233,7 +233,25 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					
 					<!-- /mens -->
 					<%	}) %>
+
+					<div class="container">
+						<div class="row justify-content-center">
+							
+							<div class="col-md-12 text-center">
+								<% if (currentPage > 1) { %>
+									<a href="?page=<%= currentPage - 1 %>" class="btn btn-primary">Previous</a>
+								<% } %>
+							
+								<!-- You might need to calculate if there are more products -->
+								
+					
+								<a href="?page=<%= currentPage + 1 %>" class="btn btn-primary">Next</a>
+								
+							</div>
+						</div>
+					</div>
 				</div>
+				
 				<!--//row-->
 				<!--/meddle-->
 				<div class="row">
@@ -362,7 +380,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 							<h4 class="sub-tittle-w3layouts my-lg-4 my-3">Satisfaction Guaranteed</h4>
 							<p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.</p>
 							<p>
-								<a href="shop.html" class="btn btn-sm animated-button gibson-three mt-4">Shop Now</a>
+								<a href="/productsonly" class="btn btn-sm animated-button gibson-three mt-4">Shop Now</a>
 							</p>
 						</div>
 						<!-- /.col-lg-4 -->
@@ -374,7 +392,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 							<h4 class="sub-tittle-w3layouts my-lg-4 my-3">Fast Shipping</h4>
 							<p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.</p>
 							<p>
-								<a href="shop.html" class="btn btn-sm animated-button gibson-three mt-4">Shop Now</a>
+								<a href="/productsonly" class="btn btn-sm animated-button gibson-three mt-4">Shop Now</a>
 							</p>
 						</div>
 						<!-- /.col-lg-4 -->
@@ -386,7 +404,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 							<h4 class="sub-tittle-w3layouts my-lg-4 my-3">UV Protection</h4>
 							<p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.</p>
 							<p>
-								<a href="shop.html" class="btn btn-sm animated-button gibson-three mt-4">Shop Now</a>
+								<a href="/productsonly" class="btn btn-sm animated-button gibson-three mt-4">Shop Now</a>
 							</p>
 						</div>
 						<!-- /.col-lg-4 -->

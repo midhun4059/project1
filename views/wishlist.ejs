@@ -152,7 +152,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					<% } else { %>
 						<h4 class="card-title mb-4">Your Wishlist</h4>
 	
-							<% product.forEach(item => { %>
+							<% product.slice().reverse().forEach(item => { %>
 								<div class="row gy-3 mb-4">
 									<div class="col-lg-5">
 										<div class="me-lg-5">
@@ -172,30 +172,24 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 											</div>
 										</div>
 									</div>
-					
-	
-					
-	
-	
-									<div class="col-lg-2 col-sm-6 col-6 d-flex flex-row flex-lg-column flex-xl-row text-nowrap">
-									 
-	
-						
-						
-	
-										<div class="">
-						<%if(item.Product.OfferPrice){%>
-											<text class="h5">Price:₹<s><%= item.Product.price%></s>  &#8377;<%= item.Product.OfferPrice %></text> <br />
-						<% }else{ %>%>
+													<div class="col-lg-2 col-sm-6 col-6 d-flex flex-row flex-lg-column flex-xl-row text-nowrap">
+						<div class="">
 							<text class="h5">Price:₹<%= item.Product.price%></text>
-							<% } %>	
-										</div>
+						</div>
 									</div>
-	
-					
-									<div class="col-lg col-sm-6 d-flex justify-content-sm-center justify-content-md-start justify-content-lg-center justify-content-xl-end mb-2">
+<div class="col-lg col-sm-6 d-flex justify-content-sm-center justify-content-md-start justify-content-lg-center justify-content-xl-end mb-2">
 						<div class="float-md-end me-2"> <!-- Added 'me-2' class for right margin -->
-							<a href="addcart/<%=item.Product._id%>" class="btn btn-light border text-success icon-hover-success">Add To Cart</a>
+							
+
+							<form action="/addtocart/<%= item.Product._id %>" method="post">
+								<input type="hidden" name="productId" value="<%= item.Product._id %>">
+								<input type="hidden" name="quantity" value="1">
+								<button type="submit" class="btn btn-light border text-success icon-hover-success">
+									Add to Cart
+								</button>
+							</form>
+							
+
 						</div>
 						<div class="float-md-end">
 							<a href="/remove/<%=item.Product._id%>" class="btn btn-light border text-danger icon-hover-danger">Remove</a>

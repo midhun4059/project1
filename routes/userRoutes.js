@@ -6,10 +6,13 @@ const cartController=require('../controller/cartController');
 const productController=require('../controller/productController');
 const orderController=require('../controller/orderController');
 const wishlistController = require('../controller/wishlistController');
+const walletController=require('../controller/walletController')
 
 const dotenv=require('dotenv').config()
 
-const session=require("express-session")
+const session=require("express-session");
+const { use } = require('moongose/routes');
+const walletcollection = require('../model/walletModel');
 //session handling
 userRoutes.use(session({
   secret:"wdgfsathgfdsfsdsd",
@@ -62,6 +65,8 @@ userRoutes.get('/login',userController.loginLoad);
 userRoutes.get('/signup',userController.signupLoad);
 userRoutes.get('/',userController.homeLoad);
 
+
+
 userRoutes.get('/productsonly',userController.productonly);
 userRoutes.post('/sortproducts',userController.sortedProducts);
 
@@ -92,6 +97,7 @@ userRoutes.post('/resetpassword',userController.checkpassword);
 
 userRoutes.get('/showorders',userController.showorders);
 userRoutes.get('/cancelOrder/:id',userController.cancelOrder);
+userRoutes.get('/returnOrder/:id',orderController.returnOrder)
 userRoutes.post('/logout',userController.userLogout);
 
 
@@ -110,6 +116,9 @@ userRoutes.post('/orderconfirm',cartController.confirmLoad)
 userRoutes.post('/razorpay',orderController.razorpayLoad);
 
 userRoutes.post('/applycoupon',userController.applyCoupon);
+
+userRoutes.get('/profile',walletController.walletLoad)
+
 
 
 

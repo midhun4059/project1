@@ -183,7 +183,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                   <td style="color: black;"><%= row.price %></td>
                                   <td style="color: black;"><%= row.category %></td>
 
-                                  <td > <img src="/images/<%= row.image %>" width="100px" height="100px" alt="/images/<%= row.image %>"></td>
+                                  <td > <img src="/images/<%= row.image[0] %>" width="100px" height="100px" alt="/images/<%= row.image %>"></td>
 
                                   <input type="hidden" name="currentImage" value="<%= row.image %>">
                                   

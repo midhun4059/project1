@@ -5,6 +5,10 @@ const generateOtp=require("generate-otp");
 const users = require('../model/userModels');
 const productcollection = require('../model/productModels');
 const couponcollection=require('../model/couponModel');
+const walletcollection=require('../model/walletModel')
+
+
+
 // const fetch=require('node-fetch');
 
 
@@ -39,12 +43,34 @@ catch(error){
 }
 }
 
+const PAGE_SIZE = 4;
 const homeLoad=async(req,res)=>{
   if(req.session.user){
-    const products=await productcollection.find()
+
+    const currentPage = parseInt(req.query.page) || 1;
+    const skip = (currentPage - 1) * PAGE_SIZE;
+
+    const products = await productcollection
+        .find()
+        .skip(skip)
+        .limit(PAGE_SIZE)
+        .exec(); // Use .exec() to execute the query
+
+
+    const user = await users.findOne({ email: req.session.user });
+    
+    const wallet = await walletcollection.findOne({ customerid: user._id });
+    if (!wallet) {
+      const newwallet = new walletcollection({
+          customerid: user._id ,
+      });
+     
+      await newwallet.save();
+  }
+  
     
     
-    res.render('home',{products})
+    res.render('home',{products,currentPage})
   }else{
     res.redirect('/login')
   }
@@ -256,8 +282,15 @@ const profile=async (req,res)=>{
     console.log(user);
 
     const data=await users.findOne({email:user});
-    if(user){
-      res.render('profile',{data});
+    
+
+    const wallet = await walletcollection.findOne({customerid: data._id });
+    console.log('11:',wallet);
+        
+    if(user && wallet){
+      var walletBalance = wallet.Amount;
+
+      res.render('profile',{data,walletBalance});
       console.log("data",data);
     }
     else{
@@ -533,7 +566,7 @@ const showorders=async(req,res)=>{
 try{
   const email=req.session.user;
   const user=await users.findOne({email:email}).populate('orders.product');
-  console.log('640:',user.orders);
+  
   if(user){
    res.render('showorders',{user,orderItems:user.orders})
 
@@ -548,18 +581,49 @@ try{
 
 const cancelOrder=async(req,res)=>{
   try{
-    const orderId=req.params.id;
-    const order=await users.findOneAndUpdate({
-      'orders._id':orderId},
-      {$set:{'orders.$.status':'Cancelled'}},
-      {new:true});
+      const orderId = req.params.id;
+      const userId = req.session.user;
+      const user=await users.findOne({email:userId}).populate('orders.product');
+      const orderDetails=await users.findOne({'orders._id':orderId}).populate('orders.product')
+      const order = orderDetails.orders.find(order => order._id == orderId);
+     
+      if (order.paymentmethod === 'Online Payment'|| order.paymentmethod==='Wallet' && (order.status === 'Pending' || order.status === 'Shipped' || order.status === 'Out for Delivery')) {
+          const wallet = await walletcollection.findOneAndUpdate(
+              { customerid: user._id },
+              { $inc: {Amount: (order.Amount)},
+              $push:{
+                  transactions:{
+                      type:'Refund',
+                      amount:(order.Amount),
+                  },
+              },
+          },
+              { new: true }
+          )
+      };
 
+      for (const order of user.orders) {
+          const product = order.product;
+          const orderedQuantity = order.quantity;
+          product.stock += orderedQuantity;
+          await product.save();
+      }
+             
+      
+      const updateorder = await users.findOneAndUpdate(
+          { 'orders._id': orderId }, 
+          { $set: {'orders.$.status': 'Cancelled' } }, 
+          { new: true } 
+      );
+     
       res.redirect('/showorders')
-  }catch(error){
-    console.error(error);
-  }
-}
+      
 
+  }catch (error) {
+      console.error('Error loading :', error);
+      res.status(500).send('Internal Server Error');
+    }
+}
 
 
 
@@ -587,15 +651,9 @@ const applyCoupon =async(req,res)=>{
         return res.json({ success: false, message: "Invalid coupon code" });
       }
       
-      // coupon is used by user or not
+   
       const user = await users.findOne({email:email});
-      // if (user.redeemedCoupons.some((redeemedCoupon) => redeemedCoupon.couponCode === couponCode)) {
-      //     return res.json({ success: false, message: "You have already used this coupon" });
-      // }
-  
-      // if (!user) {
-      //   return res.json({ success: false, message: "User not found" });
-      // }
+ 
       if (totalPrice <= minimumAmount) {
           return res.json({ success: false, message:` Minimum purchase of ${minimumAmount} is required to claim the coupon `});
       }

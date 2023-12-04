@@ -16,6 +16,22 @@
     z-index: 99;
 }
 
+/* cartfor wishlist */
+
+/* Define a custom class for the "Add to Cart" button */
+.btn-add-to-cart {
+  /* Add styles similar to the "Remove" button */
+  background-color: #ffffff; /* Background color */
+  border: 1px solid #dc3545; /* Border color */
+  color: #28a745; /* Text color */
+}
+
+/* Hover effect for the "Add to Cart" button */
+.btn-add-to-cart:hover {
+  background-color: #28a745; /* Hover background color */
+  border-color: #28a745; /* Hover border color */
+  color: #ffffff; /* Hover text color */
+}
 
 
 /* Overlay closing cross */
@@ -82,6 +98,13 @@ button#trigger-overlay {
 	border-radius:0;
 }
 
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px; /* Adjust the margin value as needed */
+}
+
+
 
 .wishlist-button {
     background-color: #ffffff;
@@ -103,6 +126,66 @@ button#trigger-overlay {
     margin-right: 5px;
   }
 
+
+  /* Add this CSS to your stylesheets or in your HTML file */
+.pagination {
+    display: flex;
+    margin-top: 20px;
+    justify-content: center;
+    
+  }
+
+  /* image changing in product details */
+  .gallery-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .main-image {
+    text-align: center;
+  }
+  
+  .thumbnail-container {
+    margin-top: 10px;
+    text-align: center;
+  }
+  
+  .thumbnail-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .thumbnail-list li {
+    margin-right: 10px;
+    cursor: pointer;
+  }
+  
+  .thumbnail-list img {
+    width: 60px; /* Adjust the size of thumbnails as needed */
+    height: 40px;
+    border: 2px solid #ccc; /* Add a border to thumbnails */
+  }
+  
+  
+  .pagination a {
+    color: #000;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+  }
+  
+  .pagination a.active {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  .pagination a:hover:not(.active) {
+    background-color: #ddd;
+  }
+  
 /* Menu style *
 .overlay ul {
 	list-style: none;

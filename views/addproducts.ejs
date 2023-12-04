@@ -135,8 +135,10 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
       <div class="container">
           <div class="row justify-content-center">
             <div class="col-md-6">
-              <form action="/admin/Products/add" method="post" enctype="multipart/form-data">
-                <div class="form-group">
+             
+              <form action="/admin/products/add" method="post" enctype="multipart/form-data">
+
+                  <div class="form-group">
                   <label for="productName"><i class="fa fa-user"></i>Product Name</label>
                   <input type="text" name="name" class="form-control" id="productName" placeholder="Enter product name" required>
                 </div>
@@ -157,12 +159,15 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                       <option value="Power lens">Power lenses</option>
 
                   </select>
-              </div>
+               </div>
               
                 <div class="form-group">
                    
                   <label for="productImage"> <i class="fa-fa-image"></i>Image of product</label>
-                  <input type="file" name="image" multiple accept="image/*" class="form-control-file" id="productImage"  required>
+                  
+                  <input type="file" name="image" class="form-control-file" id="productImage" required multiple>
+
+
                   </div>
 
                 <div class="form-group">

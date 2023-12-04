@@ -85,44 +85,51 @@ const removeFromWishlist = async (req, res) => {
   }
 };
 
-const wishlistAddCart=async(req,res)=>{
-  const userId = req.session.user;
-  const productId = req.params.id;
 
-  try{
-      const product = await Product.findOne({ _id: productId });
-      const user = await User.findOne({ email: userId });
-      const existingProductIndex = user.cartitems.cart.findIndex(item => item.product.toString() === productId);
+    const wishlistAddCart = async (req, res) => {
+        const userId = req.session.user;
+        const productId = req.params.id;
+      
+        try {
+          const product = await Product.findOne({ _id: productId });
+          const user = await User.findOne({ email: userId });
+      
+          const existingProductIndex = user.cartitems.cart.findIndex(
+            (item) => item.product.toString() === productId
+          );
+      
           if (existingProductIndex !== -1) {
-          
-          user.cart[existingProductIndex].quantity += 1;
-              
-          }else{
-
-              productPrice=product.price
-              offerPrices=product.OfferPrice
-            
-          const newCart = {
-              product:productId,  
+            user.cart[existingProductIndex].quantity += 1;
+          } else {
+            const productPrice = product.price;
+            const offerPrices = product.OfferPrice;
+      
+            const newCart = {
+              product: productId,
               quantity: 1,
-              totalPrice:offerPrices > 0 ? offerPrices : productPrice,
-          };
-          user.cart.push(newCart)
+              totalPrice: offerPrices > 0 ? offerPrices : productPrice,
+            };
+      
+            user.cart.push(newCart);
           }
-          await user.save();
-
-          const wishlistItem = await Wishlist.findOneAndRemove({
-              UserId: user._id,
-              'Product': productId
+      
+          // Remove the product from the wishlist
+          await Wishlist.findOneAndRemove({
+            UserId: user._id,
+            Product: productId, // Corrected property name
           });
-          res.redirect('/user/wishlist');
-
-  }catch(error){
-      console.log("Error Adding Product To Cart From Wishlist",error)
-
-  }
-
-}
+      
+          await user.save();
+      
+          console.log('Product added to cart:', user._id, productId);
+          res.redirect('/wishlist');
+        } catch (error) {
+          console.log('Error Adding Product To Cart From Wishlist', error);
+          // Handle the error and send an appropriate response to the user
+          res.status(500).send('Internal Server Error');
+        }
+      };
+      
 
 // Export the controllers
 module.exports = {

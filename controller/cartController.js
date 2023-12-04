@@ -1,6 +1,7 @@
 const { users } = require("moongose/models");
 const productCollection = require("../model/productModels");
 const User = require('../model/userModels');
+const walletcollection=require('../model/walletModel')
 
 
 const cart = async (req, res) => {
@@ -67,7 +68,8 @@ const useremail = req.session.user;
         } else {
           const cartitemspush={
             productId:productId,
-            quantity:1
+            quantity:1,
+            totalPrice:product.price
           }// If the product is not in the cart, add it
           user.cartitems.push({
             cart: [cartitemspush]
@@ -232,13 +234,22 @@ user.totalPrice=totalPrice
 
 const checkoutLoad=  async (req, res) => {
   try {
+
+    console.log('237:',req.body);
     const email = req.session.user;
     const user = await User.findOne({ email: email }).populate('cartitems.cart.productId');
-
+    console.log('238:',user);
+    const wallet=await walletcollection.findOne({customerid:user._id})
+    console.log('240',wallet);
+    if (wallet && wallet.Amount !== undefined) {
+        console.log("Amount:", wallet.Amount);
+    } else {
+        console.log("Wallet or Amount not found");
+    }
 
 
     if (user && user.cartitems ) {
-      res.render('checkout', { cartItems: user.cartitems, user });
+      res.render('checkout', { cartItems: user.cartitems, user ,wallet:wallet.Amount});
     } else {
       res.redirect('/home');
     }
@@ -253,6 +264,9 @@ const confirmLoad = async (req, res) => {
     const email = req.session.user;
     const user = await User.findOne({ email: email });
     console.log('275',req.body);
+
+    if(req.body.method==='Online Payment'){
+
     // Check if user exists and has cartitems with at least one item
     if (user && user.cartitems && user.cartitems.length > 0) {
     
@@ -270,8 +284,11 @@ const confirmLoad = async (req, res) => {
               product: item.productId, // Assuming productId is the correct property
               productName: item.productName,
               quantity: item.quantity,
-              totalPrice: item.totalPrice,
-              address:selectedAddress
+              Amount: item.totalPrice,
+              address:selectedAddress,
+              paymentmethod:req.body.method,
+
+
               // Add other fields as needed
             };
 
@@ -298,7 +315,163 @@ const confirmLoad = async (req, res) => {
 
 
       res.render('orderconfirm');
-    } else {
+    }
+  }else if(req.body.method==='Wallet'){
+
+    if (user && user.cartitems && user.cartitems.length > 0) {
+    
+      // Loop through each entry in cartitems
+      for (const cartItemEntry of user.cartitems) {
+        // Check if the entry has a valid 'cart' property and it is an array
+        if (cartItemEntry.cart && Array.isArray(cartItemEntry.cart)) {
+          const cart = cartItemEntry.cart;
+          const selectedAddress=await User.findOne({email:email},{address:{$elemMatch:{ _id:req.body.selectedAddress}}});
+
+
+
+          for (const item of cart) {
+            const orderItem = {
+              product: item.productId, // Assuming productId is the correct property
+              productName: item.productName,
+              quantity: item.quantity,
+              Amount: item.totalPrice,
+              address:selectedAddress,
+              paymentmethod:req.body.method,
+
+
+              // Add other fields as needed
+            };
+
+            const conf= await walletcollection.findOneAndUpdate(
+              { customerid: user._id },
+              { $inc: {Amount:(-(item.totalPrice*item.quantity))},
+              $push:{
+                  transactions:{
+                      type:'debit',
+                      amount:((item.totalPrice*item.quantity)),
+                  },
+              },
+          },
+              { new: true });
+
+            user.orders.push(orderItem);
+          }
+
+          // Assuming 'cart' is the correct property
+          cartItemEntry.cart = [];
+        }
+      }
+      if(user.cartitems){
+        user.cartitems=[];
+      }
+
+      // Save the user object with emptied carts
+      await user.save();
+      console.log('User saved successfully after emptying carts.');
+
+      // Remove the cart items from the database
+      const updateResult = await User.updateOne(
+        { email: email },
+        { $set: { 'cartitems.[].cart': [] } }
+      );
+
+      
+
+    
+
+
+      res.render('orderconfirm');
+    }
+
+  }else if(req.body.method==='Cash On Delivery'){
+
+    if (user && user.cartitems && user.cartitems.length > 0) {
+    
+      // Loop through each entry in cartitems
+      for (const cartItemEntry of user.cartitems) {
+        // Check if the entry has a valid 'cart' property and it is an array
+        if (cartItemEntry.cart && Array.isArray(cartItemEntry.cart)) {
+          const cart = cartItemEntry.cart;
+          const selectedAddress=await User.findOne({email:email},{address:{$elemMatch:{ _id:req.body.selectedAddress}}});
+
+
+
+          for (const item of cart) {
+            const orderItem = {
+              product: item.productId, // Assuming productId is the correct property
+              productName: item.productName,
+              quantity: item.quantity,
+              Amount: item.totalPrice,
+              address:selectedAddress,
+              paymentmethod:req.body.method,
+
+
+              // Add other fields as needed
+            };
+
+            user.orders.push(orderItem);
+          }
+
+          // Assuming 'cart' is the correct property
+          cartItemEntry.cart = [];
+        }
+      }
+      if(user.cartitems){
+        user.cartitems=[];
+      }
+
+      // Save the user object with emptied carts
+      await user.save();
+      console.log('User saved successfully after emptying carts.');
+
+      // Remove the cart items from the database
+      const updateResult = await User.updateOne(
+        { email: email },
+        { $set: { 'cartitems.[].cart': [] } }
+      );
+
+
+      res.render('orderconfirm');
+    }
+
+  }
+    
+  
+
+    
+    // else if(method=='Wallet'){
+    //   // const total=req.body.totalAmount
+    //   const user = await User.findOne({ email: req.session.user});
+    //   const wallet=await walletcollection.findOne({customerid:user._id}) 
+    //   const selectedAddressIndex = req.body.selectedAddress;
+    //       for (const item of user.cart) {
+    //           const orderItem = {
+    //               product: item.product,
+    //               productName: item.productName,
+    //               quantity: item.quantity,
+    //               paymentmethod: method,
+    //               totalPrice:(item.totalPrice*item.quantity),
+    //               addressId:selectedAddressIndex,
+                  
+    //           };
+    //           await walletcollection.findOneAndUpdate(
+    //               { customerid: user._id },
+    //               { $inc: {Amount:(-(item.totalPrice*item.quantity))},
+    //               $push:{
+    //                   transactions:{
+    //                       type:'debit',
+    //                       amount:((item.totalPrice*item.quantity)),
+    //                   },
+    //               },
+    //           },
+    //               { new: true });
+
+    //           user.orders.push(orderItem);
+    //       }}
+    
+    
+    
+    else {
       res.redirect('/cart');
     }
   } catch (error) {
@@ -317,4 +490,4 @@ module.exports = { cart,
   addQuantity,
   subQuantity,
   checkoutLoad,
-  confirmLoad};
+  confirmLoad}

@@ -13,7 +13,15 @@ const cartItemSchema=new mongoose.Schema({
     type:Number,
     required:true,
     default:1,
-  }
+    },
+    totalPrice:{
+      type:Number,
+      default:0,
+    },
+    paymentmethod:{
+      type:String,
+      default:" ",
+    }
 }]
 })
 
@@ -91,6 +99,11 @@ paymentmethod:{
 redeemedCoupon:{
 type:String,
 default:''
+},
+
+Amount:{
+  type:Number,
+  default:''
 },
 orderDate: {
     type: Date,

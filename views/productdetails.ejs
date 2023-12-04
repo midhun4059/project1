@@ -141,24 +141,24 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				</button>
 				<div class="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul class="navbar-nav nav-mega mx-auto">
-						<li class="nav-item">
-							<a class="nav-link ml-lg-0" href="index.html">Home
-								<span class="sr-only">(current)</span>
+						<li class="nav-item ">
+							<a class="nav-link ml-lg-0" href="/productsonly">Products
+								
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="about.html">About</a>
+							<a class="nav-link" href="/wishlist">Wishlist</a>
 						</li>
-						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
-							    aria-expanded="false">
-								Features
-							</a>
-						
-						</li>
-				
 					
+						
+						
+						<li class="nav-item">
+							<a class="nav-link" href="/profile">Profile</a>
+						</li>
 					</ul>
+
+
+				
 
 				</div>
 			</nav>
@@ -188,28 +188,21 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				<div class="inner-sec-shop pt-lg-4 pt-3">
 					<div class="row">
 						<div class="col-lg-4 single-right-left">
-							<div class="grid images_3_of_2">
-									<div class="flexslider1">
-											<ul class="slides">
-													<li data-thumb="/images/<%= products.image[0] %>">
-															<div class="thumb-image"> 
-																	<img src="/images/<%= products.image[0] %>"  class="img-fluid" alt=" " data-zoom-image="/images/<%= products.image %>">
-															</div>
-													</li>
-													 <li data-thumb="/images/<%= products.image[1] %>">
-															<div class="thumb-image"> 
-																	<img src="/images/<%= products.image[1] %>" class="img-fluid static-image" alt=" ">
-															</div>
-													</li>
-													<li data-thumb="/images/<%= products.image[2] %>">
-															<div class="thumb-image"> 
-																	<img src="/images/<%= products.image[2] %>" class="img-fluid static-image" alt=" ">
-															</div>
-													</li>
-											</ul>
-											<div class="clearfix"></div>
-									</div>
+							<div class="gallery-container">
+								<div class="main-image">
+									<img src="/images/<%= products.image[0] %>" class="img-fluid" alt="/images/<%= products.image[2] %>" id="mainImage">
+								</div>
+								<div class="thumbnail-container">
+									<ul class="thumbnail-list">
+										<% for (let i = 0; i <3; i++) { %>
+											<li>
+												<img src="/images/<%= products.image[i] %>" class="img-fluid" alt="/images/<%= products.image[i]%> ?>" onclick="changeImage('<%= products.image[i] %>')">
+											</li>
+										<% } %>
+									</ul>
+								</div>
 							</div>
+							
 					</div>
 								<div class="col-lg-8 single-right-left simpleCart_shelfItem">
 									<h3><%= products.name %></h3>
@@ -224,15 +217,15 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 									</p>
 								<div class="color-quality">
 									<div class="googles single-item singlepage">
-   <form action="/addtocart/<%= products._id %>" method="post">
+      <form action="/addtocart/<%= products._id %>" method="post">
       <input type="hidden" name="productId" value="<%= products._id %>">
       <input type="hidden" name="quantity" value="1"> <!-- Assuming you want to add one quantity by default -->
 			<button type="submit" class="googles-cart pgoogles-cart">
          Add to Cart
       </button>
-   </form>
-</div>
-</div>
+       </form>
+      </div>
+      </div>
                     <div class="color-quality">
 													<div class="googles single-item singlepage">
 														<form action="/addtowish/<%= products._id %>" method="post">
@@ -466,6 +459,16 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 		<script src="path/to/jquery.flexslider-min.js"></script>
 		<script src="path/to/jquery.elevatezoom.js"></script>
 		
+<!-- image changing -->{
+	<script>
+
+function changeImage(imagePath) {
+  document.getElementById('mainImage').src = "/images/" + imagePath;
+}
+
+	</script>
+}
+
 		<script>
 				$(document).ready(function () {
 						$('.flexslider1').flexslider({

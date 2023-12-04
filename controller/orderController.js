@@ -30,6 +30,44 @@ const razorpayLoad = async (req, res) => {
   }
 };
 
+
+const returnOrder=async(req,res)=>{
+  try{
+      const orderId = req.params.id;
+      const userId = req.session.user;
+      const user=await collection.findOne({email:userId}).populate('orders.product');
+      const orderDetails=await collection.findOne({'orders._id':orderId}).populate('orders.product')
+      const order = orderDetails.orders.find(order => order._id == orderId);
+
+      if ((order.paymentmethod === 'Online Payment' || order.paymentmethod === 'Cash On Delivery') && order.status === 'Delivered') {
+          const wallet = await walletcollection.findOneAndUpdate(
+              { customerid: user._id },
+              { $inc: {Amount: (order.totalPrice) } },
+              { new: true }
+          ) 
+      }
+
+      for (const order of user.orders) {
+          const product = order.product;
+          const orderedQuantity = order.quantity;
+          product.stock += orderedQuantity;
+          await product.save();
+      }
+         
+
+      const updateorder = await Users.findOneAndUpdate(
+          { 'orders._id': orderId }, 
+          { $set: {'orders.$.status': 'Returned' } }, 
+          { new: true } 
+      );
+      res.redirect('/user/orders')
+
+  }catch(error){
+      console.log("Error",error)
+  }
+}
+
 module.exports = {
   razorpayLoad,
+  returnOrder
 };

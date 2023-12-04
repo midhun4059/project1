@@ -1,25 +1,26 @@
 const express=require("express");
 const adminRoutes=express();
+const multer=require('multer')
 const path=require("path");
 const session=require("express-session")
 const adminController=require("../controller/adminController")
 const productController=require('../controller/productController');
-const fileUpload = require('express-fileupload');
+// const fileUpload = require('express-fileupload');
 
-const multer=require('multer')
 
-const storage=multer.diskStorage({
-    destination:function(req,file,cb){
-        cb(null,path.join(__dirname,'../public/images'))
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, path.join(__dirname, '../public/images'));
     },
-    filename:function(req,file,cb){
-        const name=Date.now()+'-'+file.originalname;
-        cb(null,name)
+    filename: function (req, file, cb) {
+        const name = Date.now() + '-' + file.originalname;
+        cb(null, name);
     }
-})
-const upload = multer({storage:storage});
+});
+const upload = multer({ storage: storage });
 
-adminRoutes.use(fileUpload());
+
+// adminRoutes.use(fileUpload());
 
 adminRoutes.use(express.urlencoded({extended:true}))
 adminRoutes.use(express.json())
@@ -62,9 +63,9 @@ adminRoutes.post("/admin/couponunblock/:id",adminController.couponUnblock);
 
 adminRoutes.get('/admin/products',productController.productsLoad)
 adminRoutes.get('/admin/products/add',productController.addProductLoad)
-adminRoutes.post('/admin/products/add',upload.array('image'),productController.insertProducts)
+adminRoutes.post('/admin/products/add',upload.array('image',3),productController.insertProducts)
 adminRoutes.get('/admin/products/delete/:id',productController.deleteProduct)
 adminRoutes.get('/admin/products/edit/:id',productController.editProductLoad)
-adminRoutes.post('/admin/products/update/:id',upload.array('image'),productController.updateProduct)
+adminRoutes.post('/admin/products/update/:id',upload.array('image',3),productController.updateProduct)
 
 module.exports=adminRoutes;
