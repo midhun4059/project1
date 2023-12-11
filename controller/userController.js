@@ -6,14 +6,16 @@ const users = require('../model/userModels');
 const productcollection = require('../model/productModels');
 const couponcollection=require('../model/couponModel');
 const walletcollection=require('../model/walletModel')
+const bcrypt = require('bcrypt');
+const { name } = require('ejs');
+const bannercollection = require('../model/bannerModel');
+
 
 
 
 // const fetch=require('node-fetch');
 
 
-const bcrypt = require('bcrypt');
-const { name } = require('ejs');
 
 
 const loginLoad=async(req,res)=>{
@@ -46,6 +48,7 @@ catch(error){
 const PAGE_SIZE = 4;
 const homeLoad=async(req,res)=>{
   if(req.session.user){
+    const banner=await bannercollection.find();
 
     const currentPage = parseInt(req.query.page) || 1;
     const skip = (currentPage - 1) * PAGE_SIZE;
@@ -70,7 +73,7 @@ const homeLoad=async(req,res)=>{
   
     
     
-    res.render('home',{products,currentPage})
+    res.render('home',{products,currentPage,banner})
   }else{
     res.redirect('/login')
   }
@@ -163,14 +166,14 @@ req.session.username=req.body.username
   })
  
   
-  setTimeout(async () => {
-  await users.findOneAndUpdate(
-        { email:req.body.email},
-        { $unset: { OTP: 1 } },
-        {new:true}
-    );
-    console.log("otp  unset sucessfull")
-}, 30000);
+//   setTimeout(async () => {
+//   await users.findOneAndUpdate(
+//         { email:req.body.email},
+//         { $unset: { OTP: 1 } },
+//         {new:true}
+//     );
+//     console.log("otp  unset sucessfull")
+// }, 30000);
  res.redirect('/otp');
 
 
@@ -562,69 +565,6 @@ res.redirect('/profile');
 
 
 
-const showorders=async(req,res)=>{
-try{
-  const email=req.session.user;
-  const user=await users.findOne({email:email}).populate('orders.product');
-  
-  if(user){
-   res.render('showorders',{user,orderItems:user.orders})
-
-  }else{
-   res.redirect('/checkout');
-  }
- 
-}catch(error){
-  console.error(error);
-}
-}
-
-const cancelOrder=async(req,res)=>{
-  try{
-      const orderId = req.params.id;
-      const userId = req.session.user;
-      const user=await users.findOne({email:userId}).populate('orders.product');
-      const orderDetails=await users.findOne({'orders._id':orderId}).populate('orders.product')
-      const order = orderDetails.orders.find(order => order._id == orderId);
-     
-      if (order.paymentmethod === 'Online Payment'|| order.paymentmethod==='Wallet' && (order.status === 'Pending' || order.status === 'Shipped' || order.status === 'Out for Delivery')) {
-          const wallet = await walletcollection.findOneAndUpdate(
-              { customerid: user._id },
-              { $inc: {Amount: (order.Amount)},
-              $push:{
-                  transactions:{
-                      type:'Refund',
-                      amount:(order.Amount),
-                  },
-              },
-          },
-              { new: true }
-          )
-      };
-
-      for (const order of user.orders) {
-          const product = order.product;
-          const orderedQuantity = order.quantity;
-          product.stock += orderedQuantity;
-          await product.save();
-      }
-             
-      
-      const updateorder = await users.findOneAndUpdate(
-          { 'orders._id': orderId }, 
-          { $set: {'orders.$.status': 'Cancelled' } }, 
-          { new: true } 
-      );
-     
-      res.redirect('/showorders')
-      
-
-  }catch (error) {
-      console.error('Error loading :', error);
-      res.status(500).send('Internal Server Error');
-    }
-}
-
 
 
 // Apply Coupon
@@ -632,15 +572,9 @@ const cancelOrder=async(req,res)=>{
 
 const applyCoupon =async(req,res)=>{
   const email=req.session.user
- 
-  try{
-      const couponCode = req.body.code;
-
-   
+ try{
+    const couponCode = req.body.code;
       const totalPrice=req.body.total;
-
-      console.log('597:',couponCode,totalPrice);
-
       const coupon = await couponcollection .findOne({ couponCode });
        const minimumAmount=coupon.minimumpurchase;
        if (!coupon=== coupon.couponCode) {
@@ -676,41 +610,7 @@ const applyCoupon =async(req,res)=>{
 }
 
 
-const productonly=async(req,res)=>{
-  if(req.session.user){
-    const products=await productcollection.find()
-    res.render('productsonly',{products})
-  }else{
-    res.redirect('/login')
-  }
-  }
 
-  const sortedProducts = async (req, res) =>{
-  try {
-    if (req.session.user) {
-      {
-        const sortOrder = req.body.sort;
-        const products=await productcollection.find()
-    
-        // Your existing logic to fetch and filter products from the database
-    
-        // Sort the products based on the selected order
-        if (sortOrder === 'asc') {
-            products.sort((a, b) => a.price - b.price);
-        } else if (sortOrder === 'desc') {
-            products.sort((a, b) => b.price - a.price);
-        }
-    
-        // Render the sorted products and send them back to the client
-        res.render('productsonly', { products });
-    }
-  }
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Internal Server Error');
-  }
-}
-  
 
 
 
@@ -737,30 +637,28 @@ module.exports={
  insertUser,
   loginLoad,
   homeLoad,
-  userLogout,
   signupLoad,
+  userLogout,
   
-  profile,
   addAddressToUser,
   editAddress,
   addaddress,
   updateAddress,
+  editaddresscheckout,
+  updateAddresscheckout,
+  addaddresscheckout,
+  addAddressToCheckout ,
+  
+  profile,
   editprofile,
   updateprofile,
   resetpassLoad,
   checkpassword,
-editaddresscheckout,
-updateAddresscheckout,
-addaddresscheckout,
-addAddressToCheckout ,
-showorders,
-cancelOrder,
+
+
 
 applyCoupon,
 
-productonly,
-
-sortedProducts,
 
 
 

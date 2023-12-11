@@ -98,6 +98,21 @@ button#trigger-overlay {
 	border-radius:0;
 }
 
+
+  .zoom-container {
+    overflow: hidden;
+    position: relative;
+  }
+
+  .zoom-image {
+    transition: transform 0.5s ease;
+  }
+
+  .zoom-image:hover {
+    transform: scale(1.5); /* Adjust the scale factor for the desired zoom level */
+  }
+
+
 .button-container {
   display: flex;
   justify-content: space-between;

@@ -175,7 +175,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                             </thead>
                             <tbody>
                                 <% user.forEach((user, index) => { %>
-                                    <% user.orders.forEach((order, orderIndex) => { %>
+                                    <% user.orders.slice().reverse().forEach((order, orderIndex) => { %>
                                         <tr class='align-middle'>
                                             <td style="color: black;"><%= index + 1 %></td>
                                             <td style="color: black;"><%= user.username %></td>

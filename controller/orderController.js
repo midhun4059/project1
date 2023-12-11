@@ -1,6 +1,11 @@
 const productcollection = require("../model/productModels");
 const Users = require("../model/userModels");
 const Razorpay = require("razorpay");
+
+const users=require('../model/userModels')
+const couponcollection=require('../model/couponModel');
+const walletcollection=require('../model/walletModel')
+
 const dotenv = require("dotenv").config();
 var instance = new Razorpay({
   key_id:"rzp_test_n0MSjxnGUDs0pC",
@@ -35,14 +40,23 @@ const returnOrder=async(req,res)=>{
   try{
       const orderId = req.params.id;
       const userId = req.session.user;
-      const user=await collection.findOne({email:userId}).populate('orders.product');
-      const orderDetails=await collection.findOne({'orders._id':orderId}).populate('orders.product')
+      const user=await users.findOne({email:userId}).populate('orders.product');
+      const orderDetails=await users.findOne({'orders._id':orderId}).populate('orders.product');
       const order = orderDetails.orders.find(order => order._id == orderId);
 
-      if ((order.paymentmethod === 'Online Payment' || order.paymentmethod === 'Cash On Delivery') && order.status === 'Delivered') {
+      if (order.paymentmethod === 'Online Payment' || order.paymentmethod === 'Cash On Delivery' && (order.status === 'Delivered')) {
           const wallet = await walletcollection.findOneAndUpdate(
               { customerid: user._id },
-              { $inc: {Amount: (order.totalPrice) } },
+              { $inc: {Amount: (order.Amount) } ,
+              $push:{
+                transactions:{
+                    type:'Refund',
+                    amount:(order.Amount),
+                },
+            },
+            
+            
+            },
               { new: true }
           ) 
       }
@@ -55,19 +69,87 @@ const returnOrder=async(req,res)=>{
       }
          
 
-      const updateorder = await Users.findOneAndUpdate(
+       await users.findOneAndUpdate(
           { 'orders._id': orderId }, 
           { $set: {'orders.$.status': 'Returned' } }, 
           { new: true } 
       );
-      res.redirect('/user/orders')
+      res.redirect('/showorders')
 
   }catch(error){
       console.log("Error",error)
   }
 }
 
+
+
+const showorders=async(req,res)=>{
+  try{
+    const email=req.session.user;
+    const user=await users.findOne({email:email}).populate('orders.product');
+    
+    if(user){
+     res.render('showorders',{user,orderItems:user.orders})
+  
+    }else{
+     res.redirect('/checkout');
+    }
+   
+  }catch(error){
+    console.error(error);
+  }
+  }
+  
+  const cancelOrder=async(req,res)=>{
+    try{
+        const orderId = req.params.id;
+        const userId = req.session.user;
+        const user=await users.findOne({email:userId}).populate('orders.product');
+        const orderDetails=await users.findOne({'orders._id':orderId}).populate('orders.product')
+        const order = orderDetails.orders.find(order => order._id == orderId);
+       
+        if (order.paymentmethod === 'Online Payment'|| order.paymentmethod==='Wallet' && (order.status === 'Pending' || order.status === 'Shipped' || order.status === 'Out for Delivery')) {
+            const wallet = await walletcollection.findOneAndUpdate(
+                { customerid: user._id },
+                { $inc: {Amount: (order.Amount)},
+                $push:{
+                    transactions:{
+                        type:'Refund',
+                        amount:(order.Amount),
+                    },
+                },
+            },
+                { new: true }
+            )
+        };
+  
+        for (const order of user.orders) {
+            const product = order.product;
+            const orderedQuantity = order.quantity;
+            product.stock += orderedQuantity;
+            await product.save();
+        }
+               
+        
+        const updateorder = await users.findOneAndUpdate(
+            { 'orders._id': orderId }, 
+            { $set: {'orders.$.status': 'Cancelled' } }, 
+            { new: true } 
+        );
+       
+        res.redirect('/showorders')
+        
+  
+    }catch (error) {
+        console.error('Error loading :', error);
+        res.status(500).send('Internal Server Error');
+      }
+  }
+  
+
 module.exports = {
   razorpayLoad,
-  returnOrder
+  returnOrder,
+  showorders,
+cancelOrder,
 };

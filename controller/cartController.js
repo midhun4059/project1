@@ -2,6 +2,7 @@ const { users } = require("moongose/models");
 const productCollection = require("../model/productModels");
 const User = require('../model/userModels');
 const walletcollection=require('../model/walletModel')
+const Wishlist=require('../model/wishlistModels')
 
 
 const cart = async (req, res) => {
@@ -75,6 +76,14 @@ const useremail = req.session.user;
             cart: [cartitemspush]
           });
         }
+        if(user){
+          const wishlistItem = await Wishlist.findOneAndRemove({
+            UserId: user._id,
+            'Product': productId
+        });
+        
+        console.log('126:Wishlist', wishlistItem);
+        }
         // Save the updated user
         await user.save();
         res.redirect('/cart');
@@ -95,7 +104,7 @@ res.status(500).json({ error: 'Internal Server Error' });
 const deleteCart=async(req,res)=>{
   try{
 const id=req.params.id;
-console.log("id",id)
+
 const email=req.session.user;
 const data = await User.findOneAndUpdate(
   { email: email },
@@ -235,10 +244,10 @@ user.totalPrice=totalPrice
 const checkoutLoad=  async (req, res) => {
   try {
 
-    console.log('237:',req.body);
+   
     const email = req.session.user;
     const user = await User.findOne({ email: email }).populate('cartitems.cart.productId');
-    console.log('238:',user);
+    
     const wallet=await walletcollection.findOne({customerid:user._id})
     console.log('240',wallet);
     if (wallet && wallet.Amount !== undefined) {
@@ -263,7 +272,7 @@ const confirmLoad = async (req, res) => {
   try {
     const email = req.session.user;
     const user = await User.findOne({ email: email });
-    console.log('275',req.body);
+   
 
     if(req.body.method==='Online Payment'){
 
@@ -291,6 +300,12 @@ const confirmLoad = async (req, res) => {
 
               // Add other fields as needed
             };
+
+            await productCollection.findOneAndUpdate(
+              { _id: item.productId },
+              { $inc: { stock: -item.quantity } } // Decrease stock by the quantity purchased
+            );
+
 
             user.orders.push(orderItem);
           }
@@ -354,6 +369,12 @@ const confirmLoad = async (req, res) => {
           },
               { new: true });
 
+              await productCollection.findOneAndUpdate(
+                { _id: item.productId },
+                { $inc: { stock: -item.quantity } } // Decrease stock by the quantity purchased
+              );
+  
+
             user.orders.push(orderItem);
           }
 
@@ -409,6 +430,12 @@ const confirmLoad = async (req, res) => {
               // Add other fields as needed
             };
 
+            await productCollection.findOneAndUpdate(
+              { _id: item.productId },
+              { $inc: { stock: -item.quantity } } // Decrease stock by the quantity purchased
+            );
+
+
             user.orders.push(orderItem);
           }
 
@@ -439,35 +466,7 @@ const confirmLoad = async (req, res) => {
   
 
     
-    // else if(method=='Wallet'){
-    //   // const total=req.body.totalAmount
-    //   const user = await User.findOne({ email: req.session.user});
-    //   const wallet=await walletcollection.findOne({customerid:user._id}) 
-    //   const selectedAddressIndex = req.body.selectedAddress;
-    //       for (const item of user.cart) {
-    //           const orderItem = {
-    //               product: item.product,
-    //               productName: item.productName,
-    //               quantity: item.quantity,
-    //               paymentmethod: method,
-    //               totalPrice:(item.totalPrice*item.quantity),
-    //               addressId:selectedAddressIndex,
-                  
-    //           };
-    //           await walletcollection.findOneAndUpdate(
-    //               { customerid: user._id },
-    //               { $inc: {Amount:(-(item.totalPrice*item.quantity))},
-    //               $push:{
-    //                   transactions:{
-    //                       type:'debit',
-    //                       amount:((item.totalPrice*item.quantity)),
-    //                   },
-    //               },
-    //           },
-    //               { new: true });
-
-    //           user.orders.push(orderItem);
-    //       }}
+  
     
     
     

@@ -10,7 +10,7 @@ const walletLoad=async(req,res)=>{
       const userId = req.session.user;
      const user=await collection.findOne({email:userId}) 
       const wallet = await walletcollection.findOne({customerid: user._id });
-console.log('11:',wallet);
+
       if (wallet) {
           const walletBalance = wallet.Amount;
 

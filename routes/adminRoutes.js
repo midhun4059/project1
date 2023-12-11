@@ -5,6 +5,8 @@ const path=require("path");
 const session=require("express-session")
 const adminController=require("../controller/adminController")
 const productController=require('../controller/productController');
+const bannerController=require("../controller/bannerController")
+
 // const fileUpload = require('express-fileupload');
 
 
@@ -59,6 +61,12 @@ adminRoutes.get("/admin/add-coupon",adminController.addCoupon);
 adminRoutes.post("/admin/add-coupon",adminController.insertCoupon);
 adminRoutes.post("/admin/couponblock/:id",adminController.couponBlock);
 adminRoutes.post("/admin/couponunblock/:id",adminController.couponUnblock);
+
+adminRoutes.get('/bannerAdmin',bannerController.bannerLoad);
+adminRoutes.get('/admin/addbanner',bannerController.addbannerLoad);
+
+adminRoutes.post('/admin/addbanner',upload.array('image',3),bannerController.bannerAdd);
+
 
 
 adminRoutes.get('/admin/products',productController.productsLoad)

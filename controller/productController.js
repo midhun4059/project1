@@ -16,6 +16,8 @@ const storage=multer.diskStorage({
       cb(null,name)
   }
 })
+
+
 // const upload = multer({storage:storage});
 
 // const upload = multer();
@@ -123,7 +125,41 @@ catch(error){
 }
 
  
+const productonly=async(req,res)=>{
+  if(req.session.user){
+    const products=await productcollection.find()
+    res.render('productsonly',{products})
+  }else{
+    res.redirect('/login')
+  }
+  }
 
+  const sortedProducts = async (req, res) =>{
+  try {
+    if (req.session.user) {
+      {
+        const sortOrder = req.body.sort;
+        const products=await productcollection.find()
+    
+        // Your existing logic to fetch and filter products from the database
+    
+        // Sort the products based on the selected order
+        if (sortOrder === 'asc') {
+            products.sort((a, b) => a.price - b.price);
+        } else if (sortOrder === 'desc') {
+            products.sort((a, b) => b.price - a.price);
+        }
+    
+        // Render the sorted products and send them back to the client
+        res.render('productsonly', { products });
+    }
+  }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+}
+  
 
 
 
@@ -135,6 +171,9 @@ module.exports={productdetails,
   insertProducts,
   deleteProduct,
 
+  productonly,
 
+  sortedProducts,
+  
 
   updateProduct}

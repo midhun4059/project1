@@ -223,23 +223,24 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 											</td>
 											<td class="invert">
 												<div class="quantity">
-														<div class="quantity-select" style="display: flex; align-items: center;">
-																<!-- Decrement quantity form -->
-																<form method="post" action="/decrementQuantity/<%= user._id %>/<%= product.productId._id %>" onsubmit="updateTotal()">
-																		<button type="submit" class="btn btn-success" data-product-id="<%= product && product.productId %>">-</button>
-																</form>
-		
-																<!-- Display quantity -->
-																<div class="entry value" style="margin: 0 10px;">
-																		<span id="quantity-value-<%= product && product.productId %>"><%= product && product.quantity %></span>
-																</div>
-		
-																<!-- Increment quantity form -->
-																<form method="post" action="/incrementQuantity/<%= user._id %>/<%= product.productId._id %>" onsubmit="updateTotal()">
-            <button type="submit" class="btn btn-success" data-product-id="<%= product && product.productId %>">+</button>
-        </form>
-														</div>
-												</div>
+													<div class="quantity-select" style="display: flex; align-items: center;">
+															<!-- Decrement quantity form -->
+															<form method="post" action="/decrementQuantity/<%= user._id %>/<%= product.productId._id %>" onsubmit="updateTotal()">
+																	<button type="submit" class="btn btn-success" data-product-id="<%= product && product.productId %>" style="display: <%= product.quantity > 1 ? 'block' : 'none' %>;">-</button>
+															</form>
+											
+															<!-- Display quantity -->
+															<div class="entry value" style="margin: 0 10px;">
+																	<span id="quantity-value-<%= product && product.productId %>"><%= product && product.quantity %></span>
+															</div>
+											
+															<!-- Increment quantity form -->
+															<form method="post" action="/incrementQuantity/<%= user._id %>/<%= product.productId._id %>" onsubmit="updateTotal()">
+																	<button type="submit" class="btn btn-success" data-product-id="<%= product && product.productId %>" style="display: <%= product.quantity < product.productId.stock ? 'block' : 'none' %>;">+</button>
+															</form>
+													</div>
+											</div>
+											
 										</td>
 											<td class="invert">
 												<h4><%= product.productId.name %></h4>

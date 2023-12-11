@@ -177,24 +177,25 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 							<text class="h5">Price:₹<%= item.Product.price%></text>
 						</div>
 									</div>
-<div class="col-lg col-sm-6 d-flex justify-content-sm-center justify-content-md-start justify-content-lg-center justify-content-xl-end mb-2">
-						<div class="float-md-end me-2"> <!-- Added 'me-2' class for right margin -->
-							
-
-							<form action="/addtocart/<%= item.Product._id %>" method="post">
-								<input type="hidden" name="productId" value="<%= item.Product._id %>">
-								<input type="hidden" name="quantity" value="1">
-								<button type="submit" class="btn btn-light border text-success icon-hover-success">
-									Add to Cart
-								</button>
-							</form>
-							
-
-						</div>
-						<div class="float-md-end">
-							<a href="/remove/<%=item.Product._id%>" class="btn btn-light border text-danger icon-hover-danger">Remove</a>
-						</div>
-					</div>
+									<div class="col-lg col-sm-6 d-flex justify-content-sm-center justify-content-md-start justify-content-lg-center justify-content-xl-end mb-2">
+										<div class="float-md-end me-2">
+												<!-- Added 'me-2' class for right margin -->
+												<% if (item.Product.stock > 0) { %>
+														<form action="/addtocart/<%= item.Product._id %>" method="post">
+																<input type="hidden" name="productId" value="<%= item.Product._id %>">
+																<input type="hidden" name="quantity" value="1">
+																<button type="submit" class="btn btn-light border text-success icon-hover-success">
+																		Add to Cart
+																</button>
+														</form>
+												<% } else { %>
+														<p class="text-danger">Out of Stock</p>
+												<% } %>
+										</div>
+										<div class="float-md-end">
+												<a href="/remove/<%=item.Product._id%>" class="btn btn-light border text-danger icon-hover-danger">Remove</a>
+										</div>
+								</div>
 					
 								</div>
 					

@@ -1,15 +1,16 @@
-// Import necessary models and modules
-const User = require('../model/userModels'); // Assuming you have a User model
-const Product = require('../model/productModels'); // Assuming you have a Product model
-const Wishlist = require('../model/wishlistModels'); // Assuming you have a Wishlist model
+
+const User = require('../model/userModels');
+const Product = require('../model/productModels');
+const Wishlist = require('../model/wishlistModels'); 
+
 
 const wishLoad=async(req,res)=>{
   try{
       const users=req.session.user
-      console.log('us:',users);
+      
       const product=await Wishlist.find({}).populate('Product')
       const user=await User.findOne({email:users})
-      console.log('ur:',user);
+      
       if(user){
          res.render('wishlist',{product}) 
       }else{
@@ -31,7 +32,7 @@ const addToWish=async(req,res)=>{
 
       if(user&&product){
           const isExist=await Wishlist.findOne({UserId:user._id,Product:product._id})
-          console.log('isExist:',isExist);
+          
           if(!isExist){
               const data={
                   UserId:user._id,
@@ -73,8 +74,10 @@ const removeFromWishlist = async (req, res) => {
               'Product': productId
           });
           res.redirect('/wishlist');
-
-      } else {
+          
+      } 
+      
+      else {
           // User not found
           console.log('No such user found');
           res.redirect('/wishlist'); // Redirect to the wishlist page or handle accordingly
@@ -114,10 +117,14 @@ const removeFromWishlist = async (req, res) => {
           }
       
           // Remove the product from the wishlist
-          await Wishlist.findOneAndRemove({
-            UserId: user._id,
-            Product: productId, // Corrected property name
+          if(user){
+            const wishlistItem = await Wishlist.findOneAndRemove({
+              UserId: user._id,
+              'Product': productId
           });
+          
+          console.log('126:', wishlistItem);
+          }
       
           await user.save();
       

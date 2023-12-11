@@ -67,8 +67,8 @@ userRoutes.get('/',userController.homeLoad);
 
 
 
-userRoutes.get('/productsonly',userController.productonly);
-userRoutes.post('/sortproducts',userController.sortedProducts);
+userRoutes.get('/productsonly',productController.productonly);
+userRoutes.post('/sortproducts',productController.sortedProducts);
 
 userRoutes.post('/login',userController.loginVerify);
 userRoutes.post('/signup',userController.insertUser);
@@ -95,9 +95,9 @@ userRoutes.post('/editprofile',userController.updateprofile);
 userRoutes.get('/resetpassword',userController.resetpassLoad);
 userRoutes.post('/resetpassword',userController.checkpassword);  
 
-userRoutes.get('/showorders',userController.showorders);
-userRoutes.get('/cancelOrder/:id',userController.cancelOrder);
-userRoutes.get('/returnOrder/:id',orderController.returnOrder)
+userRoutes.get('/showorders',orderController.showorders);
+userRoutes.get('/cancelOrder/:id',orderController.cancelOrder);
+userRoutes.get('/returnOrder/:id',orderController.returnOrder);
 userRoutes.post('/logout',userController.userLogout);
 
 
@@ -111,21 +111,21 @@ userRoutes.get('/deletecart/:id',cartController.deleteCart);
 userRoutes.post('/incrementQuantity/:userId/:productId',cartController.addQuantity);
 userRoutes.post('/decrementQuantity/:userId/:productId',cartController.subQuantity);
 userRoutes.get('/checkout',cartController.checkoutLoad);
-userRoutes.post('/orderconfirm',cartController.confirmLoad)
+userRoutes.post('/orderconfirm',cartController.confirmLoad);
 
 userRoutes.post('/razorpay',orderController.razorpayLoad);
 
 userRoutes.post('/applycoupon',userController.applyCoupon);
 
-userRoutes.get('/profile',walletController.walletLoad)
+userRoutes.get('/profile',walletController.walletLoad);
 
 
 
 
-userRoutes.get('/wishlist',wishlistController.wishLoad)
-userRoutes.post('/addtowish/:id',wishlistController.addToWish)
-userRoutes.get('/remove/:id',wishlistController.removeFromWishlist)
-userRoutes.get('/addcart/:id',wishlistController.wishlistAddCart)
+userRoutes.get('/wishlist',wishlistController.wishLoad);
+userRoutes.post('/addtowish/:id',wishlistController.addToWish);
+userRoutes.get('/remove/:id',wishlistController.removeFromWishlist);
+userRoutes.get('/addcart/:id',wishlistController.wishlistAddCart);
 
 
 module.exports=userRoutes;
