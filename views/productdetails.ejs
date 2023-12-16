@@ -60,7 +60,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				</div>
 				<div class="col-md-6 logo-w3layouts text-center">
 					<h1 class="logo-w3layouts">
-						<a class="navbar-brand" href="index.html">
+						<a class="navbar-brand" href="/">
 							GLASSY </a>
 					</h1>
 				</div>
@@ -218,7 +218,10 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 							<p><span class="item_price"> Rs <%= products.price %></span></p>
 							<div class="single_page">
 									<h6>Description:</h6>
-									<p><%= products.description %>0</p>
+									<p><%= products.description %></p>
+									<h6>Category:</h6>
+									<p><%= products.category %></p>
+
 									<p class="para">
 											<% if (products.stock > 0) { %>
 													<p style="color: red;"> Only <%= products.stock %> in Stock!</p>

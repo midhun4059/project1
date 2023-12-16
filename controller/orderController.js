@@ -147,9 +147,21 @@ const showorders=async(req,res)=>{
   }
   
 
+  const couponlist= async (req, res) => {
+    try {
+      const couponCodes = await couponcollection.find({ isBlocked: false });
+      res.json(couponCodes);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  };
+
+
 module.exports = {
   razorpayLoad,
   returnOrder,
   showorders,
 cancelOrder,
+couponlist,
 };

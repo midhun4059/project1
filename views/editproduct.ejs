@@ -162,15 +162,19 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 </div>
                 <div class="form-group">
                   <label for="productImage"><i class="fa fa-image"></i> Image</label>
-                  <input type="file" name="image" class="form-control-file" id="productImage" multiple required><br>
-                  <% product.image.forEach(image => { %>
-                    <img src="/images/<%= image %>" width="100px" height="100px" alt="/images/<%= image %>">
+                  <input type="file" name="image" class="form-control-file" id="productImage" multiple>
+                  <br>
+                  <% product.image.forEach((image, index) => { %>
+                      <div>
+                          <img src="/images/<%= image %>" width="100px" height="100px" alt="/images/<%= image %>">
+                          <a href="/admin/products/deleteImage/<%= product._id %>/<%= index %>" class="btn btn-danger">Delete</a>
+                      </div>
                   <% }); %>
-                  
-                </div>
+              </div>
+              
                 <div class="form-group">
                   <label for="productStock"><i class="fa fa-cubes"></i> Stock</label>
-                  <input type="number" name="stock" class="form-control" value="<%= product.stock %>" id="productStock" placeholder="Enter product stock">
+                  <input type="number" name="stock" class="form-control" value="<%= product.stock %>" id="productStock" placeholder="Enter product stock" min="0">
                 </div>
                 <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> Submit</button>
               </form>

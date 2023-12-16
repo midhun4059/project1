@@ -97,34 +97,48 @@ const deleteProduct=async (req,res)=>{
   }
 }
 
-const updateProduct=async(req,res)=>{
-  try{
-let id=req.params.id;
+const updateProduct = async (req, res) => {
+  try {
+    let id = req.params.id;
 
-const check=await productcollection.findById(id);
+    // Check if the product exists
+    const existingProduct = await productcollection.findById(id);
 
+    if (!existingProduct) {
+      console.log("Product not found");
+      return res.status(404).send("Product not found");
+    }
 
-const result=await productcollection.findByIdAndUpdate(id,{
-  name:req.body.name,
-  description:req.body.description,
-  price:req.body.price,
-  category:req.body.category,
-  image: req.files.map(file => file.filename),
-  stock:req.body.stock,
-})
-if(!result){
-  console.log("not found");
-}else{
-  res.redirect('/admin/products')
-}
+    // Prepare the updated product data
+    const updatedProductData = {
+      name: req.body.name,
+      description: req.body.description,
+      price: req.body.price,
+      category: req.body.category,
+      stock: req.body.stock,
+    };
 
+    // Update the image only if new files are uploaded
+    if (req.files && req.files.length > 0) {
+      updatedProductData.image = req.files.map((file) => file.filename);
+    }
+
+    // Update the product in the database
+    const result = await productcollection.findByIdAndUpdate(id, updatedProductData);
+
+    if (!result) {
+      console.log("Update failed");
+      return res.status(500).send("Update failed");
+    }
+
+    console.log("Product updated successfully");
+    res.redirect('/admin/products');
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal Server Error");
   }
-catch(error){
-  console.log(error);
-}
-}
+};
 
- 
 const productonly=async(req,res)=>{
   if(req.session.user){
     const products=await productcollection.find()
@@ -160,7 +174,62 @@ const productonly=async(req,res)=>{
   }
 }
   
+const deleteProductImage = async (req, res) => {
+  try {
+    const productId = req.params.productId;
+    const imageIndex = req.params.imageIndex;
 
+    // Check if the product exists
+    const existingProduct = await productcollection.findById(productId);
+
+    if (!existingProduct) {
+      console.log("Product not found");
+      return res.status(404).send("Product not found");
+    }
+
+    // Check if the image index is valid
+    if (imageIndex < 0 || imageIndex >= existingProduct.image.length) {
+      console.log("Invalid image index");
+      return res.status(400).send("Invalid image index");
+    }
+
+    // Remove the image at the specified index
+    existingProduct.image.splice(imageIndex, 1);
+
+    // Save the updated product
+    await existingProduct.save();
+
+    console.log("Image deleted successfully");
+    res.redirect(`/admin/products/edit/${productId}`);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+
+const filterProducts= async (req, res) => {
+  try {
+      const selectedCategory = req.body.category;
+
+      // Use the selected category to filter products from the database
+      let filteredProducts;
+      if (selectedCategory) {
+          // If a specific category is selected, filter by that category
+          filteredProducts = await productcollection.find({ category: selectedCategory });
+      } else {
+          // If no category is selected, return all products
+          filteredProducts = await productcollection.find();
+      }
+
+      // Render the filtered products
+      res.render('productsonly', { products: filteredProducts });
+  } catch (error) {
+      // Handle errors
+      console.error('Error filtering products:', error);
+      res.status(500).send('Internal Server Error');
+  }
+};
 
 
 
@@ -175,5 +244,8 @@ module.exports={productdetails,
 
   sortedProducts,
   
+  deleteProductImage,
+
+  filterProducts,
 
   updateProduct}

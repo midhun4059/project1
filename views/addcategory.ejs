@@ -134,6 +134,12 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
       <div class="container">
           <div class="row justify-content-center">
             <div class="col-md-6">
+                <div class="errorMessage">
+                    <% if (typeof errorMessage !== 'undefined' && errorMessage !== null) { %>
+                        <p style="color: red;"><%= errorMessage %></p>
+                    <% } %>
+                </div>
+                
               <form action="/admin/category/add" method="post" >
                 <div class="form-group">
                   <label for="productName"><i class="fa-cart-plus"></i>Category</label>
@@ -180,7 +186,22 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 </script>
 
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get the query parameter value
+        const urlParams = new URLSearchParams(window.location.search);
+        const alreadyExisting = urlParams.get('AlreadyExisting');
 
+        // Check if the query parameter is 'true' and display the appropriate message
+        if (alreadyExisting === 'true') {
+            // Set the error message dynamically
+            const errorMessage = 'Category already exists. Please choose a different name.';
+            // Inject the error message into the DOM
+            const errorMessageElement = document.querySelector('.errorMessage');
+            errorMessageElement.innerHTML = `<p style="color: red;">${errorMessage}</p>`;
+        }
+    });
+</script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>

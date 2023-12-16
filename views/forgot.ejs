@@ -1,0 +1,115 @@
+<!--
+	Author: W3layouts
+	Author URL: http://w3layouts.com
+-->
+<!DOCTYPE html>
+<html lang="zxx">
+
+<!-- Head -->
+
+<head>
+
+    <title>Workspace Sign Up Form Flat Responsive Widget Template :: W3layouts</title>
+
+    <!-- Meta-Tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!-- style CSS -->
+    <link rel="stylesheet" href="/style.css" type="text/css" media="all">
+
+    <!-- fontawesome -->
+    <link rel="stylesheet" href="/font-awesome.min.css" type="text/css" media="all">
+
+    <!-- google fonts -->
+    <link href="//fonts.googleapis.com/css?family=Mukta:300,400,500" rel="stylesheet">
+
+
+    <style>
+		.error-message {
+			color:red;
+			text-align: center;
+		}
+		</style>
+</head>
+<!-- //Head -->
+
+<!-- Body -->
+
+<body>
+    <section class="main">
+        <div class="bottom-grid">
+            <div class="logo">
+                <h1><a href="index.html">Login Form</a></h1>
+            </div>
+        </div>
+        <!-- register -->
+        <div class="w3lhny-register">
+            <div class="iconhny">
+                <span class="fa fa-user-plus"></span>
+            </div>
+						<form action="/emailverify" method="post" onsubmit="return validateForm()">
+							<div class="form-row">
+								<span class="fa fa-envelope"></span>
+								<p id="email-error" style="color: red;"></p>
+								<input type="email" class="form-text" name="email" id="email" placeholder="Email Address">
+						</div>
+							
+							
+							<button type="submit" class="signinbutton btn">Verify</button>
+						
+							
+						</form>
+            <div id="email-error" class="error-message" style="color: red;"></div>
+            <div id="password-error" class="error-message" style="color: red;"></div>
+            
+            
+            <span class="create-account"></span>
+            
+            <p class="already">Don't have an account?  <a href="signup">Sign Up</a></p>
+        </div>
+        <!-- //register -->
+        <div class="w3l-copyright">
+            <p>© 2020 Workspace Sign Up Form. All rights reserved | Design by <a href="http://w3layouts.com">Midhun</a>
+            </p>
+        </div>
+    </section>
+
+		<script>
+       
+
+			function validateForm() {
+				 
+					const email = document.querySelector('input[name="email"]').value;
+					
+					
+					const errorEmail = document.getElementById('error-email');
+				 
+					
+
+					
+					errorEmail.innerHTML = '';
+				 
+					
+
+					
+
+					const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+					if (email.trim() === '') {
+							errorEmail.innerHTML = 'Please Enter Your Email Address.';
+							return false;
+
+					} else if (!emailRegex.test(email)) {
+							errorEmail.innerHTML = 'Please Enter A Valid Email Address.';
+							return false;
+					}
+
+				
+					return true;
+			}
+	</script>
+</body>
+<!-- //Body -->
+
+</html>

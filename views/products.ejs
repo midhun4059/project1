@@ -136,6 +136,13 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                         </a>
                     </li>
 
+                    <li>
+                        <a href="/bannerAdmin">
+                                <i class="fa fa-book"></i>
+                                <span> Banner</span>
+                        </a>
+                </li>
+
               
             </ul>            </div>
         <!-- sidebar menu end-->
@@ -175,7 +182,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                               </tr>
                           </thead>
                           <tbody>
-                              <% product.forEach((row, index) => { %>
+                              <% product.reverse().forEach((row, index) => { %>
                               <tr class='align-middle'>
                                   <td style="color: rgb(139, 84, 84);"><%= index+1 %></td>
                                   <td style="color: black;"><%= row.name %></td>

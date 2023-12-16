@@ -31,6 +31,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	<link href="//fonts.googleapis.com/css?family=Inconsolata:400,700" rel="stylesheet">
 	<link href="//fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800"
 	    rel="stylesheet">
+			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 </head>
 
 <body>
@@ -108,7 +109,18 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			</select>
 			<button type="submit" class="btn btn-primary ml-2">Sort</button>
 		</form>
-
+		<form action="/filterproducts" method="post" class="form-inline mt-3">
+			<label for="category">Filter by Category:</label>
+			<select class="form-control ml-2" id="category" name="category">
+					<option value="">All Categories</option>
+					<!-- Add options dynamically based on your categories -->
+					<option value="Sunglasses">Sunglasses</option>
+					<option value="power glass">power glass</option>
+					<!-- Add more options as needed -->
+			</select>
+			<button type="submit" class="btn btn-primary ml-2">Filter</button>
+	</form>
+	
 		<header>
 	
 			<div id="productList"></div>
@@ -513,6 +525,12 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
             });
         });
     </script>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
     <script>
         $(document).ready(function() {
             /*

@@ -9,6 +9,7 @@ const walletcollection=require('../model/walletModel')
 const bcrypt = require('bcrypt');
 const { name } = require('ejs');
 const bannercollection = require('../model/bannerModel');
+const easyinvoice=require('easyinvoice')
 
 
 
@@ -123,7 +124,7 @@ else{
 
  const otp = generateOtp.generate(4, { digits: true, alphabets: false, specialChars: false });
 
- const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
  
    const data={
     username:req.body.username,
@@ -136,7 +137,7 @@ else{
 
 await users.create([data]);
 
-req.session.username=req.body.username
+req.session.email=req.body.email;
 
 
    transporter=nodemailer.createTransport({
@@ -166,14 +167,14 @@ req.session.username=req.body.username
   })
  
   
-//   setTimeout(async () => {
-//   await users.findOneAndUpdate(
-//         { email:req.body.email},
-//         { $unset: { OTP: 1 } },
-//         {new:true}
-//     );
-//     console.log("otp  unset sucessfull")
-// }, 30000);
+  setTimeout(async () => {
+  await users.findOneAndUpdate(
+        { email:req.session.email},
+        { $unset: { OTP: 1 } },
+        {new:true}
+    );
+    console.log("otp  unset sucessfull")
+}, 30000);
  res.redirect('/otp');
 
 
@@ -200,8 +201,8 @@ const otpLoad=(req,res)=>{
 }
 const verifyOtp = async (req, res) => {
   try {
-    const username = req.session.username;
-    const foundUser = await users.findOne({ username }); // Change the variable name to foundUser
+    const username = req.session.email;
+    const foundUser = await users.findOne({email: username }); // Change the variable name to foundUser
     
     const enterOtp =parseInt( req.body.otp);
     console.log(enterOtp);
@@ -222,63 +223,61 @@ const verifyOtp = async (req, res) => {
     res.status(500).send("Internal server error");
   }
 }
-const resendOtp=async(req,res)=>{
-  try{
-    const email=req.session.user;
-    const existingUser = await users.findOne({ email:email });
 
- const otp = generateOtp.generate(4, { digits: true, alphabets: false, specialChars: false });
 
- const hashedPassword  =await bcrypt.hash(req.body.password, 10);
- 
-   const data={
-    username:req.body.username,
-    email:req.body.email,
-    password:req.body.password,
-    phone:req.body.phone,
-    OTP:otp,
-}
-await users.create(data);
-req.session.username=req.body.username
+const resendOtp = async (req, res) => {
+  try {
+    const email = req.session.email;
+    console.log('230:',email);
+    const userData = await users.findOne({ email: email });
 
-let transporter=nodemailer.createTransport({
-      service:"gmail",
-      auth:{
-          user: 'testtdemoo11111@gmail.com',
-          pass: 'wikvaxsgqyebphvh'
-            
+  
+    const otp = generateOtp.generate(4, { digits: true, alphabets: false, specialChars: false });
+    console.log('Generated OTP:', otp);
+
+    req.session.user = req.body.email;
+
+    let transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'testtdemoo11111@gmail.com',
+        pass: 'wikvaxsgqyebphvh',
       },
-  })
-  const mailOptions={
-      from:"midhunrpillai4059@gmail.com",
-      to:"midhunrpillai4059@gmail.com",
-      subject:"Your Otp code",
-      text:`your  resend otp code is:${otp}`
-  }
-  transporter.sendMail(mailOptions,(error,info) =>{
-      if(error){
-          console.error("error sending otp",error)
+    });
 
+    const mailOptions = {
+      from: 'midhunrpillai4059@gmail.com',
+      to: 'midhunrpillai4059@gmail.com', // Change this to userData.email if it's not the same
+      subject: 'Your Resent OTP Code',
+      text: `Your resend OTP code is: ${otp}`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Error sending OTP:', error);
+        return res.status(500).json({ message: 'Error sending OTP' });
+      } else {
+        console.log('OTP sent:', info.response);
       }
-      else{
-          console.log("otp send:",info.response);
-      }
- })
- setTimeout(async () => {
-  await users.findOneAndUpdate(
-        { email:req.body.email},
-        {$set:{OTP:otp}},
-        {new:true}
+    });
+
+    const values=await users.findOneAndUpdate(
+      { email:email },
+      { $set: { OTP: otp } },
+      { new: true }
     );
-    console.log("otp unset sucessfull")
-}, 30000);
- res.redirect('/otp');
-console.log("send successfully", otp);
+    console.log('OTP updated successfully 267:',values);
+
+    res.redirect('/otp');
+    console.log('reSend otp successfully', otp);
+  } catch (error) {
+    console.error('Error in resendOtp controller:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
-catch(error){
-    console.error(error)
-  }
-}
+};
+
+
+
 const profile=async (req,res)=>{
   try{
     const user=req.session.user;
@@ -578,11 +577,11 @@ const applyCoupon =async(req,res)=>{
       const coupon = await couponcollection .findOne({ couponCode });
        const minimumAmount=coupon.minimumpurchase;
        if (!coupon=== coupon.couponCode) {
-         return res.json({ success: false, message: "Invalid coupon code" });
+         return res.json({ success: false, message: "Not Valid" });
        }
       
       if (!coupon || coupon.expirationDate < new Date()) {
-        return res.json({ success: false, message: "Invalid coupon code" });
+        return res.json({ success: false, message: "Coupon Expired" });
       }
       
    
@@ -628,12 +627,210 @@ const userLogout=(req,res)=>{
 }
 
 
+const forgotLoad=async(req,res)=>{
+  let error=''
+  res.render('forgot',{error})
+}
+
+const verifyEmail=async(req,res)=>{
+req.session.email=req.body.email;
+const email=req.session.email;
+  try{
+      const userremail=await users.findOne({email:email});
+
+      if(userremail){
+          
+   otp=generateOtp.generate(4,{digits:true,alphabets:false,specialChars:false})
+
+  transporter=nodemailer.createTransport({
+      service:"gmail",
+      auth:{
+          user: 'testtdemoo11111@gmail.com',
+            pass: 'wikvaxsgqyebphvh',
+      },
+  })
+  const mailOptions={
+      from:"midhunrpillai4059@gmail.com",
+      to:"midhunrpillai4059@gmail.com",
+      subject:"Your Otp code",
+      text:`your otp code is:${otp}`
+  }
+  transporter.sendMail(mailOptions,(error,info) =>{
+      if(error){
+          console.error("error sending otp",error)
+
+      }
+      else{
+          console.log("otp send:",info.response);
+      }
+
+  })
+  console.log("send successfully");
+  let errorMessage=''
+  res.render('forgototp',{errorMessage,user:userremail._id})
+
+
+      }else{
+          let error='Email not match'
+          res.render('forgot',{error})
+      }
+
+  }catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+  }
+}
+
+const forgototpverify=async(req,res)=>{
+  try{
+      const id=req.params.id
+      const user=await users.findById(id)
+      
+      const enterOtp=req.body.otp;
+      console.log(enterOtp)
+      if(otp===enterOtp){
+          
+      
+      res.render("newpassword",{userr:user._id})
+      }
+      else{
+          res.render("forgototp",{ errorMessage: 'Invalid OTP. Please try again.' })
+      }
+  }
+  catch(error){
+      console.error(error);
+      res.status(500).send("internal server error")
+  }
+
+
+}
+
+const setnewpassword=async(req,res)=>{
+  try{
+      const newPassword = req.body.password;
+      const id=req.params.id;
+      const user=await users.findById(id)
+    
+   
+
+      await users.findByIdAndUpdate(id, { password:newPassword });
+
+      res.redirect('/login')
+
+  }catch(error){
+      console.error(error);
+      res.status(500).send("internal server error")
+  }
+}
+
+
+
+
+
+
+const errorpage=async(req,res)=>{
+
+  res.render("errorpage");
+}
+
+const fs = require('fs');
+const path =require('path')
+const PDFDocument = require('pdfkit');
+ // Replace with the actual path
+
+const generateInvoice = async (req, res) => {
+  const orderId = req.params.id;
+  const userId = req.session.user;
+  
+  try {
+      const user = await users.findOne({ email: userId });
+      const orderDetails = await users.findOne({ 'orders._id': orderId }).populate('orders.product');
+
+      const order = orderDetails.orders.find(order => order._id == orderId);
+      
+
+      // Assuming 'order.product' is a single product
+      const product = order.product;
+      console.log('product:', product);
+      const quantity = order.quantity;
+
+      const products = [{
+          quantity: quantity,
+          description: product.name,
+          "tax-rate": 0,
+          price: product.price,
+      }];
+
+      // Calculate the total price as the sum of all product prices
+      const totalPrice = products.reduce((total, product) => {
+          return total + product.price * product.quantity;
+      }, 0);
+
+      const logoUrl =  "https://watchbox-sfcc.imgix.net/og/watchbox-og-full.png"
+      const invoiceData = {
+          currency: 'INR',
+          marginTop: 25,
+          marginRight: 25,
+          marginLeft: 25,
+          marginBottom: 25,
+          logo: logoUrl,
+          sender: {
+              company: 'Glassy',
+              address: 'Dotspace Trivandrum',
+              zip: '695411',
+              city: 'Trivandrum',
+              country: 'India'
+          },
+          client: {
+              company: user.username,
+              address: ` ${user.address[0].street}, ${user.address[0].city}, ${user.address[0].state} - ${user.address[0].pincode}, ${user.address[0].country}`
+          },
+          
+          information: {
+              date: new Date().toLocaleDateString(),
+              number: `INV_${order._id}`,
+          },
+          products: products,
+          "bottom-notice": `Thank you for choosing GLASSY! We appreciate your business
+          If you have any questions or concerns regarding this invoice,
+          please contact our customer support at support@glassy.com.
+          Your satisfaction is our priority. Hope to see you again!`
+      };
+
+      // Create invoice
+      easyinvoice.createInvoice(invoiceData, function (result) {
+          // Send the PDF as a response for download
+          res.setHeader('Content-Disposition', `attachment; filename=invoice_${orderId}.pdf`);
+          res.setHeader('Content-Type', 'application/pdf');
+          res.send(Buffer.from(result.pdf, 'base64'));
+      });
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Error generating the invoice.');
+  }
+};
+
+
+const resendOtpagain = async (req, res) => {
+  try {
+    // Your logic here, if needed
+    res.render('forgototp');
+  } catch (error) {
+    console.error('Error in resendOtpagain controller:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+
 module.exports={
   loginVerify,
   otpLoad,
   verifyOtp,
   resendOtp,
  
+  errorpage,
+
  insertUser,
   loginLoad,
   homeLoad,
@@ -660,8 +857,12 @@ module.exports={
 applyCoupon,
 
 
-
-
+forgotLoad,
+verifyEmail,
+forgototpverify,
+setnewpassword,
+generateInvoice,
+resendOtpagain,
 
  
 

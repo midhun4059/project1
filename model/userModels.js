@@ -53,7 +53,7 @@ const userSchema=new mongoose.Schema({
     required:true
   },
   OTP:{
-    type:String,
+    type:Number,
     required:false
   },
   phone:{

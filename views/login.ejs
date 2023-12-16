@@ -71,9 +71,14 @@
                     </div>
                 </fieldset>
             </form>
-            <!-- <div id="email-error" class="error-message" style="color: red;"></div>
-            <div id="password-error" class="error-message" style="color: red;"></div> -->
+            <div id="email-error" class="error-message" style="color: red;"></div>
+            <div id="password-error" class="error-message" style="color: red;"></div>
+            <div id="generic-error" class="error-message" style="color: red;"></div>
+
+            
+            
             <span class="create-account"></span>
+            <p class="already">forgot password? <a href="forgot">Click</a></p>
             <p class="already">Don't have an account?  <a href="signup">Sign Up</a></p>
         </div>
         <!-- //register -->
@@ -85,16 +90,14 @@
 
     <script>
         function validateForm() {
-            
             var email = document.getElementById("email").value;
             var password = document.getElementById("password").value;
-            var valid=true;
-            
-            
-            //reset error message
+            var valid = true;
+    
+            // Reset error messages
             document.getElementById("email-error").innerHTML = "";
             document.getElementById("password-error").innerHTML = "";
-
+    
             if (email.trim() === "") {
                 document.getElementById("email-error").innerHTML = "Email is required";
                 valid = false;
@@ -102,25 +105,26 @@
                 document.getElementById("email-error").innerHTML = "Invalid email format";
                 valid = false;
             }
-
+    
             if (password.trim() === "") {
                 document.getElementById("password-error").innerHTML = "Password is required";
                 valid = false;
             }
-
-            if (phone.trim() === "") {
-                document.getElementById("phone-error").innerHTML = "Phone Number is required";
-                valid = false;
+    
+            // Display a generic error message
+            if (!valid) {
+                document.getElementById("generic-error").innerHTML = "Invalid email or password. Please check your credentials.";
             }
-
+    
             return valid;
         }
-
+    
         function validateEmail(email) {
             var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
             return emailPattern.test(email);
         }
     </script>
+    
 </body>
 <!-- //Body -->
 

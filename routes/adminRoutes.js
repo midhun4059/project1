@@ -6,7 +6,7 @@ const session=require("express-session")
 const adminController=require("../controller/adminController")
 const productController=require('../controller/productController');
 const bannerController=require("../controller/bannerController")
-
+const adminAuth=require('../middleware/adminAuth')
 // const fileUpload = require('express-fileupload');
 
 
@@ -42,38 +42,46 @@ adminRoutes.get('/admin',adminController.adminLog);
 adminRoutes.post('/admin',adminController.adminHome);
 
 
-adminRoutes.get('/admin/users',adminController.usersLoad)
-adminRoutes.post('/admin/block/:id',adminController.userBlock)
-adminRoutes.post('/admin/unblock/:id',adminController.userUnblock);
+adminRoutes.get('/admin/users',adminAuth.isLogin,adminController.usersLoad)
+adminRoutes.post('/admin/block/:id',adminAuth.isLogin,adminController.userBlock)
+adminRoutes.post('/admin/unblock/:id',adminAuth.isLogin,adminController.userUnblock);
 
-adminRoutes.get('/admin/category',adminController.categoryLoad)
-adminRoutes.get('/admin/category/add',adminController.addCategoryLoad)
-adminRoutes.post('/admin/category/add',adminController.insertCategory)
-adminRoutes.get('/admin/category/delete/:id',adminController.deleteCategory)
-adminRoutes.get('/admin/category/edit/:id',adminController.editCategoryLoad)
-adminRoutes.post('/admin/category/update/:id',adminController.updateCategory)
-adminRoutes.get('/admin/orders',adminController.orderLoad);
-adminRoutes.get('/updateOrderStatus/:userId/:orderId/:newStatus',adminController.updateOrderStatus)
+adminRoutes.get('/admin/category',adminAuth.isLogin,adminController.categoryLoad)
+adminRoutes.get('/admin/category/add',adminAuth.isLogin,adminController.addCategoryLoad)
+adminRoutes.post('/admin/category/add',adminAuth.isLogin,adminController.insertCategory)
+adminRoutes.get('/admin/category/delete/:id',adminAuth.isLogin,adminController.deleteCategory)
+adminRoutes.get('/admin/category/edit/:id',adminAuth.isLogin,adminController.editCategoryLoad)
+adminRoutes.post('/admin/category/update/:id',adminAuth.isLogin,adminController.updateCategory)
+adminRoutes.get('/admin/orders',adminAuth.isLogin,adminController.orderLoad);
+adminRoutes.get('/updateOrderStatus/:userId/:orderId/:newStatus',adminAuth.isLogin,adminController.updateOrderStatus)
+
+adminRoutes.get("/admincoupon",adminAuth.isLogin,adminController.CouponLoad);
+adminRoutes.get("/admin/add-coupon",adminAuth.isLogin,adminController.addCoupon);
+adminRoutes.post("/admin/add-coupon",adminAuth.isLogin,adminController.insertCoupon);
+adminRoutes.post("/admin/couponblock/:id",adminAuth.isLogin,adminController.couponBlock);
+adminRoutes.post("/admin/couponunblock/:id",adminAuth.isLogin,adminController.couponUnblock);
+
+adminRoutes.get('/bannerAdmin',adminAuth.isLogin,bannerController.bannerLoad);
+adminRoutes.get('/admin/addbanner',adminAuth.isLogin,bannerController.addbannerLoad);
+adminRoutes.post('/admin/addbanner',adminAuth.isLogin,upload.array('image',3),bannerController.bannerAdd);
+adminRoutes.get('/banner/delete/:id',adminAuth.isLogin,bannerController.deleteBanner);
+
+
+
+
+adminRoutes.get('/admin/products',adminAuth.isLogin,productController.productsLoad)
+adminRoutes.get('/admin/products/add',adminAuth.isLogin,productController.addProductLoad)
+adminRoutes.post('/admin/products/add',adminAuth.isLogin,upload.array('image',3),productController.insertProducts)
+adminRoutes.get('/admin/products/delete/:id',adminAuth.isLogin,productController.deleteProduct)
+adminRoutes.get('/admin/products/edit/:id',adminAuth.isLogin,productController.editProductLoad)
+adminRoutes.post('/admin/products/update/:id',adminAuth.isLogin,upload.array('image',3),productController.updateProduct);
+
+adminRoutes.get('/admin/products/deleteImage/:productId/:imageIndex', productController.deleteProductImage);
+
+adminRoutes.post('/filterproducts',productController.filterProducts)
+
+adminRoutes.get('/salesReport',adminAuth.isLogin,adminController.salesReport);
+
 adminRoutes.post('/admin/logout',adminController.adminLogout);
-
-adminRoutes.get("/admincoupon",adminController.CouponLoad);
-adminRoutes.get("/admin/add-coupon",adminController.addCoupon);
-adminRoutes.post("/admin/add-coupon",adminController.insertCoupon);
-adminRoutes.post("/admin/couponblock/:id",adminController.couponBlock);
-adminRoutes.post("/admin/couponunblock/:id",adminController.couponUnblock);
-
-adminRoutes.get('/bannerAdmin',bannerController.bannerLoad);
-adminRoutes.get('/admin/addbanner',bannerController.addbannerLoad);
-
-adminRoutes.post('/admin/addbanner',upload.array('image',3),bannerController.bannerAdd);
-
-
-
-adminRoutes.get('/admin/products',productController.productsLoad)
-adminRoutes.get('/admin/products/add',productController.addProductLoad)
-adminRoutes.post('/admin/products/add',upload.array('image',3),productController.insertProducts)
-adminRoutes.get('/admin/products/delete/:id',productController.deleteProduct)
-adminRoutes.get('/admin/products/edit/:id',productController.editProductLoad)
-adminRoutes.post('/admin/products/update/:id',upload.array('image',3),productController.updateProduct)
 
 module.exports=adminRoutes;

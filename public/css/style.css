@@ -293,6 +293,26 @@ ul.cart-inner-info li {
     margin: 0 auto;
 }
 
+/* Add this CSS to your stylesheet or in a <style> tag in your HTML */
+
+.image-description {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.7); /* Background color with some transparency */
+    padding: 10px;
+    text-align: center;
+    color: #fff; /* Text color */
+    display: none; /* Initially hide the description */
+}
+
+.men-thumb-item:hover .image-description {
+    display: block; /* Show the description on hover */
+}
+
+
+
 /* Declare heights because of positioning of img element */
 
 .carousel-item {

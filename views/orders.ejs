@@ -139,6 +139,13 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                         </a>
                     </li>
 
+                    <li>
+                        <a href="/bannerAdmin">
+                                <i class="fa fa-book"></i>
+                                <span> Banner</span>
+                        </a>
+                </li>
+
               
             </ul>            </div>
         <!-- sidebar menu end-->
@@ -174,7 +181,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                 </tr>
                             </thead>
                             <tbody>
-                                <% user.forEach((user, index) => { %>
+                                <% user.reverse().forEach((user, index) => { %>
                                     <% user.orders.slice().reverse().forEach((order, orderIndex) => { %>
                                         <tr class='align-middle'>
                                             <td style="color: black;"><%= index + 1 %></td>

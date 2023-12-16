@@ -214,21 +214,25 @@
 
 			   <!-- Coupon Code -->
 				 <div class="form-group">
-				  <label class="form-label">Have coupon?</label>
-				  <div class="input-group">
-					<input type="text" class="form-control border" id="couponid" name="couponCode" placeholder="Coupon code" />
-					<button class="btn btn-light border" type="button"  id="buttons">Apply</button>
-				  </div>
-				  <div class="alert alert-success mt-3" role="alert" id="success-message" style="display: none;">
-					Coupon applied successfully!
-				  </div>
-				  <div class="alert text-danger mt-3" role="alert" id="error-messages">
-					<% if (typeof errorMessage !== 'undefined' && errorMessage !== null) { %>
-					  <%= errorMessage %>
-					<% } %>
-				  </div>
-				  <p class="text-danger" id="error-message"></p>
+					<label class="form-label">Have coupon?</label>
+					<div class="input-group">
+						<input type="text" class="form-control border" id="couponid" name="couponCode" placeholder="Coupon code" />
+						<button class="btn btn-light border" type="button" id="buttons">Apply</button>
+					</div>
+					<div class="alert alert-success mt-3" role="alert" id="success-message" style="display: none;">
+						Coupon applied successfully!
+					</div>
+					<div class="alert text-danger mt-3" role="alert" id="error-messages">
+						<% if (typeof errorMessage !== 'undefined' && errorMessage !== null) { %>
+							<%= errorMessage %>
+						<% } %>
+					</div>
+					<p class="text-danger" id="error-message"></p>
+				
+					<!-- Container for displaying available coupon codes -->
+					<div id="coupon-list"></div>
 				</div>
+				
 
 				</div>
 				
@@ -353,6 +357,45 @@
 
 	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
+<!-- coupon-list -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Fetch available coupon codes and render only the ones that are not expired
+    fetch('/getCouponCodes')
+      .then(response => response.json())
+      .then(couponCodes => {
+        const currentDate = new Date();
+        const couponListContainer = document.getElementById('coupon-list');
+        couponListContainer.innerHTML = '<strong>Coupons Available :</strong><ul>';
+
+        const appliedCoupon = getAppliedCoupon(); // Function to check if a coupon is applied
+
+        couponCodes
+          .filter(coupon => new Date(coupon.expirationDate) > currentDate && !coupon.isBlocked)
+          .forEach(coupon => {
+            couponListContainer.innerHTML += `<li>${coupon.couponCode}</li>`;
+          });
+
+        couponListContainer.innerHTML += '</ul>';
+
+        // Hide the input field if a coupon is already applied
+        if (appliedCoupon) {
+          document.getElementById('couponid').style.display = 'none';
+          document.getElementById('buttons').style.display = 'none';
+        }
+      })
+      .catch(error => console.error('Error fetching coupon codes:', error));
+
+    // Function to check if a coupon is applied (replace with your actual implementation)
+    function getAppliedCoupon() {
+      // Add your logic to check if a coupon is applied, return the applied coupon code if any
+      // Example: return 'APPLIEDCOUPON123'; // Replace with your actual applied coupon code
+      return null; // Return null if no coupon is applied
+    }
+  });
+</script>
+
+
 
   <script>
 
@@ -447,7 +490,7 @@
 									description: 'Payment for your order',
 									order_id: razorpayorder.razorpayorder._id,
 									handler: function (response) {
-											alert("payment successful")
+											
 											const selectedAddress = document.getElementById('addressSelect').value;
         document.getElementById('selectedAddress').value = selectedAddress;
 				form.submit();

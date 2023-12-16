@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>e_Shopee</title>
+    <link rel="stylesheet" href="/css/otp.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+</head>
+
+<body>
+    <form action="/passwordotp/<%=user._id%>" method="post">
+        <div class="container height-100">
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="position-relative">
+                    <div class="card p-2 text-center">
+                        <h6 style="color: black">Please enter the one time password to change password</h6>
+                        <div><span style="color: rgb(0, 0, 0);">A code has been sent to</span> <small></small></div>
+                        <div class="error-message">
+                            <% if (errorMessage) { %>
+                              <p style="color: red;"><%= errorMessage %></p>
+                            <% } %>
+                          </div>
+                        <input type="text" id="otp" name="otp">
+                        <div class="mt-4">
+                            <button class="btn btn-danger px-4 validate" type="submit">Submit</button>
+                        </div>
+                        <div id="countdown" style="color: red;">00:30</div>
+                        <div id="hiddenButton" style="display: none;">
+                            <a id="showButton" href="/forgototp">Resend OTP</a>
+                          </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        let seconds = 30;
+
+        function countdown() {
+            const countdownDisplay = document.getElementById('countdown');
+            const interval = setInterval(function () {
+                countdownDisplay.textContent = seconds;
+
+                if (seconds === 0) {
+                    clearInterval(interval);
+                } else {
+                    seconds--;
+                }
+            }, 1000);
+        }
+
+        countdown(); // Start the countdown when the page loads
+    </script>
+
+    <script>
+        // Function to show the hidden button after 1 minute
+        function showButtonAfterOneMinute() {
+            const hiddenButton = document.getElementById('hiddenButton');
+            hiddenButton.style.display = 'block'; // Show the hidden button
+        }
+
+        // Set a timeout to call the function after 1 minute (60,000 milliseconds)
+        setTimeout(showButtonAfterOneMinute, 30000);
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

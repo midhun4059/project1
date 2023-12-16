@@ -162,9 +162,24 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 										<div class="col-md-2 text-center d-flex justify-content-center align-items-center">
 											<p class="text-muted mb-0 small">₹<%= item.product.price %></p>
 										</div>
+
+										<div>
+
+
+											<a href="/invoice/<%= item._id %>" class="btn btn-outline-primary btn-sm" download="invoice.pdf">Invoice</a>
+										</div>
+
+										<div class="col-md-1"></div>
 										<div class="col-md-2 text-center d-flex justify-content-center align-items-center">
 											<% if (item.status !== 'Cancelled') { %>
 												<% if (item.status === 'Delivered') { %>
+<!-- 
+													<% const sevenDaysAgo = new Date(); %>
+													<% sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7); %>
+													<% if (new Date(item.orderDate) > sevenDaysAgo && item.status !== 'Returned') { %>
+														<button class="btn btn-outline-primary" data-toggle="modal" data-target="#returnModal" data-order-id="<%= item._id %>">Return</button>
+													<% } %> -->
+													
 													<!-- If status is Delivered, display Return button -->
 													<a href="/returnOrder/<%= item._id %>" class="btn btn-outline-primary">Return</a>
 												<% } else if (item.status === 'Returned') { %>

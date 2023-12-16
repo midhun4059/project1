@@ -17,7 +17,7 @@ const nocache=require('nocache');
 const mongoDBconnection=async()=>{
 try{
   
-  const connect=await mongoose.connect("mongodb://0.0.0.0/sunglassDB");
+  const connect=await mongoose.connect("mongodb+srv://midhunrpillai4059:poplolipoP@cluster0.qileww9.mongodb.net/sunglassDB");
   console.log("data base connected");
 }
 catch(error){
@@ -53,7 +53,9 @@ app.use('/',userroutes);
 const adminroutes=require('./routes/adminRoutes');
 app.use('/',adminroutes);
 
-
+app.use('*', (req, res) => {
+  res.render('errorpage');
+});
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => {

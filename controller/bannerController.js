@@ -55,9 +55,28 @@ const bannerAdd=async(req,res)=>{
 }
 
 
+const deleteBanner=async (req,res)=>{
+  try{
+    const id=req.params.id;
+    const result=await bannercollection.findByIdAndRemove({_id:id});
+console.log('62:',result);
+
+    if(result){
+      res.redirect('/bannerAdmin')
+    }else{
+      console.log('product not found');
+    }
+  }catch(error){
+    console.log('Error deleting the category:',error);
+  }
+}
+
+
+
 
 module.exports={
   bannerAdd,
   bannerLoad,
-  addbannerLoad
+  addbannerLoad,
+  deleteBanner,
 }

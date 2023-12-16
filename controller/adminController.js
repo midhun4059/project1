@@ -5,13 +5,198 @@ const couponCollection=require('../model/couponModel');
 const { render } = require('../routes/userRoutes');
 
 
-const adminLog=async(req,res)=>{
-  if(req.session.admin){
-    res.render('index')
-  }else{
-    res.render('adminLogin')
+const adminLog = async (req, res) => {
+  if (req.session.admin) {
+    try {
+      // Get the last seven days
+      const lastSevenDays = [];
+      let currentDate = new Date();
+      for (let i = 0; i < 7; i++) {
+        let day = new Date();
+        day.setDate(currentDate.getDate() - i);
+        lastSevenDays.push(day.toISOString().split('T')[0]);
+      }
+
+      // Use aggregation to get order counts for each day
+      const orderCounts = await users.aggregate([
+        {
+          $unwind: '$orders',
+        },
+        {
+          $group: {
+            _id: {
+              $dateToString: { format: '%Y-%m-%d', date: '$orders.orderDate' },
+            },
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $sort: { _id: 1 },
+        },
+      ]);
+
+      // Create a map to easily access counts by date
+      // const orderCountsMap = new Map(orderCounts.map(({ _id, count }) => [ _id, count ]));
+
+      let data=[];
+
+  const labels=lastSevenDays
+  
+  labels.forEach((label)=>{
+    const order=orderCounts.find((o)=>o._id===label)
+    if(order){
+      data.push(order.count)
+    }else{
+      data.push(0)
+    }
+
+  })
+
+  const labelsWithoutYearAndMounth=labels.map(label=>{
+    const date=new Date(label);
+    return date.getDate()
+  })
+
+
+
+
+      // console.log(data,labelsWithoutYearAndMounth);
+      // console.log("orderCounts",orderCounts);
+
+
+
+// Mounthly
+
+let monthsOfCurrentYear = [];
+    let currentYear = currentDate.getFullYear();
+
+    for (let month = 1; month < 13; month++) {
+        monthsOfCurrentYear.push(`${currentYear}-${month.toString().padStart(2, '0')}`);
+    }
+
+
+    const orderPerMounth = await users.aggregate([
+      {
+        $unwind: '$orders',
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: '%Y-%m', date: '$orders.orderDate' },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { _id: 1 },
+      },
+    ]);
+
+    let mountData=[];
+    monthsOfCurrentYear.forEach((mounth)=>{
+      const orderForMounth=orderPerMounth.find((order)=>order._id===mounth);
+      if(orderForMounth){
+        mountData.push(orderForMounth.count)
+      } else{
+        mountData.push(0)
+      }
+    })
+
+    console.log("orderPerMounth",orderPerMounth,mountData,monthsOfCurrentYear);
+
+
+
+      // Render the view with order counts
+      res.render('index', { labelsWithoutYearAndMounth,data,mountData,monthsOfCurrentYear});
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  } else {
+    res.render('adminLogin');
   }
-}
+};
+
+
+const ExcelJS = require('exceljs');
+
+const salesReport = async (req, res) => {
+  try {
+    const startDate = new Date(req.query.startDate);
+    const endDate = new Date(req.query.endDate);
+    endDate.setDate(endDate.getDate() + 1);
+
+    const salesData = await users.aggregate([
+      {
+        $match: {
+          'orders.orderDate': { $gte: startDate, $lt: endDate },
+        },
+      },
+      {
+        $unwind: '$orders',
+      },
+      {
+        $lookup: {
+          from: 'products', // Replace 'products' with the actual name of your product collection
+          localField: 'orders.product',
+          foreignField: '_id',
+          as: 'productDetails',
+        },
+      },
+      {
+        $unwind: '$productDetails',
+      },
+      {
+        $project: {
+          productName: '$productDetails.name',
+          productPrice: '$productDetails.price',
+          totalQuantity: '$orders.quantity',
+          totalPrice: '$orders.Amount',
+          orderDate: '$orders.orderDate',
+          status: '$orders.status',
+          paymentMethod: '$orders.paymentmethod',
+          redeemedCoupon: '$orders.redeemedCoupon',
+          address: '$address',
+        },
+      },
+    ]);
+
+    // Create a new workbook and add a worksheet
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Sales Report');
+
+    // Define the header row
+    const headers = [
+      'Product Name',
+      'Product Price',
+      'Total Quantity',
+      'Total Price',
+      'Order Date',
+      'Status',
+      'Payment Method',
+      'Redeemed Coupon',
+      'Address',
+    ];
+    worksheet.addRow(headers);
+
+    // Populate the worksheet with sales data using forEach
+    salesData.forEach((sale) => {
+      const row = Object.values(sale);
+      worksheet.addRow(row);
+    });
+
+    // Set the content type and headers for the response
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', 'attachment; filename=sales_report.xlsx');
+
+    // Send the workbook as a buffer to the response
+    const buffer = await workbook.xlsx.writeBuffer();
+    res.end(buffer);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+};
 
 
 
@@ -44,35 +229,43 @@ const addCategoryLoad=async (req,res)=>{
   res.render('addCategory')
 }
 
-const insertCategory=async(req,res)=>{
-   try{
-    const categorydata={
-      category:req.body.category,
-      description:req.body.description,
-    } 
-    const check=await categorycollection.findOne({category:req.body.category})
+const insertCategory = async (req, res) => {
+  try {
+    const categoryName = req.body.category;
 
-    if( check){
- 
-      console.log("already exist");
-      res.redirect('/admin/category/add?AlreadyExisting=true')
+    // Check if a category with the same name (case-insensitive) exists
+    const existingCategory = await categorycollection.findOne({
+      category: { $regex: new RegExp('^' + categoryName + '$', 'i') }
+    });
+
+    if (existingCategory) {
+      console.log("Category already exists");
+      res.redirect('/admin/category/add?AlreadyExisting=true');
+    } else {
+      // Check if there is only one category in capital case
+      const capitalCategoryCount = await categorycollection.countDocuments({
+        category: { $regex: new RegExp('^' + categoryName + '$') }
+      });
+
+      if (capitalCategoryCount > 0) {
+        console.log("Category already exists in capital case");
+        res.redirect('/admin/category/add?CapitalCaseExisting=true');
+      } else {
+        // Insert the category data
+        const categoryData = {
+          category: categoryName,
+          description: req.body.description,
+        };
+
+        await categorycollection.insertMany([categoryData]);
+        res.redirect('/admin/category');
+      }
     }
-   
-    else{
-
-      console.log(categorydata);
-      await categorycollection.insertMany([categorydata])
-      res.redirect('/admin/category')
-    }
-
-   }
-   catch(error){
-    console.log(error);
-
-
-   }
-}
-
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+};
 
 const editCategoryLoad = async (req, res) => {
   try {
@@ -279,6 +472,9 @@ const adminLogout=(req,res)=>{
   })
 }
 
+
+
+
 module.exports=
 {adminLog,
   adminHome,
@@ -303,4 +499,6 @@ couponBlock,
 couponUnblock,
 
 updateOrderStatus,
+
+salesReport,
 };
