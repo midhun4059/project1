@@ -54,13 +54,16 @@ userRoutes.post('/login',userController.loginVerify);
 userRoutes.get('/signup',userController.signupLoad);
 userRoutes.post('/signup',userController.insertUser);
 
+userRoutes.get("/otp",userController.otpLoad);
+userRoutes.post("/otp",userController.verifyOtp);
+userRoutes.get('/otp/resend',userController.resendOtp);
+
+
 userRoutes.get('/forgot',userController.forgotLoad);
 userRoutes.post('/emailverify',userController.verifyEmail);
 userRoutes.post('/passwordotp/:id',userController.forgototpverify);
+userRoutes.get('/resendotpagain', userController.resendOtpagain);
 userRoutes.post('/newpassword/:id',userController.setnewpassword);
-userRoutes.get('/forgototp', userController.resendOtpagain);
-
-
 
 userRoutes.get('/',userController.homeLoad);
 userRoutes.get('/productsonly',productController.productonly);
@@ -68,19 +71,16 @@ userRoutes.post('/sortproducts',productController.sortedProducts);
 
 userRoutes.get("/productdetails/:id",productController.productdetails);
 
-userRoutes.get("/otp",userController.otpLoad);
-userRoutes.post("/otp",userController.verifyOtp);
-userRoutes.get('/otp/resend',userController.resendOtp);
 
 userRoutes.get('/profile',userController.profile);
 userRoutes.get('/profile',walletController.walletLoad);
 userRoutes.get('/editprofile',userController.editprofile);
 userRoutes.post('/editprofile',userController.updateprofile);
 
-userRoutes.get('/walletpage',walletController.walletHistory)
+userRoutes.get('/walletpage',walletController.walletHistory);
 
 userRoutes.get('/addaddress',userController.addaddress);
-userRoutes.post('/addaddress/:id',userController.addAddressToUser)
+userRoutes.post('/addaddress/:id',userController.addAddressToUser);
 userRoutes.get('/editaddress',userController.editAddress);
 userRoutes.post('/editaddress',userController.updateAddress);
 
@@ -97,7 +97,7 @@ userRoutes.get('/wishlist',wishlistController.wishLoad);
 userRoutes.post('/addtowish/:id',wishlistController.addToWish);
 userRoutes.get('/remove/:id',wishlistController.removeFromWishlist);
 userRoutes.get('/addcart/:id',wishlistController.wishlistAddCart);
-userRoutes.get('/invoice/:id',userController.generateInvoice)
+userRoutes.get('/invoice/:id',userController.generateInvoice);
 
 
 userRoutes.get('/showorders',orderController.showorders);

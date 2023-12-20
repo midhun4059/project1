@@ -3,6 +3,13 @@ const productcollection = require('../model/productModels');
 const users=require('../model/userModels');
 const couponCollection=require('../model/couponModel');
 const { render } = require('../routes/userRoutes');
+const pdfmake = require('pdfmake');
+
+const PDFDocument = require('pdfkit');
+
+
+
+
 
 
 const adminLog = async (req, res) => {
@@ -35,8 +42,7 @@ const adminLog = async (req, res) => {
         },
       ]);
 
-      // Create a map to easily access counts by date
-      // const orderCountsMap = new Map(orderCounts.map(({ _id, count }) => [ _id, count ]));
+      
 
       let data=[];
 
@@ -102,7 +108,7 @@ let monthsOfCurrentYear = [];
       }
     })
 
-    console.log("orderPerMounth",orderPerMounth,mountData,monthsOfCurrentYear);
+   
 
 
 
@@ -198,6 +204,124 @@ const salesReport = async (req, res) => {
   }
 };
 
+const salesReportPdf = async (req, res) => {
+  try {
+    const startDate = new Date(req.query.startDate);
+    const endDate = new Date(req.query.endDate);
+    endDate.setDate(endDate.getDate() + 1);
+
+    const salesData = await users.aggregate([
+      {
+        $match: {
+          'orders.orderDate': { $gte: startDate, $lt: endDate },
+        },
+      },
+      {
+        $unwind: '$orders',
+      },
+      {
+        $lookup: {
+          from: 'products', // Replace 'products' with the actual name of your product collection
+          localField: 'orders.product',
+          foreignField: '_id',
+          as: 'productDetails',
+        },
+      },
+      {
+        $unwind: '$productDetails',
+      },
+      {
+        $project: {
+          productName: '$productDetails.name',
+          productPrice: '$productDetails.price',
+          totalQuantity: '$orders.quantity',
+          totalPrice: '$orders.Amount',
+          orderDate: '$orders.orderDate',
+          status: '$orders.status',
+          paymentMethod: '$orders.paymentmethod',
+          redeemedCoupon: '$orders.redeemedCoupon',
+          address: '$address',
+        },
+      },
+    ]);
+
+    // Create a new PDF document
+    const PDFDocument = require('pdfkit');
+    const doc = new PDFDocument();
+
+    // Set the content type and headers for the response
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename=sales_report.pdf');
+
+    // Pipe the PDF document directly to the response
+    doc.pipe(res);
+
+    // Add a header to the PDF
+    doc.fontSize(16).text('Sales Report', { align: 'center' });
+    doc.moveDown();
+
+    // Set up table headers with bold text
+    const headerY = doc.y;
+    const headers = [
+      'Product Name',
+      'Product Price',
+      'Total Quantity',
+      'Total Price',
+      'Order Date',
+      'Status',
+      'Payment Method',
+      'Redeemed Coupon',
+      'Address',
+    ];
+
+    // Set up the initial x-coordinate for each column
+    const columnX = [50, 200, 350, 450, 550, 650, 750, 850, 950];
+
+    // Draw headers and borders
+    headers.forEach((header, index) => {
+      doc.fontSize(10).font('Helvetica-Bold').text(header, columnX[index], headerY);
+      doc.moveTo(columnX[index], headerY + 15).lineTo(columnX[index] + 100, headerY + 15).stroke();
+    });
+
+    // Populate the PDF with sales data using forEach
+    let yOffset = headerY + 15;
+    salesData.forEach((sale) => {
+      // Draw cell borders
+      doc.rect(50, yOffset, 100, 20).stroke();
+      doc.rect(150, yOffset, 150, 20).stroke();
+      doc.rect(300, yOffset, 100, 20).stroke();
+      doc.rect(400, yOffset, 100, 20).stroke();
+      doc.rect(500, yOffset, 100, 20).stroke();
+      doc.rect(600, yOffset, 100, 20).stroke();
+      doc.rect(700, yOffset, 100, 20).stroke();
+      doc.rect(800, yOffset, 100, 20).stroke();
+      doc.rect(900, yOffset, 100, 20).stroke();
+
+      // Add content
+      doc.fontSize(10).font('Helvetica').text(sale.productName, 55, yOffset + 5);
+      doc.text(sale.productPrice.toString(), 205, yOffset + 5);
+      doc.text(sale.totalQuantity.toString(), 355, yOffset + 5);
+      doc.text(sale.totalPrice.toString(), 455, yOffset + 5);
+      doc.text(sale.orderDate.toString(), 555, yOffset + 5);
+      doc.text(sale.status, 655, yOffset + 5);
+      doc.text(sale.paymentMethod, 755, yOffset + 5);
+      doc.text(sale.redeemedCoupon, 855, yOffset + 5);
+      doc.text(sale.address, 955, yOffset + 5);
+
+      // Draw table row borders
+      doc.moveTo(50, yOffset + 20).lineTo(950, yOffset + 20).stroke();
+
+      yOffset += 20;
+    });
+
+    // Finalize the PDF and end the response
+    doc.end();
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
 
 
 //admin credential
@@ -248,7 +372,7 @@ const insertCategory = async (req, res) => {
       });
 
       if (capitalCategoryCount > 0) {
-        console.log("Category already exists in capital case");
+      
         res.redirect('/admin/category/add?CapitalCaseExisting=true');
       } else {
         // Insert the category data
@@ -440,8 +564,7 @@ const updateOrderStatus= async(req,res)=>{
   const userId=req.params.userId;
   const orderId=req.params.orderId;
   const newStatus=req.params.newStatus;
-console.log('278:',orderId);
-console.log('279:',newStatus);
+
 
 try{
   const order=await users.findOneAndUpdate(
@@ -501,4 +624,5 @@ couponUnblock,
 updateOrderStatus,
 
 salesReport,
+salesReportPdf
 };

@@ -177,15 +177,18 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 													<% const sevenDaysAgo = new Date(); %>
 													<% sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7); %>
 													<% if (new Date(item.orderDate) > sevenDaysAgo && item.status !== 'Returned') { %>
-														<button class="btn btn-outline-primary" data-toggle="modal" data-target="#returnModal" data-order-id="<%= item._id %>">Return</button>
+														
 													<% } %> -->
 													
 													<!-- If status is Delivered, display Return button -->
 													<a href="/returnOrder/<%= item._id %>" class="btn btn-outline-primary">Return</a>
-												<% } else if (item.status === 'Returned') { %>
-													<!-- If status is Returned, display Returned Successfully message -->
-													<p class="text-success mb-0 small">Returned Successfully</p>
-												<% } else { %>
+												<% } else if (item.status === 'Return requested'){ %>	
+									<p class="text-success mb-0 small">Return requested</p>
+									<% } else if (item.status ==='Rejected') { %>	
+										<p class="text-danger mb-0 small">Return Rejected By Admin</p>
+									<% } else if (item.status ==='Returned') { %>	
+										<p class="text-success mb-0 small">Return Approved</p>
+								<% } else { %>
 													<!-- If status is not Cancelled, Delivered, or Returned, display Cancel Order button -->
 													<a href="/cancelOrder/<%= item._id %>" class="btn btn-outline-primary">Cancel Order</a>
 												<% } %>

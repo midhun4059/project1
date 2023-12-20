@@ -135,6 +135,13 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					</a>
 			</li>
 
+			<li>
+				<a href="/admin/return">
+								<i class="fa fa-edit"></i>
+								<span> Return</span>
+				</a>
+</li>
+
               
             </ul>            </div>
         <!-- sidebar menu end-->
@@ -156,7 +163,13 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					 <form action="/salesReport" method="get">
 						<input type="date" id="Start" name="startDate">
 						<input type="date" id="end" name="endDate">
-						<input type="submit" class="btn btn-sucess">
+						<input type="submit" class="btn btn-primary">
+					</form>
+
+					<form action="/salesReportPdf" method="get">
+						<input type="date" id="Start" name="startDate" >
+						<input type="date" id="end" name="endDate" >
+						<button type="submit" class="btn btn-primary">Download PDF</button>
 					</form>
 				  </div>
 				  <div class="clearfix"> </div>

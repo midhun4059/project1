@@ -105,7 +105,7 @@ const updateProduct = async (req, res) => {
     const existingProduct = await productcollection.findById(id);
 
     if (!existingProduct) {
-      console.log("Product not found");
+     
       return res.status(404).send("Product not found");
     }
 
@@ -127,11 +127,11 @@ const updateProduct = async (req, res) => {
     const result = await productcollection.findByIdAndUpdate(id, updatedProductData);
 
     if (!result) {
-      console.log("Update failed");
+   
       return res.status(500).send("Update failed");
     }
 
-    console.log("Product updated successfully");
+   
     res.redirect('/admin/products');
   } catch (error) {
     console.log(error);
@@ -189,7 +189,7 @@ const deleteProductImage = async (req, res) => {
 
     // Check if the image index is valid
     if (imageIndex < 0 || imageIndex >= existingProduct.image.length) {
-      console.log("Invalid image index");
+      
       return res.status(400).send("Invalid image index");
     }
 

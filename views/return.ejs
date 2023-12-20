@@ -139,13 +139,13 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                         </a>
                 </li>
                 <li>
-                    <a href="/admin/return">
-                                    <i class="fa fa-edit"></i>
-                                    <span> Return</span>
-                    </a>
-    </li>
+                  <a href="/admin/return">
+                          <i class="fa fa-edit"></i>
+                          <span> Return</span>
+                  </a>
+          </li>
               
-            </ul>            </div>
+            </ul>          </div>
         <!-- sidebar menu end-->
     </div>
 </aside>
@@ -153,10 +153,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
   <section class="wrapper">
       
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
-              <a class="nav-link" href="/admin/addbanner">Add-Banner</a>
-          </button>
-          <h1>Banner Management</h1>
+         
+          <h1>ReturnOrders Management</h1>
       </nav>
       <!-- You may want to remove or replace the above navbar with your preferred navigation. -->
 
@@ -166,40 +164,56 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                   <div class="table-responsive">
                      
 
-                      
-                      <table class="table table-striped text-center my-3">
-                          <thead>
-                              <tr class="table-dark ">
-                                  <th>ID</th>
-                                  <th>Banner image</th>
-                                  <th>Description</th>
-                                  <th>Actions</th>
-
-                              </tr>
-                          </thead>
-                          <tbody>
-                              <% banner.forEach((row, index) => { %>
-                                  <tr class='align-middle'>
-                                      <td style="color: black;"><%= index+1 %></td>
-                                      <td style="color: black;">
-                                      <img  width="100px" height="100px" src="/images/<%= row.image[0] %>" alt=""></td>
-                                      <td style="color: black;"><%= row.description %></td>
+                    <table class="table table-striped text-center my-3">
+                      <thead>
+                          <tr class="table-dark">
+                              <th>ID</th>
+                              
+                              <th>Email</th>
+                              <th>Product</th>
+                              <th>Return Date</th>
+                              
+                              <th>Action</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <% orderreturn.reverse().forEach((retur,index) => { %>
+                          <tr class='align-middle'>
+                                  <td style="color: black;"><%= index +1 %></td>
                                   
-                                      <td>
-                                          
-                                          <a href="/banner/delete/<%= row._id %>" class="text-danger" >
-                                            <i class="fa fa-trash fa-lg mx-1"></i>
-                                          </a>
-                                      </td>
+                                  <td style="color: black;"><%= retur.userId%></td>
+                                  <td style="color: black;"><%= retur.productName %></td> 
+                                  <td>
+                                  <% if (retur && retur.date) { %>
+                                      <%= retur.date.toDateString() %>
+                                    <% } else { %>
+                                      N/A 
+                                    <% } %>
+                                  </td>
+                                 <td>
+                                      <% if (retur.status === 'Return approved') { %>
+                                        
+                                        Return approved
+                                      <% } else if (retur.status === 'Return Rejected') { %>
+                                       
+                                        Return Rejected
+                                      <% } else { %>
+                                        
+                                        <a href="/returnaccept/<%=retur.orderId%>" class="accept">ACCEPT <span class="fa fa-check"></span></a>
+                                        <a href="/returndeny/<%=retur.orderId%>" class="deny">DENY <span class="fa fa-close"></span></a>
+                                      <% } %>
+                                    </td>
                                     
-  
-                                      
-                                  </tr>
-                                  <% }) %>
+                                  
+                              </tr>
+                          <% }); %>
+                      </tbody>
+                  </table>
+                      
 
-                          
-                          </tbody>
-                      </table>
+
+
+
                   </div>
               </div>
           </div>
@@ -319,3 +333,4 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	<!-- //calendar -->
 </body>
 </html>
+

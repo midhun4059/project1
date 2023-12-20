@@ -17,7 +17,7 @@ const totalPriceArray = user.cartitems.map((cartItem) => {
         }, 0);
       });
     const totalPrice = totalPriceArray.reduce((acc, price) => acc + price, 0);
-      console.log(totalPrice)
+    
       
   
       user.totalPrice=totalPrice;
@@ -82,7 +82,7 @@ const useremail = req.session.user;
             'Product': productId
         });
         
-        console.log('126:Wishlist', wishlistItem);
+        
         }
         // Save the updated user
         await user.save();
@@ -320,7 +320,7 @@ const confirmLoad = async (req, res) => {
 
       // Save the user object with emptied carts
       await user.save();
-      console.log('User saved successfully after emptying carts.');
+    
 
       // Remove the cart items from the database
       const updateResult = await User.updateOne(
@@ -388,7 +388,7 @@ const confirmLoad = async (req, res) => {
 
       // Save the user object with emptied carts
       await user.save();
-      console.log('User saved successfully after emptying carts.');
+      
 
       // Remove the cart items from the database
       const updateResult = await User.updateOne(

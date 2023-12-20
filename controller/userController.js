@@ -83,7 +83,7 @@ const homeLoad=async(req,res)=>{
 
 const loginVerify=async (req, res) => {
   try{
-      console.log("Starting login verification");
+     
       const check=await users.findOne({email:req.body.email})
       
       if(check.email===req.body.email && check.isblocked===false && check.password===req.body.password && check.isVerified===true){
@@ -114,7 +114,7 @@ const existingUser = await users.findOne({ email:email });
 
 if (existingUser) {
 
-  console.log("hereee")
+ 
   // Email already exists, send an error message to EJS
   return res.render('signup', {
     error: 'Email already exists. Please use a different email address.',
@@ -178,7 +178,7 @@ req.session.email=req.body.email;
  res.redirect('/otp');
 
 
-  console.log("send successfully", otp);
+ 
 }
 
 }
@@ -205,7 +205,7 @@ const verifyOtp = async (req, res) => {
     const foundUser = await users.findOne({email: username }); // Change the variable name to foundUser
     
     const enterOtp =parseInt( req.body.otp);
-    console.log(enterOtp);
+   
 
     if (parseInt(foundUser.OTP) === enterOtp) {
 
@@ -228,12 +228,12 @@ const verifyOtp = async (req, res) => {
 const resendOtp = async (req, res) => {
   try {
     const email = req.session.email;
-    console.log('230:',email);
+    
     const userData = await users.findOne({ email: email });
 
   
     const otp = generateOtp.generate(4, { digits: true, alphabets: false, specialChars: false });
-    console.log('Generated OTP:', otp);
+    
 
     req.session.user = req.body.email;
 
@@ -266,10 +266,10 @@ const resendOtp = async (req, res) => {
       { $set: { OTP: otp } },
       { new: true }
     );
-    console.log('OTP updated successfully 267:',values);
+    
 
     res.redirect('/otp');
-    console.log('reSend otp successfully', otp);
+   
   } catch (error) {
     console.error('Error in resendOtp controller:', error);
     res.status(500).json({ message: 'Internal server error' });
@@ -281,19 +281,19 @@ const resendOtp = async (req, res) => {
 const profile=async (req,res)=>{
   try{
     const user=req.session.user;
-    console.log(user);
+    
 
     const data=await users.findOne({email:user});
     
 
     const wallet = await walletcollection.findOne({customerid: data._id });
-    console.log('11:',wallet);
+   
         
     if(user && wallet){
       var walletBalance = wallet.Amount;
 
       res.render('profile',{data,walletBalance});
-      console.log("data",data);
+      
     }
     else{
       res.redirect('/profile')
@@ -635,8 +635,10 @@ const forgotLoad=async(req,res)=>{
 const verifyEmail=async(req,res)=>{
 req.session.email=req.body.email;
 const email=req.session.email;
-  try{
+
+try{
       const userremail=await users.findOne({email:email});
+
 
       if(userremail){
           
@@ -675,6 +677,14 @@ const email=req.session.email;
           res.render('forgot',{error})
       }
 
+      setTimeout(async () => {
+        await users.findOneAndUpdate(
+              { email:req.session.email},
+              { $unset: { OTP: 1 } },
+              {new:true}
+          );
+          
+      }, 30000);
   }catch (error) {
       console.error(error);
       res.status(500).send('Internal Server Error');
@@ -813,13 +823,58 @@ const generateInvoice = async (req, res) => {
 
 const resendOtpagain = async (req, res) => {
   try {
-    // Your logic here, if needed
-    res.render('forgototp');
+    const email = req.session.email;
+    console.log('230:',email);
+    const userData = await users.findOne({ email: email });
+
+  
+    const otp = generateOtp.generate(4, { digits: true, alphabets: false, specialChars: false });
+    console.log('Generated OTP:', otp);
+
+    req.session.user = req.body.email;
+
+    let transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'testtdemoo11111@gmail.com',
+        pass: 'wikvaxsgqyebphvh',
+      },
+    });
+
+    const mailOptions = {
+      from: 'midhunrpillai4059@gmail.com',
+      to: 'midhunrpillai4059@gmail.com', // Change this to userData.email if it's not the same
+      subject: 'Your Resent OTP Code',
+      text: `Your resend OTP code is: ${otp}`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Error sending OTP:', error);
+        return res.status(500).json({ message: 'Error sending OTP' });
+      } else {
+        console.log('OTP sent:', info.response);
+      }
+    });
+
+    const values=await users.findOneAndUpdate(
+      { email:email },
+      { $set: { OTP: otp } },
+      { new: true }
+    );
+   
+
+    res.redirect('/forgototp');
+    
+
+
+    
   } catch (error) {
-    console.error('Error in resendOtpagain controller:', error);
+    console.error('Error in resendOtp controller:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
 
 
 

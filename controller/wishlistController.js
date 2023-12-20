@@ -40,7 +40,7 @@ const addToWish=async(req,res)=>{
                   
                   }
                   const result=await Wishlist.insertMany([data])
-                  console.log("Add to wish list successfull")
+                  
           }else{
               console.log("Product already exist in your wishlist");
               res.redirect('/wishlist');
@@ -79,7 +79,7 @@ const removeFromWishlist = async (req, res) => {
       
       else {
           // User not found
-          console.log('No such user found');
+          
           res.redirect('/wishlist'); // Redirect to the wishlist page or handle accordingly
       }
   } catch (error) {

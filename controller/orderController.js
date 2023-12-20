@@ -4,7 +4,8 @@ const Razorpay = require("razorpay");
 
 const users=require('../model/userModels')
 const couponcollection=require('../model/couponModel');
-const walletcollection=require('../model/walletModel')
+const walletcollection=require('../model/walletModel');
+const returnCollection=require('../model/returnModel');
 
 const dotenv = require("dotenv").config();
 var instance = new Razorpay({
@@ -15,20 +16,19 @@ var instance = new Razorpay({
 const razorpayLoad = async (req, res) => {
   try {
     const username = req.session.user;
-    console.log("herer",);
+    
 
     const users = await Users.findOne({ email: username });
     // console.log("users",users);
     const totalPrice = users.totalPrice;
-    console.log("totalPrice", totalPrice);
+  
     var options = {
       amount: totalPrice * 100, // amount in the smallest currency unit
       currency: "INR",
       receipt: "order_rcptid_11",
     };
     const razorpayorder = await instance.orders.create(options);
-    console.log("Razorpay Order:", razorpayorder);
-
+    
     return res.json({ razorpayorder });
   } catch (error) {
     console.error(error);
@@ -44,22 +44,22 @@ const returnOrder=async(req,res)=>{
       const orderDetails=await users.findOne({'orders._id':orderId}).populate('orders.product');
       const order = orderDetails.orders.find(order => order._id == orderId);
 
-      if (order.paymentmethod === 'Online Payment' || order.paymentmethod === 'Cash On Delivery' && (order.status === 'Delivered')) {
-          const wallet = await walletcollection.findOneAndUpdate(
-              { customerid: user._id },
-              { $inc: {Amount: (order.Amount) } ,
-              $push:{
-                transactions:{
-                    type:'Refund',
-                    amount:(order.Amount),
-                },
-            },
+      // if (order.paymentmethod === 'Online Payment' || order.paymentmethod === 'Cash On Delivery' && (order.status === 'Delivered')) {
+      //     const wallet = await walletcollection.findOneAndUpdate(
+      //         { customerid: user._id },
+      //         { $inc: {Amount: (order.Amount) } ,
+      //         $push:{
+      //           transactions:{
+      //               type:'Refund',
+      //               amount:(order.Amount),
+      //           },
+      //       },
             
             
-            },
-              { new: true }
-          ) 
-      }
+      //       },
+      //         { new: true }
+      //     ) 
+      // }
 
       for (const order of user.orders) {
           const product = order.product;
@@ -71,9 +71,20 @@ const returnOrder=async(req,res)=>{
 
        await users.findOneAndUpdate(
           { 'orders._id': orderId }, 
-          { $set: {'orders.$.status': 'Returned' } }, 
+          { $set: {'orders.$.status': 'Return requested !!' } }, 
           { new: true } 
       );
+
+      const returnOrderDetails = new returnCollection({
+        userId: userId,
+        orderId: orderId,
+        product: order.product._id,
+        quantity: order.quantity,
+        status: 'Requested', 
+        date: new Date(),
+    });
+    await returnOrderDetails.save();
+
       res.redirect('/showorders')
 
   }catch(error){
