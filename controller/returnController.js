@@ -31,22 +31,6 @@ const accept=async(req,res)=>{
             {$set:{'orders.$.status':'Returned'}}, 
             {new:true } 
         );
-
-        
-            // const wallet = await walletcollection.findOneAndUpdate(
-            //     { customerid: orderDetails._id },
-            //     { $inc: {Amount: (order.totalPrice) },
-            //     $push:{
-            //         transactions:{
-            //             type:'Refund',
-            //             amount:(order.totalPrice),
-            //         },
-            //     },
-            
-            // },
-            //     { new: true }
-            // ) 
-           
         const updateReturn = await returnCollection.findOneAndUpdate(
             { orderId: orderId },
             { $set: { status: 'Return approved' } },

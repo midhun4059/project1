@@ -17,13 +17,6 @@ const storage=multer.diskStorage({
   }
 })
 
-
-// const upload = multer({storage:storage});
-
-// const upload = multer();
-
-
-
 const productdetails=async(req,res)=>{
   let id=req.params.id;
   const products=await productcollection.findById(id)

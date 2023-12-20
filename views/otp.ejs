@@ -27,7 +27,7 @@
                                 <% } %>
                               </div>
                             <input type="text" id="otp" name="otp">
-                            <!-- <div id="otp" class="inputs d-flex flex-row justify-content-center mt-2"> <input name="otp" class="m-2 text-center form-control rounded" type="text" id="first" maxlength="1" /> <input name="otp" class="m-2 text-center form-control rounded" type="text" id="second" maxlength="1" /> <input  name="otp" class="m-2 text-center form-control rounded" type="text" id="third" maxlength="1" /> <input name="otp" class="m-2 text-center form-control rounded" type="text" id="fourth" maxlength="1" /> <input name="otp" class="m-2 text-center form-control rounded" type="text" id="fifth" maxlength="1" /> <input name="otp" class="m-2 text-center form-control rounded" type="text" id="sixth" maxlength="1" /> </div> -->
+                           
                             <div class="mt-4"> 
                                 <form method="post" action="/otp">
                                     <button class="btn btn-danger px-4 validate" type="submit">Submit</button>
@@ -35,12 +35,9 @@
                             </div>
                                 
                             <div id="countdown">00:30</div>
-                            <!-- <div id="hiddenButton" style="display: none;">
-                                <a id="showButton" href="/otp/resend">Resend OTP</a> 
-                                </div> -->
+                           
 
-                                <!-- <div id="hiddenButton" style="display: none;"> 
-                                    <a id="showButton" href="/otp/resend">Resend OTP</a>  -->
+                              
                                     <div id="hiddenButton" style="display: none;">
                                     <form action="/otp/resend" method="get">
                                         <button id="showButton" class="btn btn-danger">RESEND</button>
