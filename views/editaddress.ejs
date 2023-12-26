@@ -28,7 +28,7 @@
     <div class="container">
         <div class="main-body">
         
-              <!-- Breadcrumb -->
+            
               <nav aria-label="breadcrumb" class="main-breadcrumb">
                 <ol class="breadcrumb">
                   <li class="breadcrumb-item"><a href="/" style="text-decoration: none;">Home</a></li>
@@ -37,7 +37,7 @@
                   <li class="breadcrumb-item active" aria-current="page">Edit address</li>
                 </ol>
               </nav>
-              <!-- /Breadcrumb -->
+              
 
 
               
@@ -71,10 +71,7 @@
                   <div class="card mb-3">
                     <div class="card-body">
                       <form action="/editaddress" method="post" >
-                        <!-- <div class="form-group">
-                          <label for="houseName"><i class="fas fa-user"></i>House Name,Flat</label>
-                          <input type="text" name="houseName" class="form-control" id="houseName" placeholder="Enter Your House name,Building,Apartment">
-                        </div> -->
+                     
                         <div class="form-group">
                           <label for="street"><i class="fa fa-user"></i>Street</label>
                           <input type="text" name="street" class="form-control" id="productName" placeholder="Area,Street,Village" value="<%= data.address[0].street %>">

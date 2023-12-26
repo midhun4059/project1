@@ -1,9 +1,4 @@
-<!--
-	Author: W3layouts
-	Author URL: http://w3layouts.com
-	License: Creative Commons Attribution 3.0 Unported
-	License URL: http://creativecommons.org/licenses/by/3.0/
--->
+
 
 <!DOCTYPE html>
 <html lang="zxx">
@@ -33,14 +28,19 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	<link href="css/fontawesome-all.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-...your-integrity-hash-here..." crossorigin="anonymous" />
 
-	<link href="//fonts.googleapis.com/css?family=Inconsolata:400,700" rel="stylesheet">
-	<link href="//fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800"
-	    rel="stylesheet">
+	<style>
+		body {
+				font-family: ' Verdana', Tahoma, Geneva, Verdana, sans-serif;
+		
+		}
+
+		
+</style>
 </head>
 
 <body>
 	<div class="banner-top container-fluid" id="home">
-		<!-- header -->
+	
 		<header>
 			<div class="row">
 				<div class="col-md-3 top-info text-left mt-lg-4">
@@ -79,9 +79,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 							</form>
 						</li>
 					</ul>
-					<!---->
-					
-					<!---->
+		
 				</div>
 			</div>
 		
@@ -97,7 +95,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			</nav>
 			
 		</header>
-		<!-- banner -->
+	
 		<div class="banner_inner">
 			<div class="services-breadcrumb">
 				<div class="inner_breadcrumb">
@@ -113,10 +111,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			</div>
 
 		</div>
-		<!--//banner -->
+
 	</div>
-	<!--// header_top -->
-	<!--checkout-->
+
 
 
 
@@ -130,10 +127,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 							
 						</div>
 						<div class="card-body p-4">
-							<!-- <div class="d-flex justify-content-between align-items-center mb-4">
-								<p class="lead fw-normal mb-0" style="color: #a8729a;">Receipt</p>
-								<p class="small text-muted mb-0">Receipt Voucher : 1KAU9-84UIL</p>
-							</div> -->
+						
 
 							<%if(orderItems.length === 0){ %>
 								<h2>Order is Empty</h2>
@@ -153,9 +147,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 										<div class="col-md-2 text-center d-flex justify-content-center align-items-center">
 											<p class="text-muted mb-0 small"><%=item.paymentmethod%></p>
 										</div>
-										<div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-											<p class="text-muted mb-0 small"><%=item.product.description%></p>
-										</div>
+										
 										<div class="col-md-2 text-center d-flex justify-content-center align-items-center">
 											<p class="text-muted mb-0 small">Qty: <%=item.quantity%></p>
 										</div>
@@ -163,37 +155,57 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 											<p class="text-muted mb-0 small">₹<%= item.product.price %></p>
 										</div>
 
-										<div>
-
-
-											<a href="/invoice/<%= item._id %>" class="btn btn-outline-primary btn-sm" download="invoice.pdf">Invoice</a>
-										</div>
-
-										<div class="col-md-1"></div>
+									
+                <a href="/invoice/<%= item._id %>" class="btn btn-outline-primary btn-sm" download="invoice.pdf">Invoice</a>
+										 
+								   <div class="col-md-1"></div>
+									 
 										<div class="col-md-2 text-center d-flex justify-content-center align-items-center">
 											<% if (item.status !== 'Cancelled') { %>
 												<% if (item.status === 'Delivered') { %>
-<!-- 
+
 													<% const sevenDaysAgo = new Date(); %>
 													<% sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7); %>
 													<% if (new Date(item.orderDate) > sevenDaysAgo && item.status !== 'Returned') { %>
 														
-													<% } %> -->
-													
-													<!-- If status is Delivered, display Return button -->
-													<a href="/returnOrder/<%= item._id %>" class="btn btn-outline-primary">Return</a>
+													<% } %> 
+													<div class="col-md-6">
+														<form action="/feedback/<%= item.product._id %>" method="post" class="d-flex">
+																<div class="me-3">
+																		<div class="mb-3">
+																				<label for="feedbackTextArea" class="form-label">Feedback</label>
+																				<textarea class="form-control" id="feedbackTextArea" name="feedback" rows="3" required></textarea>
+																		</div>
+												
+																		<div class="mb-3">
+																				<label for="ratingSelect" class="form-label">Rating</label>
+																				<select class="form-select" id="ratingSelect" name="rating" required>
+																						<option value="1">1</option>
+																						<option value="2">2</option>
+																						<option value="3">3</option>
+																						<option value="4">4</option>
+																						<option value="5">5</option>
+																				</select>
+																		</div>
+												
+																		<button type="submit" class="btn btn-primary">Submit Feedback</button>
+																</div>
+														</form>
+												
+														<a href="/returnOrder/<%= item._id %>" class="btn btn-outline-primary">Return</a>
+												</div>
 												<% } else if (item.status === 'Return requested'){ %>	
 									<p class="text-success mb-0 small">Return requested</p>
 									<% } else if (item.status ==='Rejected') { %>	
-										<p class="text-danger mb-0 small">Return Rejected By Admin</p>
+										<p class="text-danger mb-0 small">Return Rejected</p>
 									<% } else if (item.status ==='Returned') { %>	
 										<p class="text-success mb-0 small">Return Approved</p>
 								<% } else { %>
-													<!-- If status is not Cancelled, Delivered, or Returned, display Cancel Order button -->
+									
 													<a href="/cancelOrder/<%= item._id %>" class="btn btn-outline-primary">Cancel Order</a>
 												<% } %>
 											<% } else { %>
-												<!-- If status is Cancelled, display Cancelled message -->
+											
 												<p class="text-muted mb-0 small">Cancelled</p>
 											<% } %>
 										</div>
@@ -300,7 +312,6 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	</section>
 
 
-	<!--//checkout-->
 	<!--footer -->
 	<footer class="py-lg-5 py-3">
 		<div class="container-fluid px-lg-5 px-3">
@@ -457,11 +468,11 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	<script>
 		$(document).ready(function () {
 			$('#horizontalTab').easyResponsiveTabs({
-				type: 'default', //Types: default, vertical, accordion           
-				width: 'auto', //auto or any width like 600px
-				fit: true, // 100% fit in a container
-				closed: 'accordion', // Start closed if in accordion view
-				activate: function (event) { // Callback function if tab is switched
+				type: 'default',           
+				width: 'auto',
+				fit: true, 
+				closed: 'accordion', 
+				activate: function (event) { 
 					var $tab = $(this);
 					var $info = $('#tabInfo');
 					var $name = $('span', $info);
@@ -551,14 +562,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     </script>
     <script>
         $(document).ready(function() {
-            /*
-            						var defaults = {
-            							  containerID: 'toTop', // fading element id
-            							containerHoverID: 'toTopHover', // fading element hover id
-            							scrollSpeed: 1200,
-            							easingType: 'linear' 
-            						 };
-            						*/
+           
 
             $().UItoTop({
                 easingType: 'easeOutQuart'

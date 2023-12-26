@@ -1,9 +1,4 @@
-<!--
-	Author: W3layouts
-	Author URL: http://w3layouts.com
-	License: Creative Commons Attribution 3.0 Unported
-	License URL: http://creativecommons.org/licenses/by/3.0/
--->
+
 
 <!DOCTYPE html>
 <html lang="zxx">
@@ -37,9 +32,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	<link rel="stylesheet" href="/css/flexslider.css" type="text/css" media="screen" />
 	<link href="/css/style.css" rel='stylesheet' type='text/css' />
 	<link href="css/fontawesome-all.css" rel="stylesheet">
-	<link href="//fonts.googleapis.com/css?family=Inconsolata:400,700" rel="stylesheet">
-	<link href="//fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800"
-	    rel="stylesheet">
+
 
 
 			
@@ -286,26 +279,37 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			
 								</div>
 								<div class="clearfix"> </div>
-								<!--/tabs-->
+							
 								<div class="responsive_tabs">
 									<div id="horizontalTab">
-										<ul class="resp-tabs-list">
-											<li>Description</li>
-											<li>Reviews</li>
-											<li>Information</li>
-										</ul>
+										
 										<div class="resp-tabs-container">
-											<!--/tab_one-->
+									
 											<div class="tab1">
-					
 												<div class="single_page">
-													<h6>Description</h6>
-													<p><%= products.description %>0</p>
-													<p class="para">
-														Sunglasses are a popular accessory that serves both practical and fashionable purposes. Designed to protect the eyes from harmful ultraviolet (UV) rays emitted by the sun, sunglasses have become an essential item in everyday life. Here are some key aspects to consider when talking about sunglasses.</p>
+													<h6>Reviews(Ratings Out of 5)</h6>
+													<!-- <p><%= products.Reviews %></p> -->
+											
+													<div class="product-feedback">
+														<% feedback.forEach((feedbackItem) => { %>
+															<p><strong>User:</strong> <%= feedbackItem.username.username %></p>
+															<p><strong>Rating:</strong>
+                                <% for (let i = 1; i <= 5; i++) { %>
+                                    <% if (i <= feedbackItem.rating) { %>
+                                        <span class="star">&#9733;</span> <!-- Unicode character for a filled star -->
+                                    <% } else { %>
+                                        <span class="star">&#9734;</span> <!-- Unicode character for an empty star -->
+                                    <% } %>
+                                <% } %>
+															<p><strong>Feedback:</strong> <%= feedbackItem.feedback %></p>
+															<hr>
+														<% }); %>
+														<hr>
+													</div>
 												</div>
 											</div>
-											<!--//tab_one-->
+											
+											
 											<div class="tab2">
 					
 												
@@ -316,14 +320,14 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 										</div>
 									</div>
 								</div>
-								<!--//tabs-->
+								
 					
 					</div>
 				</div>
 			</div>
 				
 		</section>
-		<!--footer -->
+		
 		<footer class="py-lg-5 py-3">
 			<div class="container-fluid px-lg-5 px-3">
 				<div class="row footer-top-w3layouts">
@@ -414,9 +418,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				</div>
 			</div>
 		</footer>
-		<!-- //footer -->
+		
 
-		<!--jQuery-->
 
 
 		<script src="path/to/jquery.min.js"></script>
@@ -544,21 +547,21 @@ function changeImage(imagePath) {
 			})
 		</script>
 
-		<!-- //end-smooth-scrolling -->
 
-		<!-- single -->
+
+	
 		<script src="js/imagezoom.js"></script>
-		<!-- single -->
-		<!-- script for responsive tabs -->
+	
+
 		<script src="js/easy-responsive-tabs.js"></script>
 		<script>
 			$(document).ready(function () {
 				$('#horizontalTab').easyResponsiveTabs({
-					type: 'default', //Types: default, vertical, accordion           
-					width: 'auto', //auto or any width like 600px
-					fit: true, // 100% fit in a container
-					closed: 'accordion', // Start closed if in accordion view
-					activate: function (event) { // Callback function if tab is switched
+					type: 'default',         
+					width: 'auto', 
+					fit: true,
+					closed: 'accordion', 
+					activate: function (event) { 
 						var $tab = $(this);
 						var $info = $('#tabInfo');
 						var $name = $('span', $info);
@@ -573,10 +576,10 @@ function changeImage(imagePath) {
 				});
 			});
 		</script>
-		<!-- FlexSlider -->
+	
 		<script src="js/jquery.flexslider.js"></script>
 		<script>
-			// Can also be used with $(document).ready()
+		
 			$(window).load(function () {
 				$('.flexslider1').flexslider({
 					animation: "slide",
@@ -584,9 +587,7 @@ function changeImage(imagePath) {
 				});
 			});
 		</script>
-		<!-- //FlexSlider-->
 
-		<!-- dropdown nav -->
 		<script>
 			$(document).ready(function () {
 				$(".dropdown").hover(
@@ -601,7 +602,7 @@ function changeImage(imagePath) {
 				);
 			});
 		</script>
-		<!-- //dropdown nav -->
+	
 	<script src="js/move-top.js"></script>
     <script src="js/easing.js"></script>
     <script>
@@ -616,14 +617,7 @@ function changeImage(imagePath) {
     </script>
     <script>
         $(document).ready(function() {
-            /*
-            						var defaults = {
-            							  containerID: 'toTop', // fading element id
-            							containerHoverID: 'toTopHover', // fading element hover id
-            							scrollSpeed: 1200,
-            							easingType: 'linear' 
-            						 };
-            						*/
+       
 
             $().UItoTop({
                 easingType: 'easeOutQuart'
@@ -631,11 +625,11 @@ function changeImage(imagePath) {
 
         });
     </script>
-    <!--// end-smoth-scrolling -->
+
 
 
 		<script src="js/bootstrap.js"></script>
-		<!-- js file -->
+	
 </body>
 
 </html>

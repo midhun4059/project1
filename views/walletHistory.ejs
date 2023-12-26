@@ -1,9 +1,4 @@
-<!--
-	Author: W3layouts
-	Author URL: http://w3layouts.com
-	License: Creative Commons Attribution 3.0 Unported
-	License URL: http://creativecommons.org/licenses/by/3.0/
--->
+
 
 <!DOCTYPE html>
 <html lang="zxx">
@@ -33,14 +28,22 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	<link href="css/fontawesome-all.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-...your-integrity-hash-here..." crossorigin="anonymous" />
 
-	<link href="//fonts.googleapis.com/css?family=Inconsolata:400,700" rel="stylesheet">
-	<link href="//fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800"
-	    rel="stylesheet">
+
+	<style>
+		body {
+				font-family: ' Verdana', Tahoma, Geneva, Verdana, sans-serif;
+		
+		}
+
+		
+</style>
+
+
 </head>
 
 <body>
 	<div class="banner-top container-fluid" id="home">
-		<!-- header -->
+		
 		<header>
 			<div class="row">
 				<div class="col-md-3 top-info text-left mt-lg-4">
@@ -79,9 +82,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 							</form>
 						</li>
 					</ul>
-					<!---->
-					
-					<!---->
+				
 				</div>
 			</div>
 		
@@ -118,7 +119,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			</nav>
 			
 		</header>
-		<!-- banner -->
+		
 		<div class="banner_inner">
 			<div class="services-breadcrumb">
 				<div class="inner_breadcrumb">
@@ -134,10 +135,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			</div>
 
 		</div>
-		<!--//banner -->
+		
 	</div>
-	<!--// header_top -->
-	<!--checkout-->
+
     <section class="h-100 gradient-custom">
         <div class="container py-5 h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">
@@ -172,8 +172,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
             </div>
         </div>
     </section>
-	<!--//checkout-->
-	<!--footer -->
+
 	<footer class="py-lg-5 py-3">
 		<div class="container-fluid px-lg-5 px-3">
 			<div class="row footer-top-w3layouts">
@@ -280,18 +279,15 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			</div>
 		</div>
 	</footer>
-	<!-- //footer -->
-	<!--jQuery-->
+
 
 	
 	<script src="js/jquery-2.2.3.min.js"></script>
-	<!-- newsletter modal -->
-	<!--search jQuery-->
+
 	<script src="js/modernizr-2.6.2.min.js"></script>
 	<script src="js/classie-search.js"></script>
 	<script src="js/demo1-search.js"></script>
-	<!--//search jQuery-->
-	<!-- cart-js -->
+	
 	<script src="js/minicart.js"></script>
 	<script>
 		googles.render();
@@ -309,7 +305,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
 
 
-	<!-- //cart-js -->
+
 	<script>
 		$(document).ready(function () {
 			$(".button-log a").click(function () {
@@ -323,17 +319,16 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			open = false;
 		});
 	</script>
-	<!-- carousel -->
-	<!-- easy-responsive-tabs -->
+	
 	<script src="js/easy-responsive-tabs.js"></script>
 	<script>
 		$(document).ready(function () {
 			$('#horizontalTab').easyResponsiveTabs({
-				type: 'default', //Types: default, vertical, accordion           
-				width: 'auto', //auto or any width like 600px
-				fit: true, // 100% fit in a container
-				closed: 'accordion', // Start closed if in accordion view
-				activate: function (event) { // Callback function if tab is switched
+				type: 'default',           
+				width: 'auto', 
+				fit: true,
+				closed: 'accordion', 
+				activate: function (event) { 
 					var $tab = $(this);
 					var $info = $('#tabInfo');
 					var $name = $('span', $info);
@@ -348,7 +343,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			});
 		});
 	</script>
-	<!--quantity-->
+	
 	<script>
 		$('.value-plus').on('click', function () {
 			var divUpd = $(this).parent().find('.value'),
@@ -362,8 +357,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			if (newVal >= 1) divUpd.text(newVal);
 		});
 	</script>
-	<!--quantity-->
-	<!--close-->
+
 	<script>
 		$(document).ready(function (c) {
 			$('.close1').on('click', function (c) {
@@ -391,9 +385,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			});
 		});
 	</script>
-	<!--//close-->
+	
 
-	<!-- dropdown nav -->
+
 	<script>
 		$(document).ready(function () {
 			$(".dropdown").hover(
@@ -408,7 +402,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			);
 		});
 	</script>
-	<!-- //dropdown nav -->
+
 	<script src="js/move-top.js"></script>
     <script src="js/easing.js"></script>
     <script>
@@ -423,19 +417,12 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     </script>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 
-<!-- Bootstrap JS -->
+
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
     <script>
         $(document).ready(function() {
-            /*
-            						var defaults = {
-            							  containerID: 'toTop', // fading element id
-            							containerHoverID: 'toTopHover', // fading element hover id
-            							scrollSpeed: 1200,
-            							easingType: 'linear' 
-            						 };
-            						*/
+          
 
             $().UItoTop({
                 easingType: 'easeOutQuart'
@@ -443,11 +430,11 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
         });
     </script>
-    <!--// end-smoth-scrolling -->
+   
 
 
 	<script src="js/bootstrap.js"></script>
-	<!-- js file -->
+
 </body>
 
 </html>

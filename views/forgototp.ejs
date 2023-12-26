@@ -9,6 +9,64 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 
+    <style>
+        body {
+            height: 100vh;
+            margin: 0;
+            background: url('/images/background images.png') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .otp-container {
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .otp-input {
+            width: 100%;
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+
+        .validate {
+            margin-top: 20px;
+        }
+
+        #countdown {
+            color: red;
+        }
+
+        #hiddenButton {
+            display: none;
+            margin-top: 10px;
+        }
+
+        #showButton {
+            color: blue;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -16,20 +74,20 @@
         <div class="container height-100">
             <div class="d-flex justify-content-center align-items-center">
                 <div class="position-relative">
-                    <div class="card p-2 text-center">
-                        <h6 style="color: black">Please enter the one time password to change password</h6>
-                        <div><span style="color: rgb(0, 0, 0);">A code has been sent to</span> <small></small></div>
+                    <div class="card p-2 text-center otp-container">
+                        <h6 style="color: black">Please enter the one-time password to change the password</h6>
+                        <div><span style="color: rgb(0, 0, 0);"></span> <small></small></div>
                         <div class="error-message">
                             <% if (errorMessage) { %>
                               <p style="color: red;"><%= errorMessage %></p>
                             <% } %>
                           </div>
-                        <input type="text" id="otp" name="otp">
+                        <input type="text" id="otp" name="otp" class="otp-input">
                         <div class="mt-4">
                             <button class="btn btn-danger px-4 validate" type="submit">Submit</button>
                         </div>
-                        <div id="countdown" style="color: red;">00:30</div>
-                        <div id="hiddenButton" style="display: none;">
+                        <div id="countdown">00:30</div>
+                        <div id="hiddenButton">
                             <a id="showButton" href="/otp/resend">Resend OTP</a>
                           </div>
                     </div>
@@ -54,17 +112,15 @@
             }, 1000);
         }
 
-        countdown(); // Start the countdown when the page loads
+        countdown(); 
     </script>
 
     <script>
-        // Function to show the hidden button after 1 minute
         function showButtonAfterOneMinute() {
             const hiddenButton = document.getElementById('hiddenButton');
-            hiddenButton.style.display = 'block'; // Show the hidden button
+            hiddenButton.style.display = 'block'; 
         }
 
-        // Set a timeout to call the function after 1 minute (60,000 milliseconds)
         setTimeout(showButtonAfterOneMinute, 30000);
     </script>
 

@@ -9,49 +9,78 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 
+    <style>
+        body {
+            height: 100vh;
+       
+            
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: url('/images/background images.png') ;
+            background-size: cover;
+        }
+
+        .otp-container {
+            max-width: 400px;
+            width: 100%;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .otp-input {
+            width: 100%;
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+
+        .submit-btn {
+            margin-top: 20px;
+        }
+
+        .resend-btn {
+            margin-top: 10px;
+        }
+    </style>
+
 </head>
 
 <body>
-    <form action="/otp" method="post">
-        <div class="container height-100 d-flex justify-content-center align-items-center">
-
-            <div class="position-relative">
-                <div class="card p-2 text-center">
-                    <h6>Please enter the one time password <br> to verify your account</h6>
+    <form action="/otp" method="post" class="otp-container">
+        <h6>Please enter the one-time password <br> to verify your account</h6>
 
 
-                            <div> <span>A code has been sent</span> <small></small> </div>
-                            <div class="error-message">
-                                <% if (errorMessage) { %>
-                                  <p><%= errorMessage %></p>
-                                <% } %>
-                              </div>
-                            <input type="text" id="otp" name="otp">
-                           
-                            <div class="mt-4"> 
-                                <form method="post" action="/otp">
-                                    <button class="btn btn-danger px-4 validate" type="submit">Submit</button>
-                                </form>
-                            </div>
-                                
-                            <div id="countdown">00:30</div>
-                           
+        <div class="error-message">
+            <% if (errorMessage) { %>
+            <p><%= errorMessage %></p>
+            <% } %>
+        </div>
 
-                              
-                                    <div id="hiddenButton" style="display: none;">
-                                    <form action="/otp/resend" method="get">
-                                        <button id="showButton" class="btn btn-danger">RESEND</button>
-                                    </form>
-                                </div>
-                                
-                                <!-- <button id="showButton">Show Me!</button> -->
-                            </div>
-                </div>
+        <input type="text" id="otp" name="otp" class="otp-input">
 
-            </div>
+        <div class="mt-4">
+            <button class="btn btn-danger px-4 submit-btn" type="submit">Submit</button>
+        </div>
+
+        <div id="countdown">00:30</div>
+
+        <div id="hiddenButton" style="display: none;" class="resend-btn">
+            <form action="/otp/resend" method="get">
+                <button id="showButton" class="btn btn-danger">RESEND</button>
+            </form>
         </div>
     </form>
-
 
     <script>
         let seconds = 30;
@@ -69,17 +98,17 @@
             }, 1000);
         }
 
-        countdown(); // Start the countdown when the page loads
+        countdown();
     </script>
 
     <script>
-        // Function to show the hidden button after 1 minute
+        
         function showButtonAfterOneMinute() {
             const hiddenButton = document.getElementById('hiddenButton');
-            hiddenButton.style.display = 'block'; // Show the hidden button
+            hiddenButton.style.display = 'block'; 
         }
 
-        // Set a timeout to call the function after 1 minute (60,000 milliseconds)
+       
         setTimeout(showButtonAfterOneMinute, 30000);
     </script>
 
