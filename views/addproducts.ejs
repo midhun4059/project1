@@ -138,22 +138,15 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                   </select>
                </div>
               
-                <div class="form-group">
-                   
-                  <label for="productImage"> <i class="fa-fa-image"></i>Image of product</label>
-                  
-                  <input type="file" name="image" class="form-control-file" id="productImage" required multiple>
+               
 
-                  <div id="imagePreviewsContainer" class="row"></div>
-
-                  <!-- Hidden fields to store cropped data for each image -->
-                  <div id="croppedDataContainer"></div>
-
-                  <!-- Cropper Container for Multiple Images -->
                   <div class="form-group">
-                      <button type="button" class="btn btn-primary" id="cropImagesBtn"><i class="fa fa-crop"></i> Crop Images</button>
-                  </div>
-
+                    <label for="productImage"><i class="fas fa-image"></i> Image of product</label>
+                    
+                    <input type="file" name="image" class="form-control-file" id="productImage" onchange="previewImage(this)" multiple>
+                    <div id="errorImage" class="error-message"></div>
+                    <img id="imagePreview" src="#" alt="Image Preview" style="max-width: 25%; display: none;">
+                   
                   </div>
 
                 <div class="form-group">
@@ -185,65 +178,6 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
 <script src="js/jquery.scrollTo.js"></script>
 
-
-<script>
-  $(document).ready(function () {
-      var croppers = [];
-
-      $('#cropImagesBtn').on('click', function () {
-          // Loop through each cropper instance and get cropped data
-          var croppedDataArray = [];
-          for (var i = 0; i < croppers.length; i++) {
-              var croppedData = croppers[i].getData();
-              croppedDataArray.push(JSON.stringify(croppedData));
-          }
-
-          // Store cropped data in hidden field
-          $('#croppedDataContainer').empty();
-          for (var i = 0; i < croppedDataArray.length; i++) {
-              var hiddenInput = $('<input>').attr({
-                  type: 'hidden',
-                  name: 'croppedData[]',
-                  value: croppedDataArray[i]
-              });
-              $('#croppedDataContainer').append(hiddenInput);
-          }
-      });
-
-      $('#productImages').on('change', function (e) {
-          var input = e.target;
-          var imagePreviewsContainer = $('#imagePreviewsContainer');
-          var croppedDataContainer = $('#croppedDataContainer');
-
-          // Clear previous previews and croppers
-          imagePreviewsContainer.empty();
-          croppers = [];
-
-          // Loop through selected files and create previews and croppers
-          for (var i = 0; i < input.files.length; i++) {
-              var reader = new FileReader();
-              reader.readAsDataURL(input.files[i]);
-
-              reader.onload = function (event) {
-                  var imagePreview = $('<div class="col-md-4"><img class="img-fluid" style="max-width: 100%;" alt="Image Preview"></div>');
-                  var cropperContainer = $('<div class="form-group col-md-4"><label for="croppedImage">Cropped Image</label><div><img class="img-fluid" alt="Cropped Image"></div></div>');
-                  var cropper = new Cropper(cropperContainer.find('img')[0], {
-                      aspectRatio: 1,
-                      viewMode: 1,
-                  });
-
-                  imagePreview.find('img').attr('src', event.target.result);
-                  cropperContainer.find('img').attr('src', event.target.result);
-
-                  imagePreviewsContainer.append(imagePreview);
-                  imagePreviewsContainer.append(cropperContainer);
-
-                  croppers.push(cropper);
-              };
-          }
-      });
-  });
-</script>
 
 
 
@@ -303,7 +237,47 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	});
 	</script>
 
+<script>
+    let cropper;
 
+    function previewImage(input) {
+        var preview = document.getElementById('imagePreview');
+        var fileInput = input.files[0];
+
+        if (fileInput) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+
+                // Initialize Cropper after the image is loaded
+                cropper = new Cropper(document.getElementById('imagePreview'), {
+                    aspectRatio: 1, // Set your desired aspect ratio
+                    viewMode: 1,    // Set your desired view mode
+                });
+            };
+
+            reader.readAsDataURL(fileInput);
+        } else {
+            preview.src = '#';
+            preview.style.display = 'none';
+            if (cropper) {
+                cropper.destroy(); // Destroy Cropper instance if no image selected
+            }
+        }
+    }
+
+    function getCroppedImage() {
+        // Get the cropped image data
+        const croppedDataUrl = cropper.getCroppedCanvas().toDataURL();
+
+        // Set the cropped image as the source of your preview element
+        document.getElementById('imagePreview').src = croppedDataUrl;
+
+        // You can also use the cropped data (croppedDataUrl) in your form submission
+    }
+</script>
 <script>
   const formData = new FormData();
 
