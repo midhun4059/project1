@@ -20,6 +20,12 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <link href="/css/style-responsive.css" rel="stylesheet"/>
 <!-- font CSS -->
 
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
 <!-- font-awesome icons -->
 <link rel="stylesheet" href="/css/font.css" type="text/css"/>
 <link href="/css/font-awesome.css" rel="stylesheet"> 
@@ -48,9 +54,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <div class="top-nav clearfix">
     <!--search & user info start-->
     <ul class="nav pull-right top-menu">
-        <li>
-            <input type="text" class="form-control search" placeholder=" Search">
-        </li>
+       
         <!-- user login dropdown start-->
         <li class="dropdown">
             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
@@ -186,8 +190,10 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                         Return Rejected
                                       <% } else { %>
                                         
-                                        <a href="/returnaccept/<%=retur.orderId%>" class="accept">ACCEPT <span class="fa fa-check"></span></a>
-                                        <a href="/returndeny/<%=retur.orderId%>" class="deny">DENY <span class="fa fa-close"></span></a>
+                                        <div class="action-buttons">
+                                            <a href="/returnaccept/<%=retur.orderId%>" class="btn btn-success accept">ACCEPT <span class="fa fa-check"></span></a>
+                                            <a href="/returndeny/<%=retur.orderId%>" class="btn btn-danger deny">DENY <span class="fa fa-close"></span></a>
+                                        </div>
                                       <% } %>
                                     </td>
                                     

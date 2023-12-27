@@ -13,11 +13,11 @@ const feedback = async (req, res) => {
     const orders = userId.orders;
     orders.forEach((ele)=>{
       const orderid = ele.product
-      // console.log('order',orderid);
+      
       orderID = orderid
     })
-    console.log('orderis',orderId)
-    // console.log("13orderid",orders);
+   
+    
 
     const newFeedback = new feedbackCollection({
       username: userId._id,

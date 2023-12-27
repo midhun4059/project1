@@ -34,6 +34,21 @@
 }
 
 
+.card-body .row .col-md-2:last-child {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card-body .row .col-md-2:last-child a.btn {
+    margin-top: 10px;
+}
+
+/* Add this style to center the feedback and return buttons vertically */
+.card-body .row .col-md-2:last-child a.btn {
+    align-self: center;
+}
+
 /* Overlay closing cross */
 .overlay .overlay-close {
     width: 40px;

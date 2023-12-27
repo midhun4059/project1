@@ -22,18 +22,17 @@ const storage = multer.diskStorage({
 const productdetails = async (req, res) => {
   try {
     const productId = req.params.id;
-console.log('detailsid',productId);
+
     const products = await productcollection.findById(productId);
     const feedback = await feedbackCollection.find({product : productId})
     .populate('username')
 
-    console.log("27feedback:",feedback);
+    
 
     res.render("productdetails", { products, feedback });
   } catch (error) {
-    console.error(error);
-    
-  }
+    res.status(500).send("Internal Server Error");
+ }
 };
 
 
