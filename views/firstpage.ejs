@@ -1,0 +1,607 @@
+
+
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+	<title>Goggles Ecommerce Category Bootstrap responsive Web Template | Home :: w3layouts</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+	<meta name="keywords" content="Goggles a Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, 
+Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+	<script>
+		addEventListener("load", function () {
+			setTimeout(hideURLbar, 0);
+		}, false);
+
+		function hideURLbar() {
+			window.scrollTo(0, 1);
+		}
+	</script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+	<link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
+	<link href="css/login_overlay.css" rel='stylesheet' type='text/css' />
+	<link href="css/style6.css" rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="css/shop.css" type="text/css" />
+	<link rel="stylesheet" href="css/owl.carousel.css" type="text/css" media="all">
+	<link rel="stylesheet" href="css/owl.theme.css" type="text/css" media="all">
+	<link href="css/style.css" rel='stylesheet' type='text/css' />
+	<link href="css/fontawesome-all.css" rel="stylesheet">
+	
+			<style>
+				body {
+						font-family: ' Verdana', Tahoma, Geneva, Verdana, sans-serif;
+				
+				}
+		
+				
+		</style>
+			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.11.0/mdb.min.css" />
+
+			<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+
+<body>
+	<div class="banner-top container-fluid" id="home">
+
+		<header>
+			<div class="row">
+				<div class="col-md-3 top-info text-left mt-lg-4">
+					<h6>Need Help</h6>
+					<ul>
+						<li>
+							<i class="fa fa-phone"></i> Call</li>
+						<li class="number-phone mt-3">12345678099</li>
+					</ul>
+				</div>
+				<div class="col-md-6 logo-w3layouts text-center d-flex align-items-center justify-content-center">
+					<h1 class="logo-w3layouts">
+							<a class="navbar-brand" href="/">GLASSY</a>
+					</h1>
+			</div>
+			
+
+				<div class="col-md-3 top-info-cart text-right mt-lg-4">
+					<ul class="cart-inner-info list-inline">
+						
+						<!-- <li class="list-inline-item">
+							<form action="/cart" method="get">
+								<input type="hidden" name="cmd" value="_cart">
+								<input type="hidden" name="display" value="1">
+								<button class="btn top_googles_cart" type="submit" name="submit" value="">
+									My Cart
+									
+								</button>
+							</form>
+						</li> -->
+					
+						<li class="list-inline-item">
+							<form action="/login" method="get">
+								<button class="btn top_googles_cart" type="submit">Login Here</button>
+							</form>
+						</li>
+					</ul>
+				</div>
+				
+			</div>
+	
+			<label class="top-log mx-auto"></label>
+			<nav class="navbar navbar-expand-lg navbar-light bg-light top-header mb-2">
+
+				<button class="navbar-toggler mx-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+			 </button>
+			 
+
+
+
+
+				
+				<!-- <div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav nav-mega mx-auto">
+						<li class="nav-item ">
+							<a class="nav-link ml-lg-0" href="/productsonly">Products
+								
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link ml-lg-0" href="/wishlist">Wishlist</a>
+						</li>
+					
+						
+						
+						<li class="nav-item">
+							<a class="nav-link ml-lg-0" href="/profile">Profile</a>
+						</li>
+					</ul>
+				
+				</div> -->
+			</nav>
+		</header>
+
+		<div id="carouselExampleCaptions" class="carousel slide carousel-fade" data-mdb-ride="carousel">
+
+		
+		
+	
+			<div class="carousel-indicators">
+	
+				<button type="button" data-mdb-target="#carouselExampleCaptions" data-mdb-slide-to="0" class="active"
+					aria-current="true" aria-label="Slide 1"></button>
+				<button type="button" data-mdb-target="#carouselExampleCaptions" data-mdb-slide-to="1"
+					aria-label="Slide 2"></button>
+				<button type="button" data-mdb-target="#carouselExampleCaptions" data-mdb-slide-to="2"
+					aria-label="Slide 3"></button>
+					<button type="button" data-mdb-target="#carouselExampleCaptions" data-mdb-slide-to="3"
+					aria-label="Slide 4"></button>
+			</div>
+	
+			<div class="carousel-inner">
+				<% banner.forEach(row=> { %>
+					<div class="carousel-item <%= banner.indexOf(row) === 0 ? 'active' : '' %>">
+	
+	
+	
+						<img src="/images/<%= row.image %>" class="d-block w-100 h-auto" alt="Wild Landscape" />
+						<div class="mask" style="background-color: rgba(0, 0, 0, 0.4)"></div>
+						<div class="carousel-caption d-none d-sm-block mb-5">
+						
+							<div class="carousel-caption text-center">
+								<div class="description-container">
+									<p class="description-text"><%= row.description %></p>
+							</div>
+								<a href="/productdetails/653cbd36718b2275f58b59a8" class="btn btn-sm animated-button gibson-three mt-4">Shop Now</a>
+							</div>
+						
+	
+					
+	
+						</div>
+	
+					</div>
+	
+	
+					<% }); %>
+			</div>
+	
+			<button class="carousel-control-prev" type="button" data-mdb-target="#carouselExampleCaptions" data-mdb-slide="prev">
+				
+				<span class="visually-hidden">Previous</span>
+		</button>
+		<button class="carousel-control-next" type="button" data-mdb-target="#carouselExampleCaptions" data-mdb-slide="next">
+				
+				<span class="visually-hidden">Next</span>
+		</button>
+		
+		</div>
+
+
+
+	</div>
+
+	
+	<section class="banner-bottom-wthreelayouts py-lg-5 py-3">
+		<div class="container-fluid">
+			<div class="inner-sec-shop px-lg-4 px-3">
+				<h3 class="tittle-w3layouts my-lg-4 my-4">New Arrivals for you </h3>
+				<div class="row">
+					
+					<% products.slice().reverse().forEach((row,index)=>{ %>
+					<div class="col-md-3 product-men women_two">
+						<div class="product-googles-info googles">
+							<div class="men-pro-item">
+								<div class="men-thumb-item">
+									<img src="images/<%= row.image[0] %>" class="img-fluid" alt="<%= row.image %>">
+									<div class="men-cart-pro">
+										<div class="inner-men-cart-pro">
+											<a href="/productdetails/<%=row._id%>" class="link-product-add-cart">Quick View</a>
+										</div>
+									</div>
+									<span class="product-new-top">New</span>
+								</div>
+								<div class="item-info-product">
+									<div class="info-product-price">
+										<div class="grid_meta">
+											<div class="product_price">
+												<h4>
+													<a href="single.html"><%= row.name %></a>
+												</h4>
+												<div class="grid-price mt-2">
+													<span class="money ">RS <%= row.price %></span>
+												</div>
+											</div>
+										
+										</div>
+										<div class="googles single-item hvr-outline-out">
+											<form action="/addtocart/<%=row._id %>" method="post">
+												<input type="hidden" name="productId" value="<%= row._id %>">
+												<input type="hidden" name="quantity" value="1">
+												<button type="submit" class="googles-cart pgoogles-cart">
+													<i class="fa fa-cart-plus"></i>
+												</button>
+											</form>
+
+										</div>
+
+										
+									</div>
+									<form action="/addtowish/<%= row._id %>" method="post">
+										<input type="hidden" name="productId" value="<%= products._id %>">
+										<button type="submit" class="wishlist-button">
+											<span class="heart-symbol">❤️</span> Add to Wishlist
+										</button>
+									</form>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+
+					<%	}) %>
+
+					<div class="container">
+						<div class="row justify-content-center">
+							
+							<div class="col-md-12 text-center">
+								<% if (currentPage > 1) { %>
+										<a href="?page=<%= currentPage - 1 %>" class="btn btn-primary">Previous</a>
+								<% } %>
+								
+								<% if (currentPage < 4) { %>
+										<a href="?page=<%= currentPage + 1 %>" class="btn btn-primary">Next</a>
+								<% } %>
+						</div>
+						
+						</div>
+					</div>
+				</div>
+				
+	
+				<div class="row">
+					<div class="col-md-12 middle-slider my-4">
+						<div class="middle-text-info text-center">
+								<h3 class="tittle-w3layouts two text-center my-lg-4 mt-3">Summer Flash sale</h3>
+								<div class="simply-countdown-custom" id="simply-countdown-custom"></div>
+								<p>
+										<a href="/productsonly" class="btn btn-sm animated-button gibson-three mt-4">Shop Now</a>
+								</p>
+						</div>
+				</div>
+				
+				</div>
+	
+		
+			
+		
+				<div class="bottom-sub-grid-content py-lg-5 py-3">
+					<div class="row">
+						<div class="col-lg-4 bottom-sub-grid text-center">
+							<div class="bt-icon">
+
+								<span class="far fa-hand-paper"></span>
+							</div>
+
+							<h4 class="sub-tittle-w3layouts my-lg-4 my-3">Satisfaction Guaranteed</h4>
+							<p>
+								"Rest assured, our commitment to excellence ensures your satisfaction guaranteed, providing you with a worry-free and delightful experience."</p>
+							<p>
+								<a href="/productsonly" class="btn btn-sm animated-button gibson-three mt-4">Shop Now</a>
+							</p>
+						</div>
+				
+						<div class="col-lg-4 bottom-sub-grid text-center">
+							<div class="bt-icon">
+								<span class="fas fa-rocket"></span>
+							</div>
+
+							<h4 class="sub-tittle-w3layouts my-lg-4 my-3">Fast Shipping</h4>
+							<p>
+								"Experience the convenience of fast shipping, ensuring that your order reaches your doorstep swiftly, providing you with a seamless and efficient shopping experience."</p>
+							<p>
+								<a href="/productsonly" class="btn btn-sm animated-button gibson-three mt-4">Shop Now</a>
+							</p>
+						</div>
+					
+						<div class="col-lg-4 bottom-sub-grid text-center">
+							<div class="bt-icon">
+								<span class="far fa-sun"></span>
+							</div>
+
+							<h4 class="sub-tittle-w3layouts my-lg-4 my-3">UV Protection</h4>
+							<p>
+								UV protection refers to measures taken to shield the skin and eyes from the harmful ultraviolet rays of the sun, essential for preventing sunburn, premature aging, and reducing the risk of skin cancer.</p>
+							<p>
+								<a href="/productsonly" class="btn btn-sm animated-button gibson-three mt-4">Shop Now</a>
+							</p>
+						</div>
+				
+					</div>
+				</div>
+		
+				<div class="testimonials p-lg-5 p-3 mt-4">
+					<div class="row last-section">
+						<div class="col-lg-3 footer-top-w3layouts-grid-sec">
+							<div class="mail-grid-icon text-center">
+								<i class="fa fa-gift"></i>
+							</div>
+							<div class="mail-grid-text-info">
+								<h3>Genuine Product</h3>
+								<p>"Genuine products ensure authenticity and quality"</p>
+							</div>
+						</div>
+						<div class="col-lg-3 footer-top-w3layouts-grid-sec">
+							<div class="mail-grid-icon text-center">
+								<i class="fa fa-shield-alt"></i>
+							</div>
+							<div class="mail-grid-text-info">
+								<h3>Secure Products</h3>
+								<p>Secure products prioritize the implementation of robust measures</p>
+							</div>
+						</div>
+						<div class="col-lg-3 footer-top-w3layouts-grid-sec">
+							<div class="mail-grid-icon text-center">
+								<i class="fa fa-dollar-sign"></i>
+							</div>
+							<div class="mail-grid-text-info">
+								<h3>Cash on Delivery</h3>
+								<p>Allows customers to pay for their purchases in cash at the time of delivery</p>
+							</div>
+						</div>
+						<div class="col-lg-3 footer-top-w3layouts-grid-sec">
+							<div class="mail-grid-icon text-center">
+								<i class="fa fa-truck"></i>
+							</div>
+							<div class="mail-grid-text-info">
+								<h3>Easy Delivery</h3>
+								<p> Provides a seamless experience for the timely and efficient delivery of your goods.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</section>
+
+	<footer class="py-lg-5 py-3">
+		<div class="container-fluid px-lg-5 px-3">
+			<div class="row footer-top-w3layouts">
+				<div class="col-lg-3 footer-grid-w3ls">
+					<div class="footer-title">
+						<h3>About Us</h3>
+					</div>
+					<div class="footer-text">
+						<p>Glassy, an innovative eyewear company, has carved its niche in the online commerce landscape by offering a wide array of stylish and functional eyewear products.</p>
+						
+					</div>
+				</div>
+				<div class="col-lg-3 footer-grid-w3ls">
+					<div class="footer-title">
+						<h3>Get in touch</h3>
+					</div>
+					<div class="contact-info">
+						<h4>Location :</h4>
+						<p>0926k 4th block building, king Avenue, New York City.</p>
+						<div class="phone">
+							<h4>Contact :</h4>
+							<p>Phone : +121 098 8907 9987</p>
+							<p>Email :
+								<a href="mailto:info@example.com">info@example.com</a>
+							</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 footer-grid-w3ls">
+					<div class="footer-title">
+						<h3>Quick Links</h3>
+					</div>
+					<ul class="links">
+						<li>
+							<a href="index.html">Home</a>
+						</li>
+						<li>
+							<a href="about.html">About</a>
+						</li>
+						<li>
+							<a href="404.html">Error</a>
+						</li>
+						<li>
+							<a href="shop.html">Shop</a>
+						</li>
+						<li>
+							<a href="contact.html">Contact Us</a>
+						</li>
+					</ul>
+				</div>
+				<div class="col-lg-3 footer-grid-w3ls">
+					<div class="footer-title">
+						<h3>Sign up for your offers</h3>
+					</div>
+					<div class="footer-text">
+						<p>By subscribing to our mailing list you will always get latest news and updates from us.</p>
+						<form action="#" method="post">
+							<input class="form-control" type="email" name="Email" placeholder="Enter your email..." required="">
+							<button class="btn1">
+								<i class="fa fa-envelope" aria-hidden="true"></i>
+							</button>
+							<div class="clearfix"> </div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="copyright-w3layouts mt-4">
+				<p class="copy-right text-center ">&copy; 2018 Goggles. All Rights Reserved | Design by
+					<a href="http://w3layouts.com/"> W3layouts </a>
+				</p>
+			</div>
+		</div>
+	</footer>
+
+
+
+	<script src="js/jquery-2.2.3.min.js"></script>
+
+	
+	<script>
+		$(document).ready(function () {
+			$("#myModal").modal();
+		});
+	</script>
+	
+	<script src="js/modernizr-2.6.2.min.js"></script>
+	<script src="js/classie-search.js"></script>
+	<script src="js/demo1-search.js"></script>
+
+	<script src="js/minicart.js"></script>
+	<script>
+		googles.render();
+
+		googles.cart.on('googles_checkout', function (evt) {
+			var items, len, i;
+
+			if (this.subtotal() > 0) {
+				items = this.items();
+
+				for (i = 0, len = items.length; i < len; i++) {}
+			}
+		});
+	</script>
+
+	<script>
+		$(document).ready(function () {
+			$(".button-log a").click(function () {
+				$(".overlay-login").fadeToggle(200);
+				$(this).toggleClass('btn-open').toggleClass('btn-close');
+			});
+		});
+		$('.overlay-close1').on('click', function () {
+			$(".overlay-login").fadeToggle(200);
+			$(".button-log a").toggleClass('btn-open').toggleClass('btn-close');
+			open = false;
+		});
+	</script>
+
+	<script src="js/simplyCountdown.js"></script>
+	<link href="css/simplyCountdown.css" rel='stylesheet' type='text/css' />
+	<script>
+		var d = new Date();
+		simplyCountdown('simply-countdown-custom', {
+			year: d.getFullYear(),
+			month: d.getMonth() + 2,
+			day: 25
+		});
+	</script>
+
+	<script src="js/owl.carousel.js"></script>
+	<script>
+		$(document).ready(function () {
+			$('.owl-carousel').owlCarousel({
+				loop: true,
+				margin: 10,
+				responsiveClass: true,
+				responsive: {
+					0: {
+						items: 1,
+						nav: true
+					},
+					600: {
+						items: 2,
+						nav: false
+					},
+					900: {
+						items: 3,
+						nav: false
+					},
+					1000: {
+						items: 4,
+						nav: true,
+						loop: false,
+						margin: 20
+					}
+				}
+			})
+		})
+	</script>
+
+
+
+
+
+	<script>
+		$(document).ready(function () {
+			$(".dropdown").hover(
+				function () {
+					$('.dropdown-menu', this).stop(true, true).slideDown("fast");
+					$(this).toggleClass('open');
+				},
+				function () {
+					$('.dropdown-menu', this).stop(true, true).slideUp("fast");
+					$(this).toggleClass('open');
+				}
+			);
+		});
+	</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+			const triggerOverlay = document.getElementById('trigger-overlay');
+			const overlay = document.querySelector('.overlay');
+
+			
+			function toggleOverlay() {
+					overlay.classList.toggle('open');
+			}
+
+	
+			triggerOverlay.addEventListener('click', toggleOverlay);
+
+		
+			overlay.querySelector('.overlay-close').addEventListener('click', toggleOverlay);
+	});
+</script>
+
+
+
+  <script src="js/move-top.js"></script>
+    <script src="js/easing.js"></script>
+    <script>
+        jQuery(document).ready(function($) {
+            $(".scroll").click(function(event) {
+                event.preventDefault();
+                $('html,body').animate({
+                    scrollTop: $(this.hash).offset().top
+                }, 900);
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+ 
+
+            $().UItoTop({
+                easingType: 'easeOutQuart'
+            });
+
+        });
+    </script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-d3i12DMakrFqAbaaPy4rFbOGUl5rz7PE5wUrR7LhFeklRzYWqUr5A3foBdZeGT1e" crossorigin="anonymous"></script>
+	<script src="js/bootstrap.js"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.11.0/mdb.min.js"></script>
+
+
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	
+
+</body>
+
+</html>

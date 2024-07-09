@@ -49,7 +49,8 @@ const addtocart = async (req, res) => {
           user.cartitems = [];
         }
 
-        const existingProduct = user.cartitems.find((cartitems) => {
+        const existingProduct = user.cartitems.find
+        ((cartitems) => {
           const foundproduct = cartitems.cart.find((item) => {
             return item.productId._id.toString() === productId;
           });

@@ -49,6 +49,7 @@ userRoutes.get("/resendotpagain", userController.resendOtpagain);
 userRoutes.post("/newpassword/:id", userController.setnewpassword);
 
 userRoutes.get("/", userController.homeLoad);
+userRoutes.get('/firstpage',userController.firstpage)
 userRoutes.get("/productsonly", productController.productonly);
 userRoutes.post("/sortproducts", productController.sortedProducts);
 

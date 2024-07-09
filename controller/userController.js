@@ -20,6 +20,26 @@ const loginLoad = async (req, res) => {
   }
 };
 
+const firstpage=async(req,res) =>{
+  if(!req.session.user){
+
+    const banner = await bannercollection.find();
+
+    const currentPage = parseInt(req.query.page) || 1;
+    const skip = (currentPage - 1) * PAGE_SIZE;
+
+    const products = await productcollection
+      .find()
+      .skip(skip)
+      .limit(PAGE_SIZE)
+      .exec();
+
+
+  res.render("firstpage",{products,banner,currentPage})
+  }
+}
+
+
 const signupLoad = async (req, res) => {
   try {
     const data = await users.findOneAndRemove({ isVerified: false });
@@ -59,7 +79,7 @@ const homeLoad = async (req, res) => {
     }
     res.render("home", { products, currentPage, banner });
   } else {
-    res.redirect("/login");
+    res.redirect("/firstpage");
   }
 };
 
@@ -754,6 +774,7 @@ const userLogout = (req, res) => {
 
 module.exports = {
   loginVerify,
+  firstpage,
   otpLoad,
   verifyOtp,
   resendOtp,
