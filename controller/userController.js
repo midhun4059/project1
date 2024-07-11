@@ -144,8 +144,8 @@ const insertUser = async (req, res) => {
         },
       });
       const mailOptions = {
-        from: "midhunrpillai4059@gmail.com",
-        to: "midhunrpillai4059@gmail.com",
+        from: "testtdemoo11111@gmail.com",
+        to: req.body.email,
         subject: "Your Otp code",
         text: `your otp code is:${otp}`,
       };
