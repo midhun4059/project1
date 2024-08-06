@@ -136,24 +136,30 @@ const insertUser = async (req, res) => {
 
       req.session.email = req.body.email;
 
-      transporter = nodemailer.createTransport({
+      // Verify that nodemailer transport is configured correctly
+      const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
           user: "testtdemoo11111@gmail.com",
           pass: "wikvaxsgqyebphvh",
         },
       });
+
       const mailOptions = {
         from: "testtdemoo11111@gmail.com",
-        to: req.body.email,
-        subject: "Your Otp code",
-        text: `your otp code is:${otp}`,
+        to: 'cikika1128@carspure.com',
+        subject: "Your OTP code",
+        text: `Your OTP code is: ${otp}`,
       };
+
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-          console.error("error sending otp", error);
+          console.error("Error sending OTP:", error);
+          return res.render("signup", {
+            error: "Error sending OTP. Please try again later.",
+          });
         } else {
-          console.log("otp send:", info.response);
+          console.log("OTP sent:", info.response);
         }
       });
 
@@ -163,14 +169,16 @@ const insertUser = async (req, res) => {
           { $unset: { OTP: 1 } },
           { new: true }
         );
-       
       }, 30000);
+
       res.redirect("/otp");
     }
   } catch (error) {
+    console.error("Internal Server Error:", error);
     res.status(500).send("Internal Server Error");
   }
 };
+
 
 const otpLoad = (req, res) => {
   try {
